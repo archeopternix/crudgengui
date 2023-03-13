@@ -52,9 +52,10 @@ func main() {
 	e.Renderer = renderer
 
 	e.GET("/", showDashboard)
-	e.GET("/models/:id", getSingleModel)
-	e.GET("/models", getModels)
+	e.GET("/entities/:id", showEntity)
+	e.GET("/entities", showAllEntities)
 	e.POST("/entities", insertEntity)
+
 	e.POST("/relations", insertRelation)
 	e.Logger.Fatal(e.Start(":1323"))
 }
@@ -65,7 +66,7 @@ func showDashboard(c echo.Context) error {
 }
 
 // getSingleModel shows detail page to model or edit screen for new model
-func getSingleModel(c echo.Context) error {
+func showEntity(c echo.Context) error {
 	// User ID from path `users/:id`
 	id := c.Param("id")
 	if id != "0" {
@@ -76,7 +77,7 @@ func getSingleModel(c echo.Context) error {
 }
 
 // getSingleModel
-func getModels(c echo.Context) error {
+func showAllEntities(c echo.Context) error {
 	return c.String(http.StatusOK, "List all models")
 }
 
