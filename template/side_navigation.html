@@ -1,0 +1,41 @@
+{{define "top_navigation.html"}}
+<!-- begin side navigation bar -->
+            <div class="column is-3 ">
+                <aside class="menu is-hidden-mobile">
+                    <p class="menu-label">
+                        General
+                    </p>
+                    <ul class="menu-list">
+                        <li><a class="is-active">Dashboard</a></li>
+                        <li><a>Customers</a></li>
+                        <li><a>Other</a></li>
+                    </ul>
+                    <p class="menu-label">
+                        Administration
+                    </p>
+                    <ul class="menu-list">
+                        <li><a>Run</a></li>
+                        <li>
+                            <a>Generate</a>
+                            <ul>
+                                <li><a>Application</a></li>
+                                <li><a>Model</a></li>
+                                <li><a>Controller</a></li>
+                                <li><a>HTML View</a></li>
+                            </ul>
+                        </li>
+                        <li><a>Entities</a>
+                           <ul>
+                                <li><a class="js-modal-trigger" data-target="modal-js-entity">Add Entity</a></li>
+                            </ul>
+                        </li>
+                        <li><a>Relations</a>
+                           <ul>
+                                <li><a class="js-modal-trigger" data-target="modal-js-relation">Add Relation</a></li>
+                            </ul>
+                        </li>
+                    </ul>
+                </aside>
+            </div>
+<!-- end side navigation bar -->
+{{end}}

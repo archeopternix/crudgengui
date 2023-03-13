@@ -1,0 +1,58 @@
+{{define "relation_popup.html"}}
+  <div id="modal-js-relation" class="modal">
+<div class="modal-background"></div>
+  <div class="modal-card">
+    <form action="/relations" method="post">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Add Relation</p>
+      <button class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+    <div class="field">
+        <label class="label">Relation Type</label>
+        <div class="control">
+          <div class="select">
+            <select name="relation-type">
+              <option>One-to-Many</option>
+              <option>Many-to-Many</option>
+            </select>
+          </div>
+      </div>
+    
+
+      <div class="field">
+        <label class="label">Source Entity</label>
+        <div class="control">
+          <div class="select">
+            <select name="relation-source">
+              <option>Please Select</option>
+              {{range .Entities}}
+              <option>{{.Name}}</option>
+              {{end}}
+
+            </select>
+          </div>
+      </div>
+      
+      <div class="field">
+        <label class="label">Destination Entity</label>
+        <div class="control">
+          <div class="select">
+            <select name="relation-destination">
+              <option>Please Select</option>
+              {{range .Entities}}
+              <option>{{.Name}}</option>
+              {{end}}
+            </select>
+          </div>
+      </div>
+      
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-success">Save changes</button>
+      <button class="button is-info">Cancel</button>
+    </footer>
+    </form>
+  </div>
+</div>
+{{end}}
