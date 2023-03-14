@@ -1,13 +1,21 @@
 entities:
-    ToDo:
-        name: ToDo
+    Nuevo:
+        name: Nuevo
         type: Entity
     Test:
         name: Test
         type: Entity
+    ToDo:
+        name: ToDo
+        type: Entity
 relations:
     Please SelectOne-to-ManyPlease Select:
-        name: ToDoOne-to-ManyTest
+        name: Please SelectOne-to-ManyPlease Select
         type: One-to-Many
-        source: ToDo
-        destination: Test
+        source: Please Select
+        destination: Please Select
+    TestSelectOne-to-ManyToDo:
+        name: TestSelectOne-to-ManyToDo
+        type: One-to-Many
+        source: Test
+        destination: ToDo

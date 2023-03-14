@@ -5,6 +5,7 @@ import (
 	"log"
 	"net/http"
 	"sync"
+  "strings"
 
 	"crudgengui/controller"
 	model "crudgengui/model"
@@ -59,15 +60,27 @@ func main() {
 		log.Fatal(err)
 	}
 
-	/*
-		renderer := &TemplateRenderer{
-			templates: template.Must(template.ParseGlob("template/*.html")),
-		}
-	*/
+	funcMap := template.FuncMap{
+		"title": strings.Title,
+    "lowercase": strings.ToLower,
+    "uppercase": strings.ToUpper,
+	}
+  
 	templates := make(map[string]*template.Template)
-	templates["entities.html"] = template.Must(template.ParseFiles("template/base/base.html", "template/entities.html", "template/entity_popup.html", "template/relation_popup.html",  "template/base/side_navigation.html", "template/base/top_navigation.html"))
-	templates["relations.html"] = template.Must(template.ParseFiles("template/base/base.html", "template/relations.html","template/entity_popup.html", "template/relation_popup.html",  "template/base/side_navigation.html", "template/base/top_navigation.html"))
-	templates["index.html"] = template.Must(template.ParseFiles("template/base/base.html", "template/entity_popup.html", "template/relation_popup.html", "template/base/side_navigation.html", "template/base/top_navigation.html"))
+
+  // base template
+	templates["base.html"] = template.Must(template.New("base.html").Funcs(funcMap).ParseFiles("template/base/side_navigation.html", "template/base/base.html", "template/entity_popup.html", "template/relation_popup.html", "template/base/side_navigation.html", "template/base/top_navigation.html"))
+
+	templates["entities.html"], err = template.Must(templates["base.html"].Clone()).ParseFiles("template/entities.html")
+ 	if err != nil {
+		log.Fatal(err)
+	}    
+  templates["relations.html"], err = template.Must(templates["base.html"].Clone()).ParseFiles("template/relations.html")
+ 	if err != nil {
+		log.Fatal(err)
+	}    
+  templates["index.html"] = template.Must(templates["base.html"].Clone())                                    
+
 	e.Renderer = &TemplateRegistry{
 		templates: templates,
 	}
@@ -92,8 +105,11 @@ func showDashboard(c echo.Context) error {
 
 // showAllEntities
 func showAllEntities(c echo.Context) error {
-	e := controller.GetAllEntities()
-	return c.Render(http.StatusOK, "entities.html", e)
+	m := controller.GetModel()
+	return c.Render(http.StatusOK, "entities.html", map[string]interface{}{
+		"model": m,
+		"title": "Entities",
+	})
 }
 
 // showEntity shows detail page to model or edit screen for new model
@@ -118,8 +134,11 @@ func deleteEntity(c echo.Context) error {
 
 // showAllRelations
 func showAllRelations(c echo.Context) error {
-	r := controller.GetAllRelations()
-	return c.Render(http.StatusOK, "relations.html", r)
+	m := controller.GetModel()
+	return c.Render(http.StatusOK, "relations.html", map[string]interface{}{
+		"model": m,
+		"title": "Relations",
+	})
 }
 
 // showRelation shows detail page to model or edit screen for new model

@@ -3,11 +3,19 @@
 {{end}}
 
 {{define "content"}}
+                <section class="hero is-info welcome is-small">
+                    <div class="hero-body">
+                        <div class="container">
+                            <h1 class="title">
+                                {{.title}}
+                            </h1>
+                        </div>
+                    </div>
+                </section>
                  <section class="table">
-                  <table class="table">
+                  <table class="table is-striped is-fullwidth">
                   <thead>
                     <tr>
-                      <th>Id</th>
                       <th>Type</th>
                       <th>Source</th>
                       <th>Destination</th>
@@ -15,14 +23,14 @@
                     </tr>
                   </thead>
                   <tbody>
+                     {{range .model.Relations}}
                     <tr>
-                      <td>1</td>  
-                      <td>1 .. n</td>
-                      <td><a href="/entities/user">Country</a></td>
-                      <td><a href="/entities/user">User</a></td>
-                      <td> 
+                      <td valign="bottom">{{.Type}}</td>
+                      <td valign="bottom"><a href="/entities/{{lowercase .Source}}">{{.Source}}</a></td>
+                      <td valign="bottom"><a href="/entities/{{lowercase .Destination}}">{{.Destination}}</a></td>
+                      <td align="right" > 
                         <p class="buttons">
-                          <a onclick="sendDelete('/relations/user')"><button class="button is-danger is-outlined">
+                          <a onclick="sendDelete('/relations/{{lowercase .Source}}{{lowercase .Type}}{{lowercase .Destination}}')"><button class="button is-danger is-outlined">
                             <span class="icon is-small">
                               <i class="fas fa-trash"></i>
                             </span>
@@ -30,6 +38,7 @@
                         </p>                  
                       </td>
                     </tr>
+                    {{end}}
                   </tbody>
                   </table>
                   <button class="button is-primary is-outlined js-modal-trigger" data-target="modal-js-relation">

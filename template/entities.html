@@ -3,8 +3,17 @@
 {{end}}
 
 {{define "content"}}
+                <section class="hero is-info welcome is-small">
+                    <div class="hero-body">
+                        <div class="container">
+                            <h1 class="title">
+                                {{.title}}
+                            </h1>
+                        </div>
+                    </div>
+                </section>
                 <section class="table">
-                  <table class="table">
+                  <table class="table is-striped is-fullwidth">
                   <thead>
                     <tr>
                       <th>Name</th>
@@ -13,32 +22,23 @@
                     </tr>
                   </thead>
                   <tbody>
+                    {{range .model.Entities}}
                     <tr>
-                      <td><a href="/entities/user">User</a></td>  
-                      <td>Entity</td>
-                      <td>
-                        <p class="buttons">
-                          <a onclick="sendDelete('/entities/user')"><button class="button is-danger is-outlined">
+                      <td valign="bottom"><a href="/entities/{{lowercase .Name}}">{{.Name}}</a></td>  
+                      <td valign="bottom">{{.Type}}</td>
+                      <td align="right" >
+                        <p align="right" class="buttons">
+                          <a onclick="sendDelete('/entities/{{lowercase .Name}}')">
+                            <button class="button is-danger is-outlined">
                             <span class="icon is-small">
                               <i class="fas fa-trash"></i>
                             </span>
-                          </button> </a>          
+                            </button> 
+                          </a>          
                         </p>   
                       </td>
                     </tr>
-                    <tr>
-                      <td><a href="/entities/location">Location</a></td>  
-                      <td>Key-Value</td>                      
-                      <td>
-                        <p class="buttons">
-                          <a onclick="sendDelete('/entities/user')"><button class="button is-danger is-outlined">
-                            <span class="icon is-small">
-                              <i class="fas fa-trash"></i>
-                            </span>
-                          </button> </a>          
-                        </p>   
-                      </td>
-                    </tr>
+                    {{end}}       
                   </tbody>
                   </table>
                   <button class="button is-primary is-outlined js-modal-trigger" data-target="modal-js-entity">
