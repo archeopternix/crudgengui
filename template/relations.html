@@ -1,0 +1,44 @@
+{{define "breadcrumb"}}
+                        <li class="is-active"><a href="#" aria-current="page">Relations</a></li>
+{{end}}
+
+{{define "content"}}
+                 <section class="table">
+                  <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Id</th>
+                      <th>Type</th>
+                      <th>Source</th>
+                      <th>Destination</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>1</td>  
+                      <td>1 .. n</td>
+                      <td><a href="/entities/user">Country</a></td>
+                      <td><a href="/entities/user">User</a></td>
+                      <td> 
+                        <p class="buttons">
+                          <a onclick="sendDelete('/relations/user')"><button class="button is-danger is-outlined">
+                            <span class="icon is-small">
+                              <i class="fas fa-trash"></i>
+                            </span>
+                          </button> </a>          
+                        </p>                  
+                      </td>
+                    </tr>
+                  </tbody>
+                  </table>
+                  <button class="button is-primary is-outlined js-modal-trigger" data-target="modal-js-relation">
+                    <span class="icon is-small">
+                      <i class="fas fa-circle-plus fa-2x"></i>
+                    </span>
+                  </button>
+                </section>              
+
+{{end}}
+
+{{template "base.html" .}}

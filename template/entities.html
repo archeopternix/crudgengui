@@ -1,0 +1,52 @@
+{{define "breadcrumb"}}
+                        <li class="is-active"><a href="#" aria-current="page">Entities</a></li>
+{{end}}
+
+{{define "content"}}
+                <section class="table">
+                  <table class="table">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Type</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td><a href="/entities/user">User</a></td>  
+                      <td>Entity</td>
+                      <td>
+                        <p class="buttons">
+                          <a onclick="sendDelete('/entities/user')"><button class="button is-danger is-outlined">
+                            <span class="icon is-small">
+                              <i class="fas fa-trash"></i>
+                            </span>
+                          </button> </a>          
+                        </p>   
+                      </td>
+                    </tr>
+                    <tr>
+                      <td><a href="/entities/location">Location</a></td>  
+                      <td>Key-Value</td>                      
+                      <td>
+                        <p class="buttons">
+                          <a onclick="sendDelete('/entities/user')"><button class="button is-danger is-outlined">
+                            <span class="icon is-small">
+                              <i class="fas fa-trash"></i>
+                            </span>
+                          </button> </a>          
+                        </p>   
+                      </td>
+                    </tr>
+                  </tbody>
+                  </table>
+                  <button class="button is-primary is-outlined js-modal-trigger" data-target="modal-js-entity">
+                    <span class="icon is-small">
+                      <i class="fas fa-circle-plus fa-2x"></i>
+                    </span>
+                  </button>
+                </section>
+{{end}}
+
+{{template "base.html" .}}

@@ -1,0 +1,13 @@
+entities:
+    ToDo:
+        name: ToDo
+        type: Entity
+    Test:
+        name: Test
+        type: Entity
+relations:
+    Please SelectOne-to-ManyPlease Select:
+        name: ToDoOne-to-ManyTest
+        type: One-to-Many
+        source: ToDo
+        destination: Test

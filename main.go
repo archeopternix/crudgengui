@@ -4,16 +4,32 @@ import (
 	"html/template"
 	"log"
 	"net/http"
-	"os"
 	"sync"
 
+	"crudgengui/controller"
 	model "crudgengui/model"
+	"fmt"
 	"io"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
+// Define the template registry struct
+type TemplateRegistry struct {
+	templates map[string]*template.Template
+}
+
+// Implement e.Renderer interface
+func (t *TemplateRegistry) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
+	tmpl, ok := t.templates[name]
+	if !ok {
+		return fmt.Errorf("Template not found -> %s", name)
+	}
+	return tmpl.ExecuteTemplate(w, "base.html", data)
+}
+
+/*
 // TemplateRenderer is a custom html/template renderer for Echo framework
 type TemplateRenderer struct {
 	templates *template.Template
@@ -29,33 +45,42 @@ func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c 
 
 	return t.templates.ExecuteTemplate(w, name, data)
 }
-
-var m *model.Model
+*/
 
 func main() {
 	e := echo.New()
 	e.Use(middleware.Static("/static"))
+	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+		Format: "method=${method}, uri=${uri}, status=${status}, error=${error}\n",
+	}))
 
-	m = model.NewModel()
-	file, err := os.Open("model.yaml")
-	if err != nil {
-		log.Fatal(err)
-	}
-	err = m.ReadYAML(file)
+	err := controller.LoadModel("model.yaml")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	renderer := &TemplateRenderer{
-		templates: template.Must(template.ParseGlob("template/*.html")),
+	/*
+		renderer := &TemplateRenderer{
+			templates: template.Must(template.ParseGlob("template/*.html")),
+		}
+	*/
+	templates := make(map[string]*template.Template)
+	templates["entities.html"] = template.Must(template.ParseFiles("template/base/base.html", "template/entities.html", "template/entity_popup.html", "template/relation_popup.html",  "template/base/side_navigation.html", "template/base/top_navigation.html"))
+	templates["relations.html"] = template.Must(template.ParseFiles("template/base/base.html", "template/relations.html","template/entity_popup.html", "template/relation_popup.html",  "template/base/side_navigation.html", "template/base/top_navigation.html"))
+	templates["index.html"] = template.Must(template.ParseFiles("template/base/base.html", "template/entity_popup.html", "template/relation_popup.html", "template/base/side_navigation.html", "template/base/top_navigation.html"))
+	e.Renderer = &TemplateRegistry{
+		templates: templates,
 	}
-	e.Renderer = renderer
 
 	e.GET("/", showDashboard)
 	e.GET("/entities/:id", showEntity)
+	e.DELETE("/entities/:id", deleteEntity)
 	e.GET("/entities", showAllEntities)
 	e.POST("/entities", insertEntity)
 
+	e.GET("/relations/:id", showRelation)
+	e.DELETE("/relations/:id", deleteRelation)
+	e.GET("/relations", showAllRelations)
 	e.POST("/relations", insertRelation)
 	e.Logger.Fatal(e.Start(":1323"))
 }
@@ -65,20 +90,56 @@ func showDashboard(c echo.Context) error {
 	//	return c.File("public/index.html")
 }
 
-// getSingleModel shows detail page to model or edit screen for new model
+// showAllEntities
+func showAllEntities(c echo.Context) error {
+	e := controller.GetAllEntities()
+	return c.Render(http.StatusOK, "entities.html", e)
+}
+
+// showEntity shows detail page to model or edit screen for new model
 func showEntity(c echo.Context) error {
 	// User ID from path `users/:id`
 	id := c.Param("id")
-	if id != "0" {
-		return c.String(http.StatusOK, id)
-	} else {
-		return c.String(http.StatusOK, "new")
-	}
+
+	return c.String(http.StatusOK, id)
 }
 
-// getSingleModel
-func showAllEntities(c echo.Context) error {
-	return c.String(http.StatusOK, "List all models")
+// deleteEntity shows detail page to model or edit screen for new model
+func deleteEntity(c echo.Context) error {
+	// User ID from path `users/:id`
+	id := c.Param("id")
+
+	if err := controller.DeleteEntity(id); err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	}
+
+	return c.JSON(http.StatusAccepted, showDashboard(c))
+}
+
+// showAllRelations
+func showAllRelations(c echo.Context) error {
+	r := controller.GetAllRelations()
+	return c.Render(http.StatusOK, "relations.html", r)
+}
+
+// showRelation shows detail page to model or edit screen for new model
+func showRelation(c echo.Context) error {
+	// User ID from path `users/:id`
+	id := c.Param("id")
+
+	return c.String(http.StatusOK, id)
+}
+
+// deleteRelation shows detail page to model or edit screen for new model
+func deleteRelation(c echo.Context) error {
+	// User ID from path `users/:id`
+	id := c.Param("id")
+
+	if err := controller.DeleteEntity(id); err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, err.Error())
+	}
+	return c.JSON(http.StatusAccepted, showDashboard(c))
+
 }
 
 // insertEntity
@@ -91,7 +152,10 @@ func insertEntity(c echo.Context) error {
 	if err := c.Bind(m); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	return c.JSON(http.StatusCreated, showDashboard(c))
+	if err := controller.SaveOrUpdateEntity(m); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return c.JSON(http.StatusCreated, showAllEntities(c))
 }
 
 // insertRelation
@@ -102,6 +166,10 @@ func insertRelation(c echo.Context) error {
 
 	r := new(model.Relation)
 	if err := c.Bind(r); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	r.Name = r.Source + r.Type + r.Destination
+	if err := controller.SaveOrUpdateRelation(r); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	return c.JSON(http.StatusCreated, showDashboard(c))
