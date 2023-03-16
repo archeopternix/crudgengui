@@ -1,21 +1,16 @@
 entities:
-    Nuevo:
-        name: Nuevo
+    alpha:
+        name: Alpha
         type: Entity
-    Test:
-        name: Test
+    super:
+        name: Super
         type: Entity
-    ToDo:
+    todo:
         name: ToDo
         type: Entity
 relations:
-    Please SelectOne-to-ManyPlease Select:
-        name: Please SelectOne-to-ManyPlease Select
-        type: One-to-Many
-        source: Please Select
-        destination: Please Select
-    TestSelectOne-to-ManyToDo:
-        name: TestSelectOne-to-ManyToDo
+    testselectone-to-manytodo:
+        name: testselectone-to-manytodo
         type: One-to-Many
         source: Test
         destination: ToDo

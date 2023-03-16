@@ -4,8 +4,8 @@ import (
 	"html/template"
 	"log"
 	"net/http"
+	"strings"
 	"sync"
-  "strings"
 
 	"crudgengui/controller"
 	model "crudgengui/model"
@@ -30,24 +30,6 @@ func (t *TemplateRegistry) Render(w io.Writer, name string, data interface{}, c 
 	return tmpl.ExecuteTemplate(w, "base.html", data)
 }
 
-/*
-// TemplateRenderer is a custom html/template renderer for Echo framework
-type TemplateRenderer struct {
-	templates *template.Template
-}
-
-// Render renders a template document
-func (t *TemplateRenderer) Render(w io.Writer, name string, data interface{}, c echo.Context) error {
-
-	// Add global methods if data is a map
-	if viewContext, isMap := data.(map[string]interface{}); isMap {
-		viewContext["reverse"] = c.Echo().Reverse
-	}
-
-	return t.templates.ExecuteTemplate(w, name, data)
-}
-*/
-
 func main() {
 	e := echo.New()
 	e.Use(middleware.Static("/static"))
@@ -61,25 +43,25 @@ func main() {
 	}
 
 	funcMap := template.FuncMap{
-		"title": strings.Title,
-    "lowercase": strings.ToLower,
-    "uppercase": strings.ToUpper,
+		"title":     strings.Title,
+		"lowercase": strings.ToLower,
+		"uppercase": strings.ToUpper,
 	}
-  
+
 	templates := make(map[string]*template.Template)
 
-  // base template
+	// base template
 	templates["base.html"] = template.Must(template.New("base.html").Funcs(funcMap).ParseFiles("template/base/side_navigation.html", "template/base/base.html", "template/entity_popup.html", "template/relation_popup.html", "template/base/side_navigation.html", "template/base/top_navigation.html"))
 
 	templates["entities.html"], err = template.Must(templates["base.html"].Clone()).ParseFiles("template/entities.html")
- 	if err != nil {
+	if err != nil {
 		log.Fatal(err)
-	}    
-  templates["relations.html"], err = template.Must(templates["base.html"].Clone()).ParseFiles("template/relations.html")
- 	if err != nil {
+	}
+	templates["relations.html"], err = template.Must(templates["base.html"].Clone()).ParseFiles("template/relations.html")
+	if err != nil {
 		log.Fatal(err)
-	}    
-  templates["index.html"] = template.Must(templates["base.html"].Clone())                                    
+	}
+	templates["index.html"] = template.Must(templates["base.html"].Clone())
 
 	e.Renderer = &TemplateRegistry{
 		templates: templates,
@@ -125,11 +107,15 @@ func deleteEntity(c echo.Context) error {
 	// User ID from path `users/:id`
 	id := c.Param("id")
 
+  if _,ok:=controller.GetEntity(id); !ok {
+    return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("ID %v not found",id))  
+  }
+  
 	if err := controller.DeleteEntity(id); err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
 
-	return c.JSON(http.StatusAccepted, showDashboard(c))
+	return nil//c.JSON(http.StatusAccepted, showAllEntities(c))
 }
 
 // showAllRelations
@@ -154,10 +140,14 @@ func deleteRelation(c echo.Context) error {
 	// User ID from path `users/:id`
 	id := c.Param("id")
 
-	if err := controller.DeleteEntity(id); err != nil {
+  if _,ok:=controller.GetRelation(id); !ok {
+    return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("ID %v not found",id))  
+  }
+
+	if err := controller.DeleteRelation(id); err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
-	return c.JSON(http.StatusAccepted, showDashboard(c))
+	return showAllRelations(c)
 
 }
 
@@ -167,14 +157,19 @@ func insertEntity(c echo.Context) error {
 	lock.Lock()
 	defer lock.Unlock()
 
-	m := new(model.Entity)
-	if err := c.Bind(m); err != nil {
+	e := new(model.Entity)
+	if err := c.Bind(e); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	if err := controller.SaveOrUpdateEntity(m); err != nil {
+
+  if _,ok:=controller.GetEntity(e.Name); ok {
+    return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Name %v is already in use",e.Name))  
+  }
+  
+	if err := controller.SaveOrUpdateEntity(e); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	return c.JSON(http.StatusCreated, showAllEntities(c))
+	return showAllEntities(c)
 }
 
 // insertRelation
@@ -188,8 +183,13 @@ func insertRelation(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	r.Name = r.Source + r.Type + r.Destination
+
+  if _,ok:=controller.GetEntity(r.Name); ok {
+    return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Name %v is already in use",r.Name))  
+  }
+  
 	if err := controller.SaveOrUpdateRelation(r); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	return c.JSON(http.StatusCreated, showDashboard(c))
+	return showAllEntities(c)
 }
