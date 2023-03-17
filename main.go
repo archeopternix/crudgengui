@@ -34,7 +34,7 @@ func main() {
 	e := echo.New()
 	e.Use(middleware.Static("/static"))
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "method=${method}, uri=${uri}, status=${status}, error=${error}\n",
+		Format: "method=${method}, uri=${uri}, status=${status}, error=${error}, path=${path}\n",
 	}))
 
 	err := controller.LoadModel("model.yaml")
@@ -51,7 +51,7 @@ func main() {
 	templates := make(map[string]*template.Template)
 
 	// base template
-	templates["base.html"] = template.Must(template.New("base.html").Funcs(funcMap).ParseFiles("template/base/side_navigation.html", "template/base/base.html", "template/entity_popup.html", "template/relation_popup.html", "template/base/side_navigation.html", "template/base/top_navigation.html"))
+	templates["base.html"] = template.Must(template.New("base.html").Funcs(funcMap).ParseFiles("template/base/side_navigation.html", "template/base/delete_popup.html", "template/base/base.html", "template/entity_popup.html", "template/relation_popup.html", "template/base/side_navigation.html", "template/base/top_navigation.html"))
 
 	templates["entities.html"], err = template.Must(templates["base.html"].Clone()).ParseFiles("template/entities.html")
 	if err != nil {
@@ -69,21 +69,29 @@ func main() {
 
 	e.GET("/", showDashboard)
 	e.GET("/entities/:id", showEntity)
-	e.DELETE("/entities/:id", deleteEntity)
+	e.POST("/entities/:id", deleteEntity)
 	e.GET("/entities", showAllEntities)
 	e.POST("/entities", insertEntity)
 
 	e.GET("/relations/:id", showRelation)
-	e.DELETE("/relations/:id", deleteRelation)
+	e.POST("/relations/:id", deleteRelation)
 	e.GET("/relations", showAllRelations)
 	e.POST("/relations", insertRelation)
+
+  e.POST("/fields", insertField)
+  e.POST("/fields/:id", deleteField)
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
 func showDashboard(c echo.Context) error {
-	return c.Render(http.StatusOK, "index.html", nil)
-	//	return c.File("public/index.html")
+  m := controller.GetModel()
+	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
+		"model": m,
+		"title": "Home",
+	})
 }
+
+// ------------- Entities -------------
 
 // showAllEntities
 func showAllEntities(c echo.Context) error {
@@ -94,12 +102,44 @@ func showAllEntities(c echo.Context) error {
 	})
 }
 
+// insertEntity
+func insertEntity(c echo.Context) error {
+	var lock sync.Mutex
+	lock.Lock()
+	defer lock.Unlock()
+
+	e := model.NewEntity()
+	if err := c.Bind(e); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	if (len(e.Name) < 2) || (len(e.Type) < 2) {
+		return nil
+	}
+	if _, ok := controller.GetEntity(e.Name); ok {
+		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Name %v is already in use", e.Name))
+	}
+
+	if err := controller.SaveOrUpdateEntity(e); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return showAllEntities(c)
+}
+
 // showEntity shows detail page to model or edit screen for new model
 func showEntity(c echo.Context) error {
-	// User ID from path `users/:id`
-	id := c.Param("id")
 
-	return c.String(http.StatusOK, id)
+	id := c.Param("id")
+  entity, ok := controller.GetEntity(id)
+  if !ok {
+		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("ID %v not found", id))
+	}
+
+	all := controller.GetAllEntities()
+	return c.Render(http.StatusOK, "entity.html", map[string]interface{}{
+		"model": all,
+    "entity": entity,
+		"title": fmt.Sprint("Entity: ",entity.Name),
+	})
 }
 
 // deleteEntity shows detail page to model or edit screen for new model
@@ -107,16 +147,18 @@ func deleteEntity(c echo.Context) error {
 	// User ID from path `users/:id`
 	id := c.Param("id")
 
-  if _,ok:=controller.GetEntity(id); !ok {
-    return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("ID %v not found",id))  
-  }
-  
+	if _, ok := controller.GetEntity(id); !ok {
+		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("ID %v not found", id))
+	}
+    
 	if err := controller.DeleteEntity(id); err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
 
-	return nil//c.JSON(http.StatusAccepted, showAllEntities(c))
+	return c.Redirect(http.StatusTemporaryRedirect, "/entities")
 }
+
+// ------------- Relations -------------
 
 // showAllRelations
 func showAllRelations(c echo.Context) error {
@@ -140,37 +182,18 @@ func deleteRelation(c echo.Context) error {
 	// User ID from path `users/:id`
 	id := c.Param("id")
 
-  if _,ok:=controller.GetRelation(id); !ok {
-    return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("ID %v not found",id))  
-  }
+	if _, ok := controller.GetRelation(id); !ok {
+		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("ID %v not found", id))
+	}
 
 	if err := controller.DeleteRelation(id); err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
-	return showAllRelations(c)
+	return c.Redirect(http.StatusTemporaryRedirect, "/relations")
 
 }
 
-// insertEntity
-func insertEntity(c echo.Context) error {
-	var lock sync.Mutex
-	lock.Lock()
-	defer lock.Unlock()
 
-	e := new(model.Entity)
-	if err := c.Bind(e); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-  if _,ok:=controller.GetEntity(e.Name); ok {
-    return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Name %v is already in use",e.Name))  
-  }
-  
-	if err := controller.SaveOrUpdateEntity(e); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	return showAllEntities(c)
-}
 
 // insertRelation
 func insertRelation(c echo.Context) error {
@@ -184,10 +207,14 @@ func insertRelation(c echo.Context) error {
 	}
 	r.Name = r.Source + r.Type + r.Destination
 
-  if _,ok:=controller.GetEntity(r.Name); ok {
-    return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Name %v is already in use",r.Name))  
-  }
-  
+  if (len(r.Name) < 3)  {
+		return nil
+	}
+
+	if _, ok := controller.GetEntity(r.Name); ok {
+		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Name %v is already in use", r.Name))
+	}
+
 	if err := controller.SaveOrUpdateRelation(r); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}

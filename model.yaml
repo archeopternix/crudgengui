@@ -2,15 +2,28 @@ entities:
     alpha:
         name: Alpha
         type: Entity
+    nuevo:
+        name: Nuevo
+        type: Entity
     super:
         name: Super
         type: Entity
-    todo:
-        name: ToDo
+    test:
+        name: Test
         type: Entity
 relations:
+    alphaone-to-manysuper:
+        name: AlphaOne-to-ManySuper
+        type: One-to-Many
+        source: Alpha
+        destination: Super
+    testone-to-manynuevo:
+        name: TestOne-to-ManyNuevo
+        type: One-to-Many
+        source: Test
+        destination: Nuevo
     testselectone-to-manytodo:
-        name: testselectone-to-manytodo
+        name: testone-to-manytodo
         type: One-to-Many
         source: Test
         destination: ToDo

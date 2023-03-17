@@ -7,10 +7,7 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Entity struct {
-	Name string `json:"name" form:"entity-name"`
-	Type string `json:"type" form:"entity-type"` // 'Entity' || 'Key-Values'
-}
+
 
 type Relation struct {
 	Name        string `json:"name" form:"relation-name"`

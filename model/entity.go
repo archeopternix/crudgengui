@@ -1,0 +1,45 @@
+package model
+
+import (
+	validation "github.com/go-ozzo/ozzo-validation"
+	is "github.com/go-ozzo/ozzo-validation/is"
+)
+
+type Entity struct {
+	Name string `json:"name" form:"entity-name" `
+	Type string `json:"type" form:"entity-type" ` // 'Entity' || 'Key-Values'
+  Fields map[string]Field `json:"fields" form:"entity-fields" `
+}
+
+func NewEntity() *Entity {
+  e:=new(Entity)
+  e.Fields = make(map[string]Field)
+  return e
+}
+
+type ErrorMap map[string]error
+
+func (e *Entity) IsValid() (bool, ErrorMap) {
+  valid:=true
+  errormap:= make(ErrorMap)
+  
+  if err := validation.Validate(e.Name,validation.Required,is.Alpha); err!=nil {
+    valid=false
+    errormap["Name"]=err
+  }
+  if err := validation.Validate(e.Type,validation.Required,is.Alpha); err!=nil {
+    valid=false
+    errormap["Type"]=err
+  }
+  
+  return valid, errormap
+}
+
+type Field struct {
+  Name string `json:"name" form:"field-name" `
+  Type string `json:"type" form:"field-type" `
+  Optional bool `json:"optional" form:"field-optional" `
+  Length int `json:"length" form:"field-length" `
+  Size int `json:"size" form:"field-size" `
+}
+

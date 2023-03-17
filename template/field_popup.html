@@ -1,0 +1,54 @@
+{{define "field_popup.html"}}
+  <div id="modal-js-field" class="modal">
+<div class="modal-background"></div>
+  <div class="modal-card">
+    <form action="/fields" method="post">
+    <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase $entity.Name}}" />
+    <header class="modal-card-head">
+      <p class="modal-card-title">Add Entity</p>
+      <button class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+          <input name="field-name" class="input is-focused" type="text" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Type</label>
+        <div class="control">
+          <div class="select">
+            <select name="field-type">
+              <option>Text</option>
+              <option>E-Mail</option>
+            </select>
+          </div>
+      </div>
+      <div class="field">
+        <label class="label">
+          <input name="field-optional" type="checkbox">
+          Optional
+        </label>
+      </div>   
+      <div class="field">
+        <label class="label">Size</label>
+        <div class="control">
+          <input name="field-size" class="input is-focused" type="number" step="1" min="1">
+        </div>
+      </div>   
+      <div class="field">
+        <label class="label">Length</label>
+        <div class="control">
+          <input name="field-length" class="input is-focused" type="number" step="1" min="1">
+        </div>
+      </div>   
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-success" type="submit">Save changes</button>
+      <button class="button is-info">Cancel</button>
+    </footer>
+    </form>
+  </div>
+</div>
+{{end}}

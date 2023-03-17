@@ -9,26 +9,37 @@
                             <h1 class="title">
                                 {{.title}}
                             </h1>
+                             <h2 class="subtitle">
+                                Type: {{.entity.Type}}
+                            </h2>
                         </div>
                     </div>
                 </section>
+
                 <section class="table">
                   <table class="table is-striped is-fullwidth">
                   <thead>
                     <tr>
                       <th>Name</th>
                       <th>Type</th>
-                      <th></th>
+                      <th>Optional</th>
+                      <th>Size</th>
+                      <th>Length</th>
                     </tr>
                   </thead>
                   <tbody>
-                    {{range .model.Entities}}
+                    {{$entity := .entity }}
+                    {{range .entity.Fields}}
                     <tr>
-                      <td valign="bottom"><a href="/entities/{{lowercase .Name}}">{{.Name}}</a></td>  
+                      <td valign="bottom"><a href="/fields/{{lowercase .Name}}">{{.Name}}</a></td>  
                       <td valign="bottom">{{.Type}}</td>
+                      <td valign="bottom">{{.Optional}}</td>
+                      <td valign="bottom">{{.Size}}</td>
+                      <td valign="bottom">{{.Length}}</td>
                       <td align="right" >
-                        <form action="/entities/{{lowercase .Name}}" method="post">
-                        <input type="hidden" id="name" name="name" value="{{lowercase .Name}}" />
+                        <form action="/fields/{{lowercase .Name}}" method="post">
+                          <input type="hidden" id="field_name" name="field_name" value="{{lowercase .Name}}" />
+                          <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase $entity.Name}}" />
                         <p align="right" class="buttons">
                             <button class="button is-danger is-outlined" >
                             <span class="icon is-small">
@@ -42,12 +53,15 @@
                     {{end}}       
                   </tbody>
                   </table>
-                  <button class="button is-primary is-outlined js-modal-trigger" data-target="modal-js-entity">
+                  <button class="button is-primary is-outlined js-modal-trigger" data-target="modal-js-field">
                     <span class="icon is-small">
                       <i class="fas fa-circle-plus fa-2x"></i>
                     </span>
                   </button>
                 </section>
+-->
 {{end}}
+{{template "field_popup.html" .}}
 
 {{template "base.html" .}}
+

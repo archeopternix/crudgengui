@@ -30,11 +30,14 @@
                       <td valign="bottom"><a href="/entities/{{lowercase .Destination}}">{{.Destination}}</a></td>
                       <td align="right" > 
                         <p class="buttons">
-                          <a onclick="sendDelete('/relations/{{lowercase .Source}}{{lowercase .Type}}{{lowercase .Destination}}')"><button class="button is-danger is-outlined">
+                          <form action="/relations/{{lowercase .Source}}{{lowercase .Type}}{{lowercase .Destination}}" method="post">
+                          <input type="hidden" id="name" name="name" value="{{lowercase .Name}}" />
+                          <button class="button is-danger is-outlined">
                             <span class="icon is-small">
                               <i class="fas fa-trash"></i>
                             </span>
-                          </button> </a>          
+                          </button> 
+                          </form>
                         </p>                  
                       </td>
                     </tr>
