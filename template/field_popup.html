@@ -3,7 +3,7 @@
 <div class="modal-background"></div>
   <div class="modal-card">
     <form action="/fields" method="post">
-    <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase $entity.Name}}" />
+    <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase .Name}}" />
     <header class="modal-card-head">
       <p class="modal-card-title">Add Entity</p>
       <button class="delete" aria-label="close"></button>
@@ -27,7 +27,7 @@
       </div>
       <div class="field">
         <label class="label">
-          <input name="field-optional" type="checkbox">
+          <input name="field-optional" type="checkbox" value="true">
           Optional
         </label>
       </div>   

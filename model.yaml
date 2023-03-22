@@ -2,15 +2,37 @@ entities:
     alpha:
         name: Alpha
         type: Entity
+        fields:
+            monster:
+                name: Monster
+                type: Text
+                optional: true
+                length: 7
+                size: 77
+            test2:
+                name: Test2
+                type: E-Mail
+                optional: true
+                length: 45
+                size: 45
     nuevo:
         name: Nuevo
         type: Entity
+        fields:
+            monster:
+                name: Monster
+                type: Text
+                optional: false
+                length: 9
+                size: 8
     super:
         name: Super
         type: Entity
+        fields: {}
     test:
         name: Test
         type: Entity
+        fields: {}
 relations:
     alphaone-to-manysuper:
         name: AlphaOne-to-ManySuper
