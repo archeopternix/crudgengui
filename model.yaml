@@ -3,18 +3,18 @@ entities:
         name: Alpha
         type: Entity
         fields:
+            fojo:
+                name: FoJo
+                type: E-Mail
+                optional: false
+                length: 22
+                size: 4
             monster:
                 name: Monster
                 type: Text
                 optional: true
                 length: 7
                 size: 77
-            test2:
-                name: Test2
-                type: E-Mail
-                optional: true
-                length: 45
-                size: 45
     nuevo:
         name: Nuevo
         type: Entity

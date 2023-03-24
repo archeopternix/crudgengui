@@ -3,12 +3,11 @@ package main
 import (
 	"html/template"
 	"log"
-	"net/http"
 	"strings"
-	"sync"
 
 	"crudgengui/controller"
-	model "crudgengui/model"
+	"crudgengui/repository"
+
 	"fmt"
 	"io"
 
@@ -31,16 +30,13 @@ func (t *TemplateRegistry) Render(w io.Writer, name string, data interface{}, c 
 }
 
 func main() {
+  var err error
+  
 	e := echo.New()
 	e.Use(middleware.Static("/static"))
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "method=${method}, uri=${uri}, status=${status}, error=${error}, path=${path}\n",
+		Format: "HTTP/${method}: ${status}, uri=${uri}, error=${error}, path=${path}\n",
 	}))
-
-	err := controller.LoadModel("model.yaml")
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	funcMap := template.FuncMap{
 		"title":     strings.Title,
@@ -72,197 +68,21 @@ func main() {
 		templates: templates,
 	}
 
-	e.GET("/", showDashboard)
-	e.GET("/entities/:id", showEntity)
-	e.POST("/entities/:id", deleteEntity)
-	e.GET("/entities", showAllEntities)
-	e.POST("/entities", insertEntity)
+  mc := controller.NewModelController(repository.NewModelRepository(repository.NewYAMLModel("model.yaml")))
 
-	e.GET("/relations/:id", showRelation)
-	e.POST("/relations/:id", deleteRelation)
-	e.GET("/relations", showAllRelations)
-	e.POST("/relations", insertRelation)
+	e.GET("/", mc.ShowDashboard)
+	e.GET("/entities/:id", mc.ShowEntity)
+	e.POST("/entities/:id", mc.DeleteEntity)
+	e.GET("/entities", mc.ShowAllEntities)
+	e.POST("/entities", mc.InsertEntity)
 
-	e.POST("/fields", insertField)
-	e.POST("/fields/:id", deleteField)
+	e.GET("/relations/:id", mc.ShowRelation)
+	e.POST("/relations/:id", mc.DeleteRelation)
+	e.GET("/relations", mc.ShowAllRelations)
+	e.POST("/relations", mc.InsertRelation)
+
+	e.POST("/fields", mc.InsertField)
+	e.POST("/fields/:id", mc.DeleteField)
 	e.Logger.Fatal(e.Start(":1323"))
 }
 
-func showDashboard(c echo.Context) error {
-	m := controller.GetModel()
-	return c.Render(http.StatusOK, "index.html", map[string]interface{}{
-		"model": m,
-		"title": "Home",
-	})
-}
-
-// ------------- Entities -------------
-
-// showAllEntities
-func showAllEntities(c echo.Context) error {
-	m := controller.GetModel()
-	return c.Render(http.StatusOK, "entities.html", map[string]interface{}{
-		"model": m,
-		"title": "Entities",
-	})
-}
-
-// insertEntity
-func insertEntity(c echo.Context) error {
-	var lock sync.Mutex
-	lock.Lock()
-	defer lock.Unlock()
-
-	e := model.NewEntity()
-	if err := c.Bind(e); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	if (len(e.Name) < 2) || (len(e.Type) < 2) {
-		return nil
-	}
-	if _, ok := controller.GetEntity(e.Name); ok {
-		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Name %v is already in use", e.Name))
-	}
-
-	if err := controller.SaveOrUpdateEntity(e); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	return showAllEntities(c)
-}
-
-// showEntity shows detail page to model or edit screen for new model
-func showEntity(c echo.Context) error {
-
-	id := c.Param("id")
-	entity, ok := controller.GetEntity(id)
-	if !ok {
-		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("ID %v not found", id))
-	}
-
-	all := controller.GetAllEntities()
-	return c.Render(http.StatusOK, "entity.html", map[string]interface{}{
-		"model":  all,
-		"entity": entity,
-		"title":  fmt.Sprint("Entity: ", entity.Name),
-	})
-}
-
-// deleteEntity shows detail page to model or edit screen for new model
-func deleteEntity(c echo.Context) error {
-	// User ID from path `users/:id`
-	id := c.Param("id")
-
-	if _, ok := controller.GetEntity(id); !ok {
-		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("ID %v not found", id))
-	}
-
-	if err := controller.DeleteEntity(id); err != nil {
-		return echo.NewHTTPError(http.StatusNotFound, err.Error())
-	}
-
-	return c.Redirect(http.StatusTemporaryRedirect, "/entities")
-}
-
-// ------------- Relations -------------
-
-// showAllRelations
-func showAllRelations(c echo.Context) error {
-	m := controller.GetModel()
-	return c.Render(http.StatusOK, "relations.html", map[string]interface{}{
-		"model": m,
-		"title": "Relations",
-	})
-}
-
-// showRelation shows detail page to model or edit screen for new model
-func showRelation(c echo.Context) error {
-	// User ID from path `users/:id`
-	id := c.Param("id")
-
-	return c.String(http.StatusOK, id)
-}
-
-// deleteRelation shows detail page to model or edit screen for new model
-func deleteRelation(c echo.Context) error {
-	// User ID from path `users/:id`
-	id := c.Param("id")
-
-	if _, ok := controller.GetRelation(id); !ok {
-		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("ID %v not found", id))
-	}
-
-	if err := controller.DeleteRelation(id); err != nil {
-		return echo.NewHTTPError(http.StatusNotFound, err.Error())
-	}
-	return c.Redirect(http.StatusTemporaryRedirect, "/relations")
-
-}
-
-// insertRelation
-func insertRelation(c echo.Context) error {
-	var lock sync.Mutex
-	lock.Lock()
-	defer lock.Unlock()
-
-	r := new(model.Relation)
-	if err := c.Bind(r); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	r.Name = r.Source + r.Type + r.Destination
-
-	if len(r.Name) < 3 {
-		return nil
-	}
-
-	if _, ok := controller.GetEntity(r.Name); ok {
-		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Name %v is already in use", r.Name))
-	}
-
-	if err := controller.SaveOrUpdateRelation(r); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-	return showAllEntities(c)
-}
-
-// ------------- Fields -------------
-
-// deleteRelation shows detail page to model or edit screen for new model
-func deleteField(c echo.Context) error {
-	// User ID from path `users/:id`
-	fname := c.FormValue("field_name")
-	ename := c.FormValue("entity_name")
-
-	if (len(fname) < 2) || (len(ename) < 2) {
-		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Entity '%s', field '%s' not found", ename, fname))
-	}
-
-	if err := controller.DeleteField(ename, fname); err != nil {
-		return echo.NewHTTPError(http.StatusNotFound, err.Error())
-	}
-	return showAllEntities(c)
-
-}
-
-// insertRelation
-func insertField(c echo.Context) error {
-	var lock sync.Mutex
-	lock.Lock()
-	defer lock.Unlock()
-
-	ename := c.FormValue("entity_name")
-
-	field := new(model.Field)
-	if err := c.Bind(field); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	if (len(field.Name) < 3) || (len(ename) < 3) {
-		return nil
-	}
-
-	if err := controller.SaveOrUpdateField(ename,field); err != nil {
-		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-	}
-
-	return showAllEntities(c)
-}
