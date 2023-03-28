@@ -3,7 +3,6 @@ package main
 import (
 	"html/template"
 	"log"
-	"strings"
 
 	"crudgengui/controller"
 	"crudgengui/repository"
@@ -38,6 +37,7 @@ func main() {
 		Format: "HTTP/${method}: ${status}, uri=${uri}, error=${error}, path=${path}\n",
 	}))
 
+  /*
 	funcMap := template.FuncMap{
 		"title":     strings.Title,
 		"lowercase": strings.ToLower,
@@ -63,10 +63,31 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+ */
+  templates := controller.NewTemplateRegistry()
 
-	e.Renderer = &TemplateRegistry{
-		templates: templates,
-	}
+// base template
+err=templates.AddTemplate("base.html","","template/base/side_navigation.html", "template/base/delete_popup.html", "template/base/base.html", "template/entity_popup.html", "template/relation_popup.html", "template/base/side_navigation.html", "template/base/top_navigation.html")
+if err!=nil {
+  log.Panic(err)
+}  
+  
+err=templates.AddTemplate("entities.html","base.html","template/entities.html")
+ templates.AddTemplate("relations.html","base.html","template/relations.html")
+if err!=nil {
+  log.Panic(err)
+}  
+  err=templates.AddTemplate("entity.html","base.html","template/field_popup.html","template/entity.html")
+if err!=nil {
+  log.Panic(err)
+}  
+
+    err=templates.AddTemplate("index.html","base.html")
+if err!=nil {
+  log.Panic(err)
+}  
+  
+	e.Renderer = templates
 
   mc := controller.NewModelController(repository.NewModelRepository(repository.NewYAMLModel("model.yaml")))
 
