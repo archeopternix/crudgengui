@@ -12,6 +12,10 @@ import (
 )
 
 // TemplateRegistry defines the template registry struct
+// Usage with echo:  
+//      templates := controller.NewTemplateRegistry()
+//      e.Renderer = templates
+
 type TemplateRegistry struct {
 	templates map[string]*template.Template
 	funcMap   template.FuncMap
@@ -41,7 +45,7 @@ func NewTemplateRegistry() *TemplateRegistry {
 	tr := new(TemplateRegistry)
 	tr.funcMap = tr.getFuncMap()
 	tr.templates = make(map[string]*template.Template)
-	// tr.init()
+
 	return tr
 }
 
@@ -80,25 +84,3 @@ func (tr *TemplateRegistry) AddTemplate(name string, basetemplate string, filena
 	return nil
 }
 
-func (tr *TemplateRegistry) init() {
-	var err error
-
-	// base template
-	tr.templates["base.html"] = template.Must(template.New("base.html").Funcs(tr.funcMap).ParseFiles("template/base/side_navigation.html", "template/base/delete_popup.html", "template/base/base.html", "template/entity_popup.html", "template/relation_popup.html", "template/base/side_navigation.html", "template/base/top_navigation.html"))
-
-	tr.templates["entities.html"], err = template.Must(tr.templates["base.html"].Clone()).ParseFiles("template/entities.html")
-	if err != nil {
-		log.Fatal(err)
-	}
-	tr.templates["relations.html"], err = template.Must(tr.templates["base.html"].Clone()).ParseFiles("template/relations.html")
-	if err != nil {
-		log.Fatal(err)
-	}
-	tr.templates["index.html"] = template.Must(tr.templates["base.html"].Clone())
-
-	tr.templates["entity.html"], err = template.Must(tr.templates["base.html"].Clone()).ParseFiles("template/field_popup.html", "template/entity.html")
-	if err != nil {
-		log.Fatal(err)
-	}
-
-}

@@ -101,7 +101,7 @@ func (mc ModelController) DeleteEntity(c echo.Context) error {
 
 // ------------- Relations -------------
 
-// showAllRelations
+// ShowAllRelations
 func (mc ModelController) ShowAllRelations(c echo.Context) error {
 	m := mc.repo.GetModel()
 	return c.Render(http.StatusOK, "relations.html", map[string]interface{}{
@@ -110,7 +110,7 @@ func (mc ModelController) ShowAllRelations(c echo.Context) error {
 	})
 }
 
-// showRelation shows detail page to model or edit screen for new model
+// ShowRelation shows detail page to model or edit screen for new model
 func (mc ModelController) ShowRelation(c echo.Context) error {
 	// User ID from path `users/:id`
 	id := c.Param("id")
@@ -118,7 +118,7 @@ func (mc ModelController) ShowRelation(c echo.Context) error {
 	return c.String(http.StatusOK, id)
 }
 
-// deleteRelation shows detail page to model or edit screen for new model
+// DeleteRelation shows detail page to model or edit screen for new model
 func (mc ModelController) DeleteRelation(c echo.Context) error {
 	// User ID from path `users/:id`
 	id := c.Param("id")
@@ -134,7 +134,7 @@ func (mc ModelController) DeleteRelation(c echo.Context) error {
 
 }
 
-// insertRelation
+// InsertRelation
 func (mc ModelController) InsertRelation(c echo.Context) error {
 	var lock sync.Mutex
 	lock.Lock()
@@ -162,7 +162,7 @@ func (mc ModelController) InsertRelation(c echo.Context) error {
 
 // ------------- Fields -------------
 
-// deleteRelation shows detail page to model or edit screen for new model
+// DeleteField shows detail page to model or edit screen for new model
 func (mc ModelController) DeleteField(c echo.Context) error {
 	// User ID from path `users/:id`
 	fname := c.FormValue("field_name")
@@ -179,7 +179,7 @@ func (mc ModelController) DeleteField(c echo.Context) error {
 
 }
 
-// insertRelation
+// InsertField
 func (mc ModelController) InsertField(c echo.Context) error {
 	var lock sync.Mutex
 	lock.Lock()
