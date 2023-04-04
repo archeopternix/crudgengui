@@ -14,6 +14,7 @@ type FieldTypeDefinition struct {
   DefaultLength int
   HasSize bool
   DefaultSize int
+  // numerical values
   HasMin bool
   DefaultMin int
   HasMax bool
@@ -30,9 +31,9 @@ type FieldTypeDefinition struct {
   ChangeDate time.Time
 }
 
-/*type FieldTypeDefinitions map[string]FieldTypeDefinition
+type FieldTypeDefinitions map[string]FieldTypeDefinition
 
-type FieldTemplates map[string]FieldDefinition
+/*type FieldTemplates map[string]FieldDefinition
 
 func NewFieldTemplates() *FieldTemplates {
   ft:= make(FieldTemplates) 
@@ -48,16 +49,8 @@ type GitRepo struct {
 }
 
 
-type BaseTemplate struct {
-  Name string
-  Type string // TemplateTypes e.g. Frontend...
-  Content string
-  
-  Version int
-  ChangeDate time.Time
-}
-
-type FieldTemplate struct {
+/*
+type PartialTemplate struct {
   Name string
   Type string // TemplateTypes e.g. Frontend...
   FieldTypeName string
@@ -66,3 +59,4 @@ type FieldTemplate struct {
   Version int
   ChangeDate time.Time
 }
+*/

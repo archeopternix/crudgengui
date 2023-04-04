@@ -1,0 +1,107 @@
+{{define "fieldtype_popup.html"}}
+  <div id="modal-js-fieldtype" class="modal">
+<div class="modal-background"></div>
+  <div class="modal-card">
+    <form action="/fieldtypes" method="post">
+    <header class="modal-card-head">
+      <p class="modal-card-title">Add Field Type</p>
+      <button class="delete" aria-label="close"></button>
+    </header>
+    <section class="modal-card-body">
+      <div class="field">
+        <label class="label">Name</label>
+        <div class="control">
+          <input name="field-name" class="input is-focused" type="text" required>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Base Type</label>
+        <div class="control">
+          <div class="select">
+            <select name="field-type">
+              <option value="string">Text</option>
+              <option value="int">Integer</option>
+              <option value="float64">Float</option>
+              <option value="bool">Boolean</option>
+              <option value="time.Time">DateTime</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="label">Size</label>
+        <div class="control">
+          <input name="field-size" class="input is-focused" type="number" step="1" min="1">
+        </div>
+      </div>  
+      <div class="field">
+        <label class="label">Optional</label>
+        <div class="control">
+          <input name="field-optional" type="checkbox" value="true" checked>
+      </div>   
+    </div> 
+
+    <label class="label">Size</label>
+    <div class="field has-addons">       
+      <div class="buttons has-addons">
+        <a class="button is-info ">Yes</a>
+        <a class="button is-selected">No</a>
+      </div>
+    	<div class="control">
+    	  <input name="field-size" class="input is-focused" type="number" step="1" min="1">       
+      </div>   
+    </div>
+ 
+    <label class="label">Length</label>
+    <div class="field has-addons">       
+      <div class="buttons has-addons">
+        <a class="button is-info ">Yes</a>
+        <a class="button is-selected">No</a>
+      </div>
+    	<div class="control">
+    	  <input name="field-length" class="input is-focused" type="number" step="1" min="1">       
+      </div>   
+    </div>
+ 
+    <label class="label">Min Value</label>
+    <div class="field has-addons">       
+      <div class="buttons has-addons">
+        <a class="button is-info ">Yes</a>
+        <a class="button is-selected">No</a>
+      </div>
+    	<div class="control">
+    	  <input name="field-min" class="input is-focused" type="number">       
+      </div>   
+    </div> 
+      
+    <label class="label">Max Value</label>
+    <div class="field has-addons">       
+      <div class="buttons has-addons">
+        <a class="button is-info ">Yes</a>
+        <a class="button is-selected">No</a>
+      </div>
+    	<div class="control">
+    	  <input name="field-max" class="input is-focused" type="number">       
+      </div>   
+    </div>
+    
+    <label class="label">Step</label>
+    <div class="field has-addons">       
+      <div class="buttons has-addons">
+        <a class="button is-info ">Yes</a>
+        <a class="button is-selected">No</a>
+      </div>
+    	<div class="control">
+    	  <input name="field-step" class="input is-focused" type="number">       
+      </div>   
+    </div>
+      
+    </section>
+    <footer class="modal-card-foot">
+      <button class="button is-success" type="submit">Save changes</button>
+      <button class="button is-info">Cancel</button>
+    </footer>
+    </form>
+  </div>
+</div>
+{{end}}
