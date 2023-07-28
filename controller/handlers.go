@@ -1,28 +1,26 @@
 package controller
-import (
 
+import (
 	"net/http"
 
 	"sync"
 
 	model "crudgengui/model"
-  repository "crudgengui/repository"
+	repository "crudgengui/repository"
 	"fmt"
-
 
 	"github.com/labstack/echo/v4"
 )
 
 type ModelController struct {
-  repo *repository.ModelRepository
+	repo *repository.ModelRepository
 }
 
 func NewModelController(r *repository.ModelRepository) *ModelController {
-  mc := new(ModelController)
-  mc.repo=r
-  return mc
+	mc := new(ModelController)
+	mc.repo = r
+	return mc
 }
-
 
 func (mc ModelController) ShowDashboard(c echo.Context) error {
 	m := mc.repo.GetModel()
@@ -144,17 +142,22 @@ func (mc ModelController) InsertRelation(c echo.Context) error {
 	if err := c.Bind(r); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-	r.Name = r.Source + r.Type + r.Destination
 
-	if len(r.Name) < 3 {
+	if (r.Source == "Please Select") || (r.Destination == "Please Select") || (r.Destination == r.Source) {
+		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Source '%s' and/or destination '%s' Entity are conflicting", r.Source, r.Destination))
+	}
+
+	rname := r.Source + r.Type + r.Destination
+
+	if len(rname) < 3 {
 		return nil
 	}
 
-	if _, ok := mc.repo.GetEntity(r.Name); ok {
-		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Name %v is already in use", r.Name))
+	if _, ok := mc.repo.GetRelation(rname); ok {
+		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Name %v for Relation is already in use", rname))
 	}
 
-	if err := mc.repo.SaveOrUpdateRelation(r); err != nil {
+	if err := mc.repo.SaveOrUpdateRelation(rname, r); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	return mc.ShowAllEntities(c)
@@ -196,9 +199,19 @@ func (mc ModelController) InsertField(c echo.Context) error {
 		return nil
 	}
 
-	if err := mc.repo.SaveOrUpdateField(ename,field); err != nil {
+	if err := mc.repo.SaveOrUpdateField(ename, field); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	return mc.ShowAllEntities(c)
+  entity, ok := mc.repo.GetEntity(ename)
+	if !ok {
+		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Entity %v not found", ename))
+	}
+
+	all := mc.repo.GetAllEntities()
+	return c.Render(http.StatusOK, "entity.html", map[string]interface{}{
+		"model":  all,
+		"entity": entity,
+		"title":  fmt.Sprint("Entity: ", entity.Name),
+	})
 }

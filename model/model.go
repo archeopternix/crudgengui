@@ -7,13 +7,18 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-
-
 type Relation struct {
 	Name        string `json:"name" form:"relation-name"`
 	Type        string `json:"type" form:"relation-type"` // 'One-to-Many' | 'Many-to-Many'
 	Source      string `json:"source" form:"relation-source"`
 	Destination string `json:"destination" form:"relation-destination"`
+}
+
+func (r Relation) ContainsEntity(name string) bool {
+  if (r.Source == name) || (r.Destination == name) {
+    return true
+  }
+  return false
 }
 
 type Model struct {
@@ -37,6 +42,11 @@ func (m *Model) ReadYAML(reader io.Reader) error {
 	if err != nil {
 		return fmt.Errorf("error in model read, %v", err)
 	}
+
+	if m.Relations == nil {
+		m.Relations = make(map[string]Relation)
+	}
+
 	return nil
 }
 
@@ -50,4 +60,15 @@ func (m *Model) WriteYAML(writer io.Writer) error {
 		return fmt.Errorf("error in model write, %v", err)
 	}
 	return nil
+}
+
+// EntityInRealtions checks if the entityname is contained in Source 
+// or Destination of one of the entities
+func (m Model) EntityInRealtions(entityname string) bool {
+  for _, r:= range m.Relations {
+    if r.ContainsEntity(entityname) {
+      return true
+    }
+  }
+  return false
 }

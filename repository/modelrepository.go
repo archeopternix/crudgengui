@@ -3,6 +3,7 @@ package repository
 import (
 	"crudgengui/model"
 	"fmt"
+	"log"
 	"strings"
 )
 
@@ -41,6 +42,14 @@ func (mrep *ModelRepository) SaveOrUpdateEntity(e *model.Entity) error {
 
 // DeleteEntity deletes one entity from the model
 func (mrep *ModelRepository) DeleteEntity(name string) error {
+  _, ok := mrep.GetEntity(strings.ToLower(name))
+	if !ok {
+		return fmt.Errorf("Entity '%s' not found", name)
+	}
+  if mrep.m.EntityInRealtions(name) {
+    return fmt.Errorf("Cannot delete as Entity '%s' is linked in a relation", name)
+  }
+  
 	delete(mrep.m.Entities, strings.ToLower(name))
 
 	return mrep.modelRW.WriteModel(mrep.m)
@@ -102,8 +111,14 @@ func (mrep *ModelRepository) GetAllFields(ename string) (map[string]model.Field,
 }
 
 // SaveOrUpdateRelation saves or updates a relation in the model
-func (mrep *ModelRepository) SaveOrUpdateRelation(r *model.Relation) error {
-	mrep.m.Relations[strings.ToLower(r.Name)] = *r
+func (mrep *ModelRepository) SaveOrUpdateRelation(rname string, r *model.Relation) error {
+
+	_, ok := mrep.GetRelation(strings.ToLower(rname))
+	if !ok {
+    log.Println("Create new relation with name: ",strings.ToLower(rname))		
+	}
+
+	mrep.m.Relations[strings.ToLower(rname)] = *r
 
 	return mrep.modelRW.WriteModel(mrep.m)
 }

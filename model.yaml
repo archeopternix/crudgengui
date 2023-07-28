@@ -15,37 +15,41 @@ entities:
                 optional: true
                 length: 7
                 size: 77
-    nuevo:
-        name: Nuevo
+            nostroemailo:
+                name: NostroEmailo
+                type: E-Mail
+                optional: false
+                length: 13
+                size: 23
+    super:
+        name: Super
         type: Entity
         fields:
             monster:
                 name: Monster
                 type: Text
                 optional: false
-                length: 9
-                size: 8
-    super:
-        name: Super
+                length: 0
+                size: 0
+    yoyo:
+        name: YoYo
         type: Entity
-        fields: {}
-    test:
-        name: Test
-        type: Entity
-        fields: {}
+        fields:
+            monster:
+                name: Monster
+                type: Text
+                optional: false
+                length: 3
+                size: 3
+            test2:
+                name: Test2
+                type: Text
+                optional: false
+                length: 1
+                size: 1
 relations:
-    alphaone-to-manysuper:
-        name: AlphaOne-to-ManySuper
+    alphaone-to-manynuevo:
+        name: ""
         type: One-to-Many
         source: Alpha
-        destination: Super
-    testone-to-manynuevo:
-        name: TestOne-to-ManyNuevo
-        type: One-to-Many
-        source: Test
         destination: Nuevo
-    testselectone-to-manytodo:
-        name: testone-to-manytodo
-        type: One-to-Many
-        source: Test
-        destination: ToDo
