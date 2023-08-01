@@ -20,21 +20,20 @@
   
                 <section>
                   <form action="/fields" method="post">
-                    <input type="hidden" id="field_name" name="field_name" value="{{lowercase .model.Name}}" />
                     <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase .entityname}}" />
                     
                     <section>
                       <div class="field">
                         <label class="label">Name</label>
                         <div class="control">
-                          <input name="field-name" class="input is-focused" type="text" required>
+                          <input name="field_name" class="input is-focused" type="text" value="{{lowercase .model.Name}}" required />
                         </div>
                       </div>
                       <div class="field">
                         <label class="label">Type</label>
                         <div class="control">
                           <div class="select">
-                            <select name="field-type">
+                            <select name="field_type" value="{{.model.Type}}">
                               <option>Text</option>
                               <option>E-Mail</option>
                               <option>Integer</option>
@@ -47,20 +46,20 @@
                       </div>
                       <div class="field">
                         <label class="label">
-                          <input name="field-optional" type="checkbox" value="true">
+                          <input name="field_optional" type="checkbox" {{if .model.Optional}}value="on"{{end}}>
                           Optional
                         </label>
                       </div>   
                       <div class="field">
                         <label class="label">Size</label>
                         <div class="control">
-                          <input name="field-size" class="input is-focused" type="number" step="1" min="1">
+                          <input name="field_size" class="input is-focused" type="number" step="1" min="1" value="{{lowercase .model.Size}}">
                         </div>
                       </div>   
                       <div class="field">
                         <label class="label">Length</label>
                         <div class="control">
-                          <input name="field-length" class="input is-focused" type="number" step="1" min="1">
+                          <input name="field_length" class="input is-focused" type="number" step="1" min="1" value="{{lowercase .model.Length}}">
                         </div>
                       </div>   
                     </section>

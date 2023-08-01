@@ -1,11 +1,11 @@
 package model
 
 type Field struct {
-  Name string `json:"name" form:"field-name" `
-  Type string `json:"type" form:"field-type" `
-  Optional bool `json:"optional" form:"field-optional" `
-  Length int `json:"length" form:"field-length" `
-  Size int `json:"size" form:"field-size" `
+  Name string `json:"name" form:"field_name" `
+  Type string `json:"type" form:"field_type" `
+  Optional bool `json:"optional" form:"field_optional" `
+  Length string `json:"length" form:"field_length" `
+  Size string `json:"size" form:"field_size" `
 }
 
 type TextField struct {
