@@ -1,0 +1,78 @@
+{{define "breadcrumb"}}
+                        <li><a href="/entities">Entities</a></li>
+                        <li><a href="/entities/{{lowercase .entityname}}">{{.entityname}}</a></li>
+                        <li class="is-active"><a href="#" aria-current="page">Field</a></li>
+{{end}}
+
+{{define "content"}}
+                <section class="hero is-info welcome is-small">
+                    <div class="hero-body">
+                        <div class="container">
+                            <h1 class="title">
+                                {{.title}}
+                            </h1>
+                             <h2 class="subtitle">
+                                Entity: '{{.entityname}}'
+                            </h2>
+                        </div>
+                    </div>
+                </section>
+  
+                <section>
+                  <form action="/fields" method="post">
+                    <input type="hidden" id="field_name" name="field_name" value="{{lowercase .model.Name}}" />
+                    <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase .entityname}}" />
+                    
+                    <section>
+                      <div class="field">
+                        <label class="label">Name</label>
+                        <div class="control">
+                          <input name="field-name" class="input is-focused" type="text" required>
+                        </div>
+                      </div>
+                      <div class="field">
+                        <label class="label">Type</label>
+                        <div class="control">
+                          <div class="select">
+                            <select name="field-type">
+                              <option>Text</option>
+                              <option>E-Mail</option>
+                              <option>Integer</option>
+                              <option>Fixed-Comma</option>
+                              <option>Lookup</option>
+                              <option>Date</option>
+                              <option>Boolean</option>
+                            </select>
+                          </div>
+                      </div>
+                      <div class="field">
+                        <label class="label">
+                          <input name="field-optional" type="checkbox" value="true">
+                          Optional
+                        </label>
+                      </div>   
+                      <div class="field">
+                        <label class="label">Size</label>
+                        <div class="control">
+                          <input name="field-size" class="input is-focused" type="number" step="1" min="1">
+                        </div>
+                      </div>   
+                      <div class="field">
+                        <label class="label">Length</label>
+                        <div class="control">
+                          <input name="field-length" class="input is-focused" type="number" step="1" min="1">
+                        </div>
+                      </div>   
+                    </section>
+                    <footer>
+                      <button class="button is-success" type="submit">Save changes</button>
+                      <button class="button is-info">Cancel</button>
+                    </footer>
+                  </form>
+                </section>
+
+{{end}}
+
+
+{{template "base.html" .}}
+

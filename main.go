@@ -23,21 +23,29 @@ func main() {
   templates := controller.NewTemplateRegistry()
 
 // base template
-err=templates.AddTemplate("base.html","","template/base/side_navigation.html", "template/base/delete_popup.html", "template/base/base.html", "template/entity_popup.html", "template/relation_popup.html", "template/base/side_navigation.html", "template/base/top_navigation.html")
-if err!=nil {
-  log.Panic(err)
-}  
-  
-err=templates.AddTemplate("entities.html","base.html","template/entities.html")
- templates.AddTemplate("relations.html","base.html","template/relations.html")
-if err!=nil {
-  log.Panic(err)
-}  
-  err=templates.AddTemplate("entity.html","base.html","template/field_popup.html","template/entity.html")
+err=templates.AddTemplate("base.html","","template/base/side_navigation.html", "template/base/delete_popup.html", "template/base/base.html",  "template/base/side_navigation.html", "template/base/top_navigation.html")
 if err!=nil {
   log.Panic(err)
 }  
 
+  
+err=templates.AddTemplate("entities.html","base.html", "template/entity_popup.html", "template/base/script.html", "template/entities.html")
+ templates.AddTemplate("relations.html","base.html", "template/relation_popup.html", "template/base/script.html", "template/relations.html")
+if err!=nil {
+  log.Panic(err)
+}  
+  err=templates.AddTemplate("entity.html","base.html","template/field_popup.html", "template/base/script.html", "template/entity.html")
+if err!=nil {
+  log.Panic(err)
+}  
+
+ 
+
+err=templates.AddTemplate("field.html","base.html","template/field.html")
+if err!=nil {
+  log.Panic(err)
+}  
+  
     err=templates.AddTemplate("index.html","base.html")
 if err!=nil {
   log.Panic(err)

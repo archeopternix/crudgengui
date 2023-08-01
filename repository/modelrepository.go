@@ -147,3 +147,21 @@ func (mrep *ModelRepository) GetRelation(name string) (*model.Relation, bool) {
 	r, ok := mrep.m.Relations[strings.ToLower(name)]
 	return &r, ok
 }
+
+// GetField of an Entity from the model
+func (mrep *ModelRepository) GetField(entityname string, name string) (*model.Field, bool) {
+  var ent model.Entity
+  var field model.Field
+  var ok bool
+  
+  if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
+		return nil, false
+	}
+
+	if ent, ok = mrep.m.Entities[strings.ToLower(entityname)]; !ok {
+    return nil,false
+  }
+
+  field, ok = ent.Fields[strings.ToLower(name)]
+	return &field, ok
+}

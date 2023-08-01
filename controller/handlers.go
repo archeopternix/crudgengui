@@ -64,21 +64,42 @@ func (mc ModelController) InsertEntity(c echo.Context) error {
 	return mc.ShowAllEntities(c)
 }
 
-// showEntity shows detail page to model or edit screen for new model
+// ShowEntity shows detail page for an Entity or if a query parameter is set the respective Field
+// Option 1: /entities/:id shows detail page of Entity
+// Option 2: /entities/:id?field=myfield shows detail page to edit the Field definition
 func (mc ModelController) ShowEntity(c echo.Context) error {
-
+	
+  // Entity id from path `/entities/:id`
 	id := c.Param("id")
 	entity, ok := mc.repo.GetEntity(id)
 	if !ok {
-		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("ID %v not found", id))
+		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Entity '%v' not found", id))
 	}
-
-	all := mc.repo.GetAllEntities()
-	return c.Render(http.StatusOK, "entity.html", map[string]interface{}{
-		"model":  all,
-		"entity": entity,
-		"title":  fmt.Sprint("Entity: ", entity.Name),
-	})
+  
+  // Query parameter ?field=myfield
+  fieldname := c.QueryParam("field")
+  if len(fieldname)>0 {
+    
+    // Show field definition of entity
+    field, ok := mc.repo.GetField(id,fieldname)
+  	if !ok {
+  		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Field '%v' in Entity '%v' not found", fieldname, id))
+  	}  
+  	return c.Render(http.StatusOK, "field.html", map[string]interface{}{
+  		"model":  field,
+  		"entityname": entity.Name,
+  		"title":  fmt.Sprint("Field: '",field.Name, "'"),
+  	}) 
+  } else {
+    
+    // Show entity
+  	all := mc.repo.GetAllEntities()
+  	return c.Render(http.StatusOK, "entity.html", map[string]interface{}{
+  		"model":  all,
+  		"entity": entity,
+  		"title":  fmt.Sprint("Entity: ", entity.Name),
+  	})  
+  }
 }
 
 // deleteEntity shows detail page to model or edit screen for new model

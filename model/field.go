@@ -16,7 +16,7 @@ type TextField struct {
   Pattern string `json:"pattern" form:"field-pattern" ` // Specifies a regular expression that an <input> element's value is checked against
 }
 
-type NumberField {
+type NumberField struct {
   Max int `json:"max" form:"field-max" `
   Min int `json:"min" form:"field-min" `
   Step int `json:"step" form:"field-step" `//Specifies the interval between legal numbers in an input field

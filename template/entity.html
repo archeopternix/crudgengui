@@ -1,5 +1,6 @@
 {{define "breadcrumb"}}
-                        <li class="is-active"><a href="#" aria-current="page">Entities</a></li>
+                        <li><a href="/entities">Entities</a></li>
+                        <li class="is-active"><a href="#" aria-current="page">{{.entity.Name}}</a></li>
 {{end}}
 
 {{define "content"}}
@@ -10,7 +11,7 @@
                                 {{.title}}
                             </h1>
                              <h2 class="subtitle">
-                                Type: {{.entity.Type}}
+                                Show list of fields
                             </h2>
                         </div>
                     </div>
@@ -31,7 +32,7 @@
                     {{$entity := .entity }}
                     {{range .entity.Fields}}
                     <tr>
-                      <td valign="bottom"><a href="/fields/{{lowercase .Name}}">{{.Name}}</a></td>  
+                      <td valign="bottom"><a href="/entities/{{lowercase $entity.Name}}?field={{lowercase .Name}}">{{.Name}}</a></td>  
                       <td valign="bottom">{{.Type}}</td>
                       <td valign="bottom">{{.Optional}}</td>
                       <td valign="bottom">{{.Size}}</td>
@@ -61,7 +62,7 @@
                 </section>
 
 {{template "field_popup.html" $entity}}
-
+{{template "script.html" .}}
 {{end}}
 
 
