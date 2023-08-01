@@ -54,15 +54,12 @@
                     {{end}}       
                   </tbody>
                   </table>
-                  <button class="button is-primary is-outlined js-modal-trigger" data-target="modal-js-field">
+                  <button class="button is-primary is-outlined" onclick="window.location.href='/fields/{{lowercase $entity.Name}}';">
                     <span class="icon is-small">
                       <i class="fas fa-circle-plus fa-2x"></i>
                     </span>
                   </button>
                 </section>
-
-{{template "field_popup.html" $entity}}
-{{template "script.html" .}}
 {{end}}
 
 

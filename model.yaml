@@ -5,8 +5,8 @@ entities:
         fields:
             fojo:
                 name: fojo
-                type: Text
-                optional: false
+                type: Fixed-Comma
+                optional: true
                 length: "6"
                 size: "6"
             monster:
@@ -17,20 +17,32 @@ entities:
                 size: "50"
             nostroemailo:
                 name: nostroemailo
-                type: Integer
-                optional: false
+                type: Text
+                optional: true
                 length: "13"
                 size: "23"
     super:
         name: Super
         type: Entity
         fields:
+            abc:
+                name: ABC
+                type: Text
+                optional: true
+                length: "4"
+                size: "4"
+            cde:
+                name: cde
+                type: Text
+                optional: true
+                length: "2"
+                size: "2"
             monster:
                 name: Monster
                 type: Text
-                optional: false
-                length: "0"
-                size: "0"
+                optional: true
+                length: "1"
+                size: "1"
     yoyo:
         name: YoYo
         type: Entity

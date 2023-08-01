@@ -17,7 +17,7 @@ func main() {
 	e := echo.New()
 	e.Use(middleware.Static("/static"))
 	e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
-		Format: "HTTP/${method}: ${status}, uri=${uri}, error=${error}, path=${path}\n",
+		Format: "${method}:${status}, uri:\"${uri}\", path:\"${path}\", error:\"${error}\"\n",
 	}))
 
   templates := controller.NewTemplateRegistry()
@@ -66,10 +66,10 @@ if err!=nil {
 	e.GET("/relations", mc.ShowAllRelations)
 	e.POST("/relations", mc.InsertRelation)
 
-	e.POST("/fields", mc.InsertField)
-	e.POST("/fields/:id", mc.DeleteField)
-
-  
+	e.GET("/fields/:id", mc.ShowField) // :id is the entityname where the field belongs 
+  e.POST("/fields", mc.InsertField)
+	e.POST("/fields/:id", mc.DeleteField) // :id is the entityname where the field belongs to
+	
 	e.Logger.Fatal(e.Start(":1323"))
 }
 

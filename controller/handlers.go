@@ -236,3 +236,40 @@ func (mc ModelController) InsertField(c echo.Context) error {
 		"title":  fmt.Sprint("Entity: ", entity.Name),
 	})
 }
+
+// ShowField shows detail page for Field
+// /fields/:id shows detail page to create the Field definition. :id is the entity
+// or
+// /fields/:id?field=myfield shows detail page for the Field . :id is the entity
+func (mc ModelController) ShowField(c echo.Context) error {
+	
+  // Entity id from path `/entities/:id`
+	id := c.Param("id")
+	entity, ok := mc.repo.GetEntity(id)
+	if !ok {
+		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Entity '%v' not found", id))
+	}
+  
+  // Query parameter ?field=myfield
+  fieldname := c.QueryParam("field")
+  if len(fieldname)>0 {   
+    // Show field definition of entity
+    field, ok := mc.repo.GetField(id,fieldname)
+  	if !ok {
+  		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Field '%v' in Entity '%v' not found", fieldname, id))
+  	}  
+  	return c.Render(http.StatusOK, "field.html", map[string]interface{}{
+  		"model":  field,
+  		"entityname": entity.Name,
+  		"title":  fmt.Sprint("Field: '",field.Name, "'"),
+  	}) 
+  } 
+
+  // Create a new field
+    	return c.Render(http.StatusOK, "field.html", map[string]interface{}{
+  		"model":  model.Field{},
+  		"entityname": entity.Name,
+  		"title":  fmt.Sprint("Create a new Field"),
+  	})   
+  
+}
