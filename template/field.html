@@ -28,64 +28,85 @@
                           <input name="field_name" class="input" type="text" value="{{.model.Name}}" required />
                         </div>
                       </div>
-                      <div class="field">
-                        <label class="label">Type</label>
-                        <div class="control">
-                          <div class="select">
-                            <select id="type_select" name="field_type" value="{{.model.Type}}" autofocus onchange="fieldVisibilty()" onfocus="fieldVisibilty()">
-                              <option{{if eq .model.Type "Boolean"}} selected{{end}}>Boolean</option>
-                              <option{{if eq .model.Type "Text"}} selected{{end}}>Text</option>
-                              <option{{if eq .model.Type "E-Mail"}} selected{{end}}>E-Mail</option>
-                              <option{{if eq .model.Type "Phone"}} selected{{end}}>Phone</option>
-                              <option{{if eq .model.Type "Number"}} selected{{end}}>Number</option>
-                              <option{{if eq .model.Type "Date"}} selected{{end}}>Date</option>
-                            </select>
+                      <div class="columns is-mobile">
+                        <div class="column">
+                          <div class="field">
+                            <label class="label">Type</label>
+                            <div class="control">
+                              <div class="select">
+                                <select id="type_select" name="field_type" value="{{.model.Type}}" autofocus onchange="fieldVisibilty()" onfocus="fieldVisibilty()">
+                                  <option{{if eq .model.Type "Boolean"}} selected{{end}}>Boolean</option>
+                                  <option{{if eq .model.Type "Text"}} selected{{end}}>Text</option>
+                                  <option{{if eq .model.Type "E-Mail"}} selected{{end}}>E-Mail</option>
+                                  <option{{if eq .model.Type "Phone"}} selected{{end}}>Phone</option>
+                                  <option{{if eq .model.Type "Number"}} selected{{end}}>Number</option>
+                                  <option{{if eq .model.Type "Date"}} selected{{end}}>Date</option>
+                                </select>
+                              </div>
+                             </div>
                           </div>
-                         </div>
-                      </div>
-                       
-                      <div class="field" id="optional">
-                        <label class="label">
-                          <input name="field_optional" type="checkbox" value="true" {{if .model.Optional}}checked{{end}} />
-                          Optional
-                        </label>
-                      </div>   
-                      <div class="field" id="size">
-                        <label class="label">Size</label>
-                        <div class="control">
-                          <input name="field_size" class="input" type="number" step="1" min="0" value="{{.model.Size}}">
                         </div>
-                      </div>   
-                      <div class="field" id="length">
-                        <label class="label">Length</label>
-                        <div class="control">
-                          <input name="field_length" class="input" type="number" step="1" min="0" value="{{.model.Length}}">
-                        </div>
-                      </div>   
-                      <div class="field" id="maxlength">
-                        <label class="label">Maximum Length</label>
-                        <div class="control">
-                          <input name="field_maxlength" class="input" type="number" step="1" min="0" value="{{.model.MaxLength}}">
-                        </div>
-                      </div>   
-                      <div class="field" id="minlength">
-                        <label class="label">Minimum Length</label>
-                        <div class="control">
-                          <input name="field_minlength" class="input" type="number" step="1" min="0" value="{{.model.MinLength}}">
-                        </div>
-                      </div>   
-                      <div class="field" id="maxval">
-                        <label class="label">Maximum Value</label>
-                        <div class="control">
-                          <input name="field_max" class="input" type="number" value="{{.model.Max}}">
-                        </div>
-                      </div>   
-                      <div class="field" id="minval">
-                        <label class="label">Minimum Value</label>
-                        <div class="control">
-                          <input name="field_min" class="input" type="number" value="{{.model.Min}}">
-                        </div>
-                      </div>   
+                        <div class="column">
+                          <div class="field" id="optional">
+                            <label class="label">Optional</label>
+                              <input name="field_optional" type="checkbox" value="true" {{if .model.Optional}}checked{{end}} />                            
+                          </div>   
+                        </div>   
+                      </div> <!-- columns -->
+                      <div class="columns is-mobile">
+                        <div class="column">
+                          <div class="field" id="size">
+                            <label class="label">Size</label>
+                            <div class="control">
+                              <input name="field_size" class="input" type="number" step="1" min="0" value="{{.model.Size}}">
+                            </div>
+                          </div> 
+                        </div>   
+                        <div class="column">
+                          <div class="field" id="length">
+                            <label class="label">Length</label>
+                            <div class="control">
+                              <input name="field_length" class="input" type="number" step="1" min="0" value="{{.model.Length}}">
+                            </div>
+                          </div>   
+                        </div>  
+                      </div> <!-- columns -->
+                      <div class="columns is-mobile">
+                        <div class="column">
+                          <div class="field" id="maxlength">
+                            <label class="label">Maximum Length</label>
+                            <div class="control">
+                              <input name="field_maxlength" class="input" type="number" step="1" min="0" value="{{.model.MaxLength}}">
+                            </div>
+                          </div>   
+                        </div>   
+                        <div class="column">
+                          <div class="field" id="minlength">
+                            <label class="label">Minimum Length</label>
+                            <div class="control">
+                              <input name="field_minlength" class="input" type="number" step="1" min="0" value="{{.model.MinLength}}">
+                            </div>
+                          </div>   
+                        </div>   
+                      </div> <!-- columns -->
+                      <div class="columns is-mobile">
+                        <div class="column">
+                          <div class="field" id="maxval">
+                            <label class="label">Maximum Value</label>
+                            <div class="control">
+                              <input name="field_max" class="input" type="number" value="{{.model.Max}}">
+                            </div>
+                          </div> 
+                        </div>   
+                        <div class="column">
+                          <div class="field" id="minval">
+                            <label class="label">Minimum Value</label>
+                            <div class="control">
+                              <input name="field_min" class="input" type="number" value="{{.model.Min}}">
+                            </div>
+                          </div> 
+                        </div>                        
+                      </div> <!-- columns -->
                       <div class="field" id="stepval">
                         <label class="label">Step</label>
                         <div class="control">

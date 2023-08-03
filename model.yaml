@@ -33,7 +33,7 @@ entities:
                 step: 0
             nostroemailo:
                 name: nostroemailo
-                type: Phone
+                type: E-Mail
                 optional: true
                 length: "13"
                 size: "23"
@@ -79,7 +79,7 @@ entities:
                 step: 0
             monster:
                 name: Monster
-                type: Phone
+                type: Number
                 optional: true
                 length: "1"
                 size: "1"
