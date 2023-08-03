@@ -5,6 +5,7 @@
 {{end}}
 
 {{define "content"}}
+
                 <section class="hero is-info welcome is-small">
                     <div class="hero-body">
                         <div class="container">
@@ -19,47 +20,102 @@
                 </section>
   
                 <section>
-                  <form action="/fields" method="post">
-                    <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase .entityname}}" />
-                    
+                  <form action="/fields" method="post">          
                     <section>
                       <div class="field">
                         <label class="label">Name</label>
                         <div class="control">
-                          <input name="field_name" class="input is-focused" type="text" value="{{lowercase .model.Name}}" required />
+                          <input name="field_name" class="input" type="text" value="{{.model.Name}}" required />
                         </div>
                       </div>
                       <div class="field">
                         <label class="label">Type</label>
                         <div class="control">
                           <div class="select">
-                            <select name="field_type" value="{{.model.Type}}">
-                              <option>Text</option>
-                              <option>E-Mail</option>
-                              <option>Integer</option>
-                              <option>Fixed-Comma</option>
-                              <option>Lookup</option>
-                              <option>Date</option>
-                              <option>Boolean</option>
+                            <select id="type_select" name="field_type" value="{{.model.Type}}" autofocus onchange="fieldVisibilty()" onfocus="fieldVisibilty()">
+                              <option{{if eq .model.Type "Boolean"}} selected{{end}}>Boolean</option>
+                              <option{{if eq .model.Type "Text"}} selected{{end}}>Text</option>
+                              <option{{if eq .model.Type "E-Mail"}} selected{{end}}>E-Mail</option>
+                              <option{{if eq .model.Type "Phone"}} selected{{end}}>Phone</option>
+                              <option{{if eq .model.Type "Number"}} selected{{end}}>Number</option>
+                              <option{{if eq .model.Type "Date"}} selected{{end}}>Date</option>
                             </select>
                           </div>
+                         </div>
                       </div>
-                      <div class="field">
+                       
+                      <div class="field" id="optional">
                         <label class="label">
                           <input name="field_optional" type="checkbox" value="true" {{if .model.Optional}}checked{{end}} />
                           Optional
                         </label>
                       </div>   
-                      <div class="field">
+                      <div class="field" id="size">
                         <label class="label">Size</label>
                         <div class="control">
-                          <input name="field_size" class="input is-focused" type="number" step="1" min="1" value="{{lowercase .model.Size}}">
+                          <input name="field_size" class="input" type="number" step="1" min="0" value="{{.model.Size}}">
                         </div>
                       </div>   
-                      <div class="field">
+                      <div class="field" id="length">
                         <label class="label">Length</label>
                         <div class="control">
-                          <input name="field_length" class="input is-focused" type="number" step="1" min="1" value="{{lowercase .model.Length}}">
+                          <input name="field_length" class="input" type="number" step="1" min="0" value="{{.model.Length}}">
+                        </div>
+                      </div>   
+                      <div class="field" id="maxlength">
+                        <label class="label">Maximum Length</label>
+                        <div class="control">
+                          <input name="field_maxlength" class="input" type="number" step="1" min="0" value="{{.model.MaxLength}}">
+                        </div>
+                      </div>   
+                      <div class="field" id="minlength">
+                        <label class="label">Minimum Length</label>
+                        <div class="control">
+                          <input name="field_minlength" class="input" type="number" step="1" min="0" value="{{.model.MinLength}}">
+                        </div>
+                      </div>   
+                      <div class="field" id="maxval">
+                        <label class="label">Maximum Value</label>
+                        <div class="control">
+                          <input name="field_max" class="input" type="number" value="{{.model.Max}}">
+                        </div>
+                      </div>   
+                      <div class="field" id="minval">
+                        <label class="label">Minimum Value</label>
+                        <div class="control">
+                          <input name="field_min" class="input" type="number" value="{{.model.Min}}">
+                        </div>
+                      </div>   
+                      <div class="field" id="stepval">
+                        <label class="label">Step</label>
+                        <div class="control">
+                          <input name="field_step" class="input" type="number" value="{{.model.Step}}">
+                        </div>
+                      </div>  
+                      <div class="field" id="placeholder">
+                        <label class="label">Placeholder</label>
+                        <div class="control">
+                          <input id="placeholder_field" name="field_placeholder" class="input" type="text" value="{{.model.Placeholder}}">
+                        </div>
+                      </div>     
+                      <div class="field" id="datetime">
+                        <label class="label">Date/Time</label>
+                        <div class="control">
+                          <div class="select">
+                            <select name="field_datetime" value="{{.model.DateTime}}">
+                              <option{{if eq .model.DateTime "Date"}} selected{{end}}>Date</option>
+                              <option{{if eq .model.DateTime "Time"}} selected{{end}}>Time</option>
+                              <option{{if eq .model.DateTime "Date+Time"}} selected{{end}}>Date+Time</option>
+                              <option{{if eq .model.DateTime "Week"}} selected{{end}}>Week</option>
+                              <option{{if eq .model.DateTime "Month"}} selected{{end}}>Month</option>
+                            </select>
+                          </div>
+                        </div> 
+                      </div>                        
+                      <div class="field" id="pattern">
+                        <label class="label">Validation Pattern</label>
+                        <div class="control">
+                          <input id="pattern_field" name="field_pattern" class="input" type="text" value="{{.model.Pattern}}">
                         </div>
                       </div>   
                     </section>
@@ -67,9 +123,124 @@
                       <button class="button is-success" type="submit">Save changes</button>
                       <button class="button is-info">Cancel</button>
                     </footer>
+                    <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase .entityname}}" />                
                   </form>
                 </section>
 
+<script>
+window.onload = function(){
+    var element = document.getElementById('type_select');
+    element.focus();
+    setTimeout(function () { element.focus(); }, 1);
+}
+  
+  function fieldVisibilty() {
+    var select = document.getElementById("type_select").value;
+  switch(select) {
+    case "Boolean":
+      document.getElementById("pattern").style.display = "none";
+      document.getElementById("optional").style.display = "none";
+      document.getElementById("maxlength").style.display = "none";
+      document.getElementById("minlength").style.display = "none";
+      document.getElementById("placeholder").style.display = "none";
+      document.getElementById("size").style.display = "none";
+      document.getElementById("length").style.display = "none";
+      document.getElementById("datetime").style.display = "none";
+      document.getElementById("maxval").style.display = "none";
+      document.getElementById("minval").style.display = "none";
+      document.getElementById("stepval").style.display = "none";
+      break;
+    case "Text":
+      document.getElementById("pattern").style.display = "block";
+      document.getElementById("optional").style.display = "block";
+      document.getElementById("maxlength").style.display = "block";
+      document.getElementById("minlength").style.display = "block";
+      document.getElementById("placeholder").style.display = "block";
+      document.getElementById("size").style.display = "block";
+      document.getElementById("length").style.display = "block";
+      document.getElementById("datetime").style.display = "none";
+      document.getElementById("maxval").style.display = "none";
+      document.getElementById("minval").style.display = "none";
+      document.getElementById("stepval").style.display = "none";
+      if (!document.getElementById("placeholder_field").value) {
+        document.getElementById("placeholder_field").value="Some text..."
+      }
+      break;   
+    case "E-Mail":
+      document.getElementById("pattern").style.display = "block";
+      document.getElementById("optional").style.display = "block";
+      document.getElementById("maxlength").style.display = "block";
+      document.getElementById("minlength").style.display = "block";
+      document.getElementById("placeholder").style.display = "block";
+      document.getElementById("size").style.display = "block";
+      document.getElementById("length").style.display = "block";
+      document.getElementById("datetime").style.display = "none";
+      document.getElementById("maxval").style.display = "none";
+      document.getElementById("minval").style.display = "none";
+      document.getElementById("stepval").style.display = "none";
+      if (!document.getElementById("placeholder_field").value) {
+        document.getElementById("placeholder_field").value="test@yahoo.de"
+      }
+      break;
+    case "Phone":
+      document.getElementById("pattern").style.display = "block";
+      document.getElementById("optional").style.display = "block";
+      document.getElementById("maxlength").style.display = "none";
+      document.getElementById("minlength").style.display = "none";
+      document.getElementById("placeholder").style.display = "block";
+      document.getElementById("size").style.display = "block";
+      document.getElementById("length").style.display = "block";
+      document.getElementById("datetime").style.display = "none";
+      document.getElementById("maxval").style.display = "none";
+      document.getElementById("minval").style.display = "none";
+      document.getElementById("stepval").style.display = "none";
+      if (!document.getElementById("placeholder_field").value) {
+        document.getElementById("placeholder_field").value="+34 5603821"
+      }
+      break;
+     case "Date":
+      document.getElementById("pattern").style.display = "none";
+      document.getElementById("optional").style.display = "block";
+      document.getElementById("maxlength").style.display = "none";
+      document.getElementById("minlength").style.display = "none";
+      document.getElementById("placeholder").style.display = "none";
+      document.getElementById("size").style.display = "none";
+      document.getElementById("length").style.display = "none";
+      document.getElementById("datetime").style.display = "block";
+      document.getElementById("maxval").style.display = "none";
+      document.getElementById("minval").style.display = "none";
+      document.getElementById("stepval").style.display = "none";
+      break;     
+    case "Number":
+      document.getElementById("pattern").style.display = "none";
+      document.getElementById("optional").style.display = "block";
+      document.getElementById("maxlength").style.display = "none";
+      document.getElementById("minlength").style.display = "none";
+      document.getElementById("placeholder").style.display = "block";
+      document.getElementById("size").style.display = "block";
+      document.getElementById("length").style.display = "block";
+      document.getElementById("datetime").style.display = "none";
+      document.getElementById("maxval").style.display = "block";
+      document.getElementById("minval").style.display = "block";
+      document.getElementById("stepval").style.display = "block";
+      if (!document.getElementById("placeholder_field").value) {
+        document.getElementById("placeholder_field").value="123"
+      }
+      break;     
+    default:
+      document.getElementById("pattern").style.display = "block";
+      document.getElementById("optional").style.display = "block";
+      document.getElementById("maxlength").style.display = "block";
+      document.getElementById("minlength").style.display = "block";
+      document.getElementById("placeholder").style.display = "block";
+      document.getElementById("size").style.display = "block";
+      document.getElementById("length").style.display = "block";
+      console.log("no hit");
+    }
+  }
+
+
+</script>
 {{end}}
 
 
