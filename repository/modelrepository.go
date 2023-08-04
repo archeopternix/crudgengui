@@ -184,14 +184,13 @@ func (mrep *ModelRepository) GetLookup(name string) (*model.Lookup, bool) {
 }
 
 // SaveOrUpdateLookup saves or updates a relation in the model
-func (mrep *ModelRepository) SaveOrUpdateLookup(name string, l *model.Lookup) error {
+func (mrep *ModelRepository) SaveOrUpdateLookup(name string, lookup *model.Lookup) error {
 
 	_, ok := mrep.GetLookup(strings.ToLower(name))
 	if !ok {
     log.Println("Create new lookup with name: ",strings.ToLower(name))		
 	}
-
-	mrep.m.Lookups[strings.ToLower(name)] = *l
+	mrep.m.Lookups[strings.ToLower(name)] = *lookup
 
 	return mrep.modelRW.WriteModel(mrep.m)
 }

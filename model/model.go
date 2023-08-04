@@ -22,10 +22,22 @@ func (r Relation) ContainsEntity(name string) bool {
 }
 
 // Lookup is a string list
-type Lookup []string
+type Lookup struct {
+  List []string
+}
 
 func NewLookup() *Lookup {
   return new(Lookup)
+}
+
+func (f *Lookup)Add(text string){
+  f.List=append(f.List,text)
+}
+
+func (f *Lookup)Delete(i int){
+  copy(f.List[i:], f.List[i+1:]) // Shift a[i+1:] left one index.
+  f.List[len(f.List)-1] = ""     // Erase last element (write zero value).
+  f.List = f.List[:len(f.List)-1]     // Truncate slice.
 }
 
 type Model struct {

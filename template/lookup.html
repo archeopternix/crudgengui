@@ -1,0 +1,57 @@
+{{define "breadcrumb"}}
+                        <li class="is-active"><a href="#" aria-current="page">Lookups</a></li>
+{{end}}
+
+{{define "content"}}
+                <section class="hero is-info welcome is-small">
+                    <div class="hero-body">
+                        <div class="container">
+                            <h1 class="title">
+                                {{.title}}
+                            </h1>
+                        </div>
+                    </div>
+                </section>
+                <section class="table">
+                  <table class="table is-striped is-fullwidth">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th></th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {{$key := .title}}
+                    {{range $index, $value:=.model.List}}
+                    <tr>
+                      <td valign="bottom">{{$value}}</td>  
+                      <td align="right" >
+                        <form action="/lookups/{{$key}}" method="post">
+                        <input type="hidden" id="name" name="name" value="{{$value}}" />
+                        <input type="hidden" id="index" name="index" value="{{$index}}" />
+                        <input type="hidden" id="deletetext" name="deletetext" value="true" />
+                        <p align="right" class="buttons">
+                            <button class="button is-danger is-outlined" >
+                            <span class="icon is-small">
+                              <i class="fas fa-trash"></i>
+                            </span>
+                            </button> 
+                        </p>   
+                        </form>
+                      </td>
+                    </tr>
+                    {{end}}       
+                  </tbody>
+                  </table>
+                  <button class="button is-primary is-outlined js-modal-trigger" data-target="modal-js-lookupadd">
+                    <span class="icon is-small">
+                      <i class="fas fa-circle-plus fa-2x"></i>
+                    </span>
+                  </button>
+                </section>
+
+{{template "lookupadd_popup.html" .}}
+{{template "script.html" .}}
+{{end}}
+
+{{template "base.html" .}}

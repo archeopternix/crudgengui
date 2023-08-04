@@ -144,5 +144,10 @@ relations:
         source: Alpha
         destination: Super
 lookups:
-    enum: []
-    liste: []
+    enum:
+        list:
+            - DTTGS
+            - asd
+    liste:
+        list:
+            - DTTGS

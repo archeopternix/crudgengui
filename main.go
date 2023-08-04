@@ -38,6 +38,11 @@ func main() {
   if err!=nil {
     log.Panic(err)
   }  
+
+  err=templates.AddTemplate("lookup.html","base.html", "template/lookupadd_popup.html", "template/base/script.html", "template/lookup.html")
+  if err!=nil {
+    log.Panic(err)
+  }  
   
   err=templates.AddTemplate("relations.html","base.html", "template/relation_popup.html", "template/base/script.html", "template/relations.html")
   if err!=nil {
@@ -80,7 +85,7 @@ func main() {
 
 	e.GET("/lookups", mc.ShowAllLookups)
 	e.POST("/lookups", mc.InsertLookup)
-  // e.GET("/lookup/:id", mc.ShowLookup)
+  e.GET("/lookups/:id", mc.ShowLookup)
 	e.POST("/lookups/:id", mc.ModifyLookup) // save, delete Lookup
 
   
