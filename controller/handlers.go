@@ -216,6 +216,22 @@ func (mc ModelController) InsertField(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
+  if (field.Length =="0") {
+     field.Length ="" 
+  }
+    if (field.MaxLength =="0") {
+     field.MaxLength ="" 
+  }
+  if (field.Size =="0") {
+     field.Size ="" 
+  }
+  if (field.Max =="0") {
+     field.Max ="" 
+  }
+  if (field.Step =="0") {
+     field.Step ="" 
+  }
+  
 	if (len(field.Name) < 3) || (len(ename) < 3) {
 		return nil
 	}

@@ -165,3 +165,40 @@ func (mrep *ModelRepository) GetField(entityname string, name string) (*model.Fi
   field, ok = ent.Fields[strings.ToLower(name)]
 	return &field, ok
 }
+
+// GetAllLookups gets all entities from the model
+func (mrep ModelRepository) GetAllLookups() map[string]model.Lookup {
+	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
+		return nil
+	}
+	return mrep.m.Lookups
+}
+
+// GetLookup gets one single entity from the model
+func (mrep *ModelRepository) GetLookup(name string) (*model.Lookup, bool) {
+	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
+		return nil, false
+	}
+	r, ok := mrep.m.Lookups[strings.ToLower(name)]
+	return &r, ok
+}
+
+// SaveOrUpdateLookup saves or updates a relation in the model
+func (mrep *ModelRepository) SaveOrUpdateLookup(name string, l *model.Lookup) error {
+
+	_, ok := mrep.GetLookup(strings.ToLower(name))
+	if !ok {
+    log.Println("Create new lookup with name: ",strings.ToLower(name))		
+	}
+
+	mrep.m.Lookups[strings.ToLower(name)] = *l
+
+	return mrep.modelRW.WriteModel(mrep.m)
+}
+
+// DeleteLookup deletes one relation from the model
+func (mrep *ModelRepository) DeleteLookup(name string) error {
+	delete(mrep.m.Lookups, strings.ToLower(name))
+
+	return mrep.modelRW.WriteModel(mrep.m)
+}

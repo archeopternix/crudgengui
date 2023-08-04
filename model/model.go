@@ -21,15 +21,24 @@ func (r Relation) ContainsEntity(name string) bool {
   return false
 }
 
+// Lookup is a string list
+type Lookup []string
+
+func NewLookup() *Lookup {
+  return new(Lookup)
+}
+
 type Model struct {
 	Entities  map[string]Entity
 	Relations map[string]Relation
+  Lookups map[string]Lookup
 }
 
 func NewModel() *Model {
 	m := new(Model)
 	m.Entities = make(map[string]Entity)
 	m.Relations = make(map[string]Relation)
+  m.Lookups = make(map[string]Lookup)
 	return m
 }
 
@@ -46,7 +55,9 @@ func (m *Model) ReadYAML(reader io.Reader) error {
 	if m.Relations == nil {
 		m.Relations = make(map[string]Relation)
 	}
-
+	if m.Entities == nil {
+		m.Entities = make(map[string]Entity)
+	}
 	return nil
 }
 
