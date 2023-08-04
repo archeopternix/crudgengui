@@ -53,9 +53,7 @@ func (mc ModelController) ModifyLookup(c echo.Context) error {
 
   // delete lookup from list
   del := c.FormValue("delete")  
-  if del =="true" { 
-    fmt.Println("delete parameter: ",del)
-    
+  if del =="true" {     
   	if err := mc.repo.DeleteLookup(id); err != nil {
   		return echo.NewHTTPError(http.StatusNotFound, err.Error())
   	}
@@ -64,9 +62,7 @@ func (mc ModelController) ModifyLookup(c echo.Context) error {
   // delete text from lookup 
   deltx := c.FormValue("deletetext")  
   if deltx =="true" { 
-    fmt.Println("delete Txt parameter: ",deltx)
-    
-  	l, ok := mc.repo.GetLookup(id)
+   	l, ok := mc.repo.GetLookup(id)
     if !ok {
   		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Lookup to add entry '%v' not found", id))
   	}
@@ -84,8 +80,6 @@ func (mc ModelController) ModifyLookup(c echo.Context) error {
   // add attribute to lookup
   add := c.FormValue("add")
   if add =="true" { 
-    fmt.Println("add parameter: ",add)
-    
   	l, ok := mc.repo.GetLookup(id)
     if !ok {
   		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Lookup to add entry '%v' not found", id))
