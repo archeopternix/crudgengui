@@ -201,3 +201,15 @@ func (mrep *ModelRepository) DeleteLookup(name string) error {
 
 	return mrep.modelRW.WriteModel(mrep.m)
 }
+
+// GetAllLookupNames gets all names of lookups from the model
+func (mrep ModelRepository) GetAllLookupNames() (names []string) {
+	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
+		return nil
+	}
+  
+  for key,_:= range mrep.m.Lookups {
+    names=append(names,key)  
+  }
+	return names
+}

@@ -85,8 +85,15 @@ func (mc ModelController) ShowEntity(c echo.Context) error {
   	if !ok {
   		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Field '%v' in Entity '%v' not found", fieldname, id))
   	}  
+      data := struct {
+      Field   model.Field
+      LookupNames []string
+    }{
+      *field,
+       mc.repo.GetAllLookupNames(),
+    }
   	return c.Render(http.StatusOK, "field.html", map[string]interface{}{
-  		"model":  field,
+  		"model":  data,
   		"entityname": entity.Name,
   		"title":  fmt.Sprint("Field: '",field.Name, "'"),
   	}) 
@@ -274,16 +281,29 @@ func (mc ModelController) ShowField(c echo.Context) error {
   	if !ok {
   		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Field '%v' in Entity '%v' not found", fieldname, id))
   	}  
+    data := struct {
+      Field   model.Field
+      LookupNames []string
+    }{
+      *field,
+       mc.repo.GetAllLookupNames(),
+    }
   	return c.Render(http.StatusOK, "field.html", map[string]interface{}{
-  		"model":  field,
+  		"model": data,
   		"entityname": entity.Name,
   		"title":  fmt.Sprint("Field: '",field.Name, "'"),
   	}) 
   } 
-
+    data := struct {
+      Field   model.Field
+      LookupNames []string
+    }{
+       model.Field{},
+       mc.repo.GetAllLookupNames(),
+    }
   // Create a new field
     	return c.Render(http.StatusOK, "field.html", map[string]interface{}{
-  		"model":  model.Field{},
+  		"model":  data,
   		"entityname": entity.Name,
   		"title":  fmt.Sprint("Create a new Field"),
   	})   

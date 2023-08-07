@@ -10,8 +10,9 @@ type Field struct {
   MinLength string `json:"minlength" form:"field_minlength" ` // Specifies the minimum number of characters required
   Placeholder string `json:"placeholder" form:"field_placeholder" `
   Pattern string `json:"pattern" form:"field_pattern" ` // Specifies a regular expression that an <input> element's value is checked against
-  DateTime string `json:"datetime" form:"field-datetime" ` // holds the specifier for the date/time format: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time
-  Max string `json:"max" form:"field-max" `
-  Min string `json:"min" form:"field-min" `
-  Step string `json:"step" form:"field-step" `//Specifies the interval between legal numbers in an input field
+  DateTime string `json:"datetime" form:"field_datetime" ` // holds the specifier for the date/time format: https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input/time
+  Max string `json:"max" form:"field_max" `
+  Min string `json:"min" form:"field_min" `
+  Step string `json:"step" form:"field_step" `//Specifies the interval between legal numbers in an input field
+  Lookup string `json:"lookup" form:"field_lookup" `  // Name of the Lookup list
 }
