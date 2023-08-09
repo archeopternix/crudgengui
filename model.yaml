@@ -3,6 +3,21 @@ entities:
         name: Alpha
         type: Entity
         fields:
+            abc:
+                name: ABC
+                type: Lookup
+                optional: false
+                length: ""
+                size: ""
+                maxlength: ""
+                minlength: ""
+                placeholder: ""
+                pattern: ""
+                datetime: Date
+                max: ""
+                min: ""
+                step: ""
+                lookup: enum
             fofo:
                 name: FOFO
                 type: Boolean
@@ -97,6 +112,10 @@ entities:
                 min: "0"
                 step: "0"
                 lookup: ""
+    warframe:
+        name: Warframe
+        type: Entity
+        fields: {}
     yoyo:
         name: YoYo
         type: Entity
@@ -152,7 +171,16 @@ relations:
         type: Many-to-Many
         source: Alpha
         destination: Super
+    warframeone-to-manyyoyo:
+        name: ""
+        type: One-to-Many
+        source: Warframe
+        destination: YoYo
 lookups:
+    dr:
+        list:
+            - "123"
+            - "456"
     enum:
         list:
             - DTTGS

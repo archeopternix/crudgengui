@@ -7,8 +7,11 @@
                     <div class="hero-body">
                         <div class="container">
                             <h1 class="title">
-                                {{.title}}
+                                {{.Text.title}}
                             </h1>
+                            <h2 class="subtitle">
+                                List all
+                            </h2>
                         </div>
                     </div>
                 </section>
@@ -22,7 +25,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {{range .model.Entities}}
+                    {{range .Data.model.Entities}}
                     <tr>
                       <td valign="bottom"><a href="/entities/{{lowercase .Name}}">{{.Name}}</a></td>  
                       <td valign="bottom">{{.Type}}</td>
