@@ -12,14 +12,34 @@ import (
 )
 
 // ------------- Lookups -------------
+// showLookup helper function to show lookup based on the name of the lookup
+func (mc ModelController) showLookup(c echo.Context, lookupname string) error {
+	lookup, ok := mc.repo.GetLookup(lookupname)
+	if !ok {
+		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Lookup '%v' not found", lookupname))
+	}
+
+  text:=map[string]string{
+		"title": lookupname,
+    "menu": "menu_lookups",
+	}
+  rd:= newRequestData(text,map[string]interface{}{
+		"lookup": lookup,
+	})
+	return c.Render(http.StatusOK, "lookup.html", rd)
+}
 
 // ShowAllLookups
 func (mc ModelController) ShowAllLookups(c echo.Context) error {
 	m := mc.repo.GetModel()
-	return c.Render(http.StatusOK, "lookups.html", map[string]interface{}{
-		"model": m,
+   text:=map[string]string{
 		"title": "Lookups",
+    "menu": "menu_lookups",
+	}
+  rd:= newRequestData(text,map[string]interface{}{
+		"lookups": m.Lookups,
 	})
+	return c.Render(http.StatusOK, "lookups.html", rd)
 }
 
 
@@ -75,6 +95,7 @@ func (mc ModelController) ModifyLookup(c echo.Context) error {
     if err:= mc.repo.SaveOrUpdateLookup(id,l); err!=nil {
       return echo.NewHTTPError(http.StatusNotFound, err.Error())  
     }
+    return mc.showLookup(c,id)
   } 
 
   // add attribute to lookup
@@ -88,26 +109,17 @@ func (mc ModelController) ModifyLookup(c echo.Context) error {
     if err:= mc.repo.SaveOrUpdateLookup(id,l); err!=nil {
       return echo.NewHTTPError(http.StatusNotFound, err.Error())  
     }
+     return mc.showLookup(c,id)
   }
 
-  // in any case show the list of lookups
-	m := mc.repo.GetModel()
-	return c.Render(http.StatusOK, "lookups.html", map[string]interface{}{
-		"model": m,
-		"title": "Lookups",
-	})
+  return c.Redirect(http.StatusSeeOther,"/lookups") 
 }
 
 // ShowLookup /lookups/:id
 func (mc ModelController) ShowLookup(c echo.Context) error {
    // Entity id from path `/lookups/:id`
 	id := c.Param("id")
-	lookup, ok := mc.repo.GetLookup(id)
-	if !ok {
-		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Lookup '%v' not found", id))
-	}
-	return c.Render(http.StatusOK, "lookup.html", map[string]interface{}{
-		"model": lookup,
-		"title": id,
-	})
+	
+	return mc.showLookup(c, id)
 }
+

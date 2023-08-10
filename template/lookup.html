@@ -1,5 +1,6 @@
 {{define "breadcrumb"}}
-                        <li class="is-active"><a href="#" aria-current="page">Lookups</a></li>
+                        <li><a href="/lookups" aria-current="page">Lookups</a></li>
+                        <li class="is-active"><a href="#" aria-current="page">{{.Text.title}}</a></li>
 {{end}}
 
 {{define "content"}}
@@ -7,8 +8,11 @@
                     <div class="hero-body">
                         <div class="container">
                             <h1 class="title">
-                                {{.title}}
+                                Lookup: {{.Text.title}}
                             </h1>
+                            <h2 class="subtitle">
+                                List of entries
+                            </h2>
                         </div>
                     </div>
                 </section>
@@ -21,8 +25,8 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {{$key := .title}}
-                    {{range $index, $value:=.model.List}}
+                    {{$key := .Text.title}}
+                    {{range $index, $value:=.Data.lookup.List}}
                     <tr>
                       <td valign="bottom">{{$value}}</td>  
                       <td align="right" >

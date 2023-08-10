@@ -7,8 +7,11 @@
                     <div class="hero-body">
                         <div class="container">
                             <h1 class="title">
-                                {{.title}}
+                                {{.Text.title}}
                             </h1>
+                            <h2 class="subtitle">
+                                List all
+                            </h2>
                         </div>
                     </div>
                 </section>
@@ -21,7 +24,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {{range $key, $value := .model.Lookups}}
+                    {{range $key, $value := .Data.lookups}}
                     <tr>
                       <td valign="bottom"><a href="/lookups/{{$key}}">{{$key}}</a></td>  
                       <td align="right" >

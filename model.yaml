@@ -180,7 +180,12 @@ lookups:
     dr:
         list:
             - "123"
-            - "456"
+            - DTTGS
+            - ZULU
+    drstein:
+        list:
+            - ZULU
+            - DTTGS
     enum:
         list:
             - DTTGS
