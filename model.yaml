@@ -5,7 +5,7 @@ entities:
         fields:
             abc:
                 name: ABC
-                type: Lookup
+                type: Boolean
                 optional: false
                 length: ""
                 size: ""
@@ -20,7 +20,7 @@ entities:
                 lookup: enum
             fofo:
                 name: FOFO
-                type: Boolean
+                type: Date
                 optional: false
                 length: ""
                 size: ""
@@ -28,11 +28,11 @@ entities:
                 minlength: "0"
                 placeholder: Some text...
                 pattern: ""
-                datetime: ""
+                datetime: Date+Time
                 max: ""
                 min: ""
                 step: ""
-                lookup: ""
+                lookup: dr
             monster:
                 name: monster
                 type: E-Mail

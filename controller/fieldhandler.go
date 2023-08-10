@@ -1,15 +1,46 @@
 package controller
 
 import (
+	model "crudgengui/model"
+	
+	"fmt"
 	"net/http"
 	"sync"
-	model "crudgengui/model"
-	"fmt"
 
 	"github.com/labstack/echo/v4"
 )
 
 // ------------- Fields -------------
+// showField helper function to show detail page for field
+func (mc ModelController) showField(c echo.Context, entityname string, fieldname string) error {
+  var rd *RequestData
+  field:= &model.Field{}
+  titletext := "Create a new field: "
+  
+  // if filename defined show field detail page
+  if len(fieldname)> 0 {
+    var ok bool
+    // show field detail page
+    field, ok = mc.repo.GetField(entityname,fieldname)
+    if !ok {
+      return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Field '%v' in Entity '%v' not found", fieldname, entityname))
+    	}  
+    titletext = "Field: "+ fieldname
+  }
+  
+  text:=map[string]string{
+    "title": titletext,
+    "menu": "menu_entities",
+    "entityname" : entityname,
+  }
+  
+  rd = newRequestData(text,map[string]interface{}{
+    "field": field,
+    "lookupnames": mc.repo.GetAllLookupNames(),
+  })
+  
+  return c.Render(http.StatusOK, "field.html", rd) 
+}
 
 // DeleteField shows detail page to model or edit screen for new model
 func (mc ModelController) DeleteField(c echo.Context) error {
@@ -24,8 +55,8 @@ func (mc ModelController) DeleteField(c echo.Context) error {
 	if err := mc.repo.DeleteField(ename, fname); err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
-	return mc.ShowAllEntities(c)
-
+  
+  return mc.showEntity(c,ename)
 }
 
 // InsertField
@@ -77,44 +108,13 @@ func (mc ModelController) ShowField(c echo.Context) error {
 	
   // Entity id from path `/entities/:id`
 	id := c.Param("id")
-	entity, ok := mc.repo.GetEntity(id)
+	_, ok := mc.repo.GetEntity(id)
 	if !ok {
 		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Entity '%v' not found", id))
 	}
   
   // Query parameter ?field=myfield
   fieldname := c.QueryParam("field")
-  if len(fieldname)>0 {   
-    // Show field definition of entity
-    field, ok := mc.repo.GetField(id,fieldname)
-  	if !ok {
-  		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Field '%v' in Entity '%v' not found", fieldname, id))
-  	}  
-    data := struct {
-      Field   model.Field
-      LookupNames []string
-    }{
-      *field,
-       mc.repo.GetAllLookupNames(),
-    }
-  	return c.Render(http.StatusOK, "field.html", map[string]interface{}{
-  		"model": data,
-  		"entityname": entity.Name,
-  		"title":  fmt.Sprint("Field: '",field.Name, "'"),
-  	}) 
-  } 
-    data := struct {
-      Field   model.Field
-      LookupNames []string
-    }{
-       model.Field{},
-       mc.repo.GetAllLookupNames(),
-    }
-  // Create a new field
-    	return c.Render(http.StatusOK, "field.html", map[string]interface{}{
-  		"model":  data,
-  		"entityname": entity.Name,
-  		"title":  fmt.Sprint("Create a new Field"),
-  	})   
-  
+
+  return mc.showField(c,id,fieldname)
 }

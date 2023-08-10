@@ -10,6 +10,23 @@ import (
 )
 
 // ------------- Entities -------------
+// showEntity helper function to show detail page for entity
+func (mc ModelController) showEntity(c echo.Context, entityname string) error {
+  entity, ok := mc.repo.GetEntity(entityname)
+	if !ok {
+		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Entity '%v' not found", entityname))
+	}
+  
+  text:=map[string]string{
+  "title": "Entity: "+ entityname,
+  "menu": "menu_entities",
+	}
+  rd:= newRequestData(text,map[string]interface{}{
+		"entity": entity,
+	})
+  
+  return c.Render(http.StatusOK, "entity.html", rd)  
+}
 
 // ShowAllEntities retrieves all entities from repo and shows list page
 // route: GET /entities
@@ -48,7 +65,6 @@ func (mc ModelController) InsertEntity(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 	return c.Redirect(http.StatusSeeOther,"/entities") 
-  //mc.ShowAllEntities(c)
 }
 
 // ShowEntity shows detail page for an Entity or if a query parameter is set the respective Field
@@ -77,44 +93,6 @@ func (mc ModelController) ShowEntity(c echo.Context) error {
   return mc.showEntity(c,id)
 }
 
-// showEntity helper function to show detail page for entity
-func (mc ModelController) showEntity(c echo.Context, entityname string) error {
-  entity, ok := mc.repo.GetEntity(entityname)
-	if !ok {
-		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Entity '%v' not found", entityname))
-	}
-  
-  text:=map[string]string{
-  "title": "Entity: "+ entityname,
-  "menu": "menu_entities",
-	}
-  rd:= newRequestData(text,map[string]interface{}{
-		"entity": entity,
-	})
-  
-  return c.Render(http.StatusOK, "entity.html", rd)  
-}
-
-// showField helper function to show detail page for field
-func (mc ModelController) showField(c echo.Context, entityname string, fieldname string) error {
-    // Show field definition of entity
-    field, ok := mc.repo.GetField(entityname,fieldname)
-  	if !ok {
-  		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Field '%v' in Entity '%v' not found", fieldname, entityname))
-  	}  
-      data := struct {
-      Field   model.Field
-      LookupNames []string
-    }{
-      *field,
-       mc.repo.GetAllLookupNames(),
-    }
-  	return c.Render(http.StatusOK, "field.html", map[string]interface{}{
-  		"model":  data,
-  		"entityname": entityname,
-  		"title":  fmt.Sprint("Field: '",field.Name, "'"),
-  	}) 
-}
 
 // DeleteEntity shows detail page to model or edit screen for new model
 // route: POST /lookups/:id

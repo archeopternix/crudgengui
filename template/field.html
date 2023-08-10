@@ -1,6 +1,6 @@
 {{define "breadcrumb"}}
                         <li><a href="/entities">Entities</a></li>
-                        <li><a href="/entities/{{lowercase .entityname}}">{{.entityname}}</a></li>
+                        <li><a href="/entities/{{lowercase .Text.entityname}}">{{.Text.entityname}}</a></li>
                         <li class="is-active"><a href="#" aria-current="page">Field</a></li>
 {{end}}
 
@@ -10,22 +10,24 @@
                     <div class="hero-body">
                         <div class="container">
                             <h1 class="title">
-                                {{.title}}
+                                {{.Text.title}}
                             </h1>
                              <h2 class="subtitle">
-                                Entity: '{{.entityname}}'
+                                Entity: '{{.Text.entityname}}'
                             </h2>
                         </div>
                     </div>
                 </section>
   
                 <section>
-                  <form action="/fields" method="post">          
+                  <form action="/fields" method="post">   
+                    {{$lookupname := .Data.lookupnames}}
+                    {{ with .Data.field}}
                     <section>
                       <div class="field">
                         <label class="label">Name</label>
                         <div class="control">
-                          <input name="field_name" class="input" type="text" value="{{.model.Field.Name}}" required />
+                          <input name="field_name" class="input" type="text" value="{{.Name}}" required />
                         </div>
                       </div>
                       <div class="columns is-mobile">
@@ -34,14 +36,14 @@
                             <label class="label">Type</label>
                             <div class="control">
                               <div class="select">
-                                <select id="type_select" name="field_type" value="{{.model.Field.Type}}" autofocus onchange="fieldVisibilty()" onfocus="fieldVisibilty()">
-                                  <option{{if eq .model.Field.Type "Boolean"}} selected{{end}}>Boolean</option>
-                                  <option{{if eq .model.Field.Type "Text"}} selected{{end}}>Text</option>
-                                  <option{{if eq .model.Field.Type "E-Mail"}} selected{{end}}>E-Mail</option>
-                                  <option{{if eq .model.Field.Type "Phone"}} selected{{end}}>Phone</option>
-                                  <option{{if eq .model.Field.Type "Number"}} selected{{end}}>Number</option>
-                                  <option{{if eq .model.Field.Type "Date"}} selected{{end}}>Date</option>
-                                  <option{{if eq .model.Field.Type "Lookup"}} selected{{end}}>Lookup</option>
+                                <select id="type_select" name="field_type" value="{{.Type}}" autofocus onchange="fieldVisibilty()" onfocus="fieldVisibilty()">
+                                  <option{{if eq .Type "Boolean"}} selected{{end}}>Boolean</option>
+                                  <option{{if eq .Type "Text"}} selected{{end}}>Text</option>
+                                  <option{{if eq .Type "E-Mail"}} selected{{end}}>E-Mail</option>
+                                  <option{{if eq .Type "Phone"}} selected{{end}}>Phone</option>
+                                  <option{{if eq .Type "Number"}} selected{{end}}>Number</option>
+                                  <option{{if eq .Type "Date"}} selected{{end}}>Date</option>
+                                  <option{{if eq .Type "Lookup"}} selected{{end}}>Lookup</option>
                                 </select>
                               </div>
                              </div>
@@ -50,7 +52,7 @@
                         <div class="column">
                           <div class="field" id="optional">
                             <label class="label">Optional</label>
-                              <input name="field_optional" type="checkbox" value="true" {{if .model.Field.Optional}}checked{{end}} />                            
+                              <input name="field_optional" type="checkbox" value="true" {{if .Optional}}checked{{end}} />                            
                           </div>   
                         </div>   
                       </div> <!-- columns -->
@@ -59,7 +61,7 @@
                           <div class="field" id="size">
                             <label class="label">Size</label>
                             <div class="control">
-                              <input name="field_size" class="input" type="number" step="1" min="0" value="{{.model.Field.Size}}">
+                              <input name="field_size" class="input" type="number" step="1" min="0" value="{{.Size}}">
                             </div>
                           </div> 
                         </div>   
@@ -67,7 +69,7 @@
                           <div class="field" id="length">
                             <label class="label">Length</label>
                             <div class="control">
-                              <input name="field_length" class="input" type="number" step="1" min="0" value="{{.model.Field.Length}}">
+                              <input name="field_length" class="input" type="number" step="1" min="0" value="{{.Length}}">
                             </div>
                           </div>   
                         </div>  
@@ -77,7 +79,7 @@
                           <div class="field" id="maxlength">
                             <label class="label">Maximum Length</label>
                             <div class="control">
-                              <input name="field_maxlength" class="input" type="number" step="1" min="0" value="{{.model.Field.MaxLength}}">
+                              <input name="field_maxlength" class="input" type="number" step="1" min="0" value="{{.MaxLength}}">
                             </div>
                           </div>   
                         </div>   
@@ -85,7 +87,7 @@
                           <div class="field" id="minlength">
                             <label class="label">Minimum Length</label>
                             <div class="control">
-                              <input name="field_minlength" class="input" type="number" step="1" min="0" value="{{.model.Field.MinLength}}">
+                              <input name="field_minlength" class="input" type="number" step="1" min="0" value="{{.MinLength}}">
                             </div>
                           </div>   
                         </div>   
@@ -95,7 +97,7 @@
                           <div class="field" id="minval">
                             <label class="label">Minimum Value</label>
                             <div class="control">
-                              <input name="field_min" class="input" type="number" value="{{.model.Field.Min}}">
+                              <input name="field_min" class="input" type="number" value="{{.Min}}">
                             </div>
                           </div> 
                         </div>  
@@ -103,7 +105,7 @@
                           <div class="field" id="maxval">
                             <label class="label">Maximum Value</label>
                             <div class="control">
-                              <input name="field_max" class="input" type="number" value="{{.model.Field.Max}}">
+                              <input name="field_max" class="input" type="number" value="{{.Max}}">
                             </div>
                           </div> 
                         </div>                         
@@ -113,7 +115,7 @@
                           <div class="field" id="stepval">
                             <label class="label">Step</label>
                             <div class="control">
-                              <input name="field_step" class="input" type="number" value="{{.model.Field.Step}}">
+                              <input name="field_step" class="input" type="number" value="{{.Step}}">
                             </div>
                           </div>  
                         </div>                         
@@ -121,19 +123,19 @@
                       <div class="field" id="placeholder">
                         <label class="label">Placeholder</label>
                         <div class="control">
-                          <input id="placeholder_field" name="field_placeholder" class="input" type="text" value="{{.model.Field.Placeholder}}">
+                          <input id="placeholder_field" name="field_placeholder" class="input" type="text" value="{{.Placeholder}}">
                         </div>
                       </div>     
                       <div class="field" id="datetime">
                         <label class="label">Date/Time</label>
                         <div class="control">
                           <div class="select">
-                            <select name="field_datetime" value="{{.model.Field.DateTime}}">
-                              <option{{if eq .model.Field.DateTime "Date"}} selected{{end}}>Date</option>
-                              <option{{if eq .model.Field.DateTime "Time"}} selected{{end}}>Time</option>
-                              <option{{if eq .model.Field.DateTime "Date+Time"}} selected{{end}}>Date+Time</option>
-                              <option{{if eq .model.Field.DateTime "Week"}} selected{{end}}>Week</option>
-                              <option{{if eq .model.Field.DateTime "Month"}} selected{{end}}>Month</option>
+                            <select name="field_datetime" value="{{.DateTime}}">
+                              <option{{if eq .DateTime "Date"}} selected{{end}}>Date</option>
+                              <option{{if eq .DateTime "Time"}} selected{{end}}>Time</option>
+                              <option{{if eq .DateTime "Date+Time"}} selected{{end}}>Date+Time</option>
+                              <option{{if eq .DateTime "Week"}} selected{{end}}>Week</option>
+                              <option{{if eq .DateTime "Month"}} selected{{end}}>Month</option>
                             </select>
                           </div>
                         </div> 
@@ -141,16 +143,16 @@
                       <div class="field" id="pattern">
                         <label class="label">Validation Pattern</label>
                         <div class="control">
-                          <input id="pattern_field" name="field_pattern" class="input" type="text" value="{{.model.Field.Pattern}}">
+                          <input id="pattern_field" name="field_pattern" class="input" type="text" value="{{.Pattern}}">
                         </div>
                       </div>
                       <div class="field" id="lookup">
                             <label class="label">Lookup</label>
                             <div class="control">
                               <div class="select">
-                                <select id="lookup_select" name="field_lookup" value="{{.model.Field.Lookup}}" autofocus onchange="fieldVisibilty()" onfocus="fieldVisibilty()">
-                                  {{$lk:= .model.Field.Lookup}}
-                                  {{range $value:=.model.LookupNames}}
+                                <select id="lookup_select" name="field_lookup" value="{{.Lookup}}" autofocus onchange="fieldVisibilty()" onfocus="fieldVisibilty()">
+                                  {{$lk:= .Lookup}}
+                                  {{range $value:=$lookupname}}
                                   <option{{if eq $lk $value}} selected{{end}}>{{$value}}</option>          
                                   {{end}}
                                 </select>
@@ -158,11 +160,12 @@
                              </div>
                           </div>
                     </section>
+                    {{end}}
                     <footer>
                       <button class="button is-success" type="submit">Save changes</button>
-                      <a class="button is-info" href="/entities/{{lowercase .entityname}}">Cancel</a>
+                      <a class="button is-info" href="/entities/{{lowercase .Text.entityname}}">Cancel</a>
                     </footer>
-                    <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase .entityname}}" />                
+                    <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase .Text.entityname}}" />                
                   </form>
                 </section>
 

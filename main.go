@@ -48,8 +48,8 @@ func main() {
   if err!=nil {
     log.Panic(err)
   }  
-  
-  err=templates.AddTemplate("entity.html","base.html","template/field_popup.html", "template/base/script.html", "template/entity.html")
+
+  err=templates.AddTemplate("entity.html","base.html", "template/base/script.html", "template/entity.html")
   if err!=nil {
     log.Panic(err)
   }  
