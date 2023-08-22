@@ -15,7 +15,6 @@ import (
 // Usage with echo:  
 //      templates := controller.NewTemplateRegistry()
 //      e.Renderer = templates
-
 type TemplateRegistry struct {
 	templates map[string]*template.Template
 	funcMap   template.FuncMap

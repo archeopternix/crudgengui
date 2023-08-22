@@ -13,10 +13,17 @@ import (
 // ShowAllRelations
 func (mc ModelController) ShowAllRelations(c echo.Context) error {
 	m := mc.repo.GetModel()
-	return c.Render(http.StatusOK, "relations.html", map[string]interface{}{
+
+  text:=map[string]string{
+  "title": "Relations",
+  "menu": "menu_relations",
+	}
+  rd:= newRequestData(text,map[string]interface{}{
 		"model": m,
-		"title": "Relations",
 	})
+  
+  return c.Render(http.StatusOK, "relations.html", rd)  
+
 }
 
 // ShowRelation shows detail page to model or edit screen for new model

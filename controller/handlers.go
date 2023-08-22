@@ -57,6 +57,9 @@ func (mc ModelController) ShowDashboard(c echo.Context) error {
   text:=map[string]string{
 		"title": "Home",
     "menu": "menu_home",
+    "entitycount": fmt.Sprint(len(m.Entities)),
+    "relationcount": fmt.Sprint(len(m.Relations)),
+    "lookupcount": fmt.Sprint(len(m.Lookups)),
 	}
   rd:= newRequestData(text,map[string]interface{}{
 		"model": m,

@@ -5,19 +5,19 @@ entities:
         fields:
             abc:
                 name: ABC
-                type: Boolean
+                type: Lookup
                 optional: false
                 length: ""
                 size: ""
                 maxlength: ""
                 minlength: ""
-                placeholder: ""
+                placeholder: Some text...
                 pattern: ""
                 datetime: Date
                 max: ""
                 min: ""
                 step: ""
-                lookup: enum
+                lookup: dr
             fofo:
                 name: FOFO
                 type: Date
@@ -171,6 +171,11 @@ relations:
         type: Many-to-Many
         source: Alpha
         destination: Super
+    alphaone-to-manywarframe:
+        name: ""
+        type: One-to-Many
+        source: Alpha
+        destination: Warframe
     warframeone-to-manyyoyo:
         name: ""
         type: One-to-Many
@@ -182,6 +187,7 @@ lookups:
             - "123"
             - DTTGS
             - ZULU
+            - ZULUnew
     drstein:
         list:
             - ZULU

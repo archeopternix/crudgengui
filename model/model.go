@@ -1,3 +1,4 @@
+// Package model defines the entities and relations used as a bases for the CRUD generator
 package model
 
 import (
@@ -7,45 +8,15 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
-type Relation struct {
-	Name        string `json:"name" form:"relation-name"`
-	Type        string `json:"type" form:"relation-type"` // 'One-to-Many' | 'Many-to-Many'
-	Source      string `json:"source" form:"relation-source"`
-	Destination string `json:"destination" form:"relation-destination"`
-}
 
-func (r Relation) ContainsEntity(name string) bool {
-  if (r.Source == name) || (r.Destination == name) {
-    return true
-  }
-  return false
-}
-
-// Lookup is a string list
-type Lookup struct {
-  List []string
-}
-
-func NewLookup() *Lookup {
-  return new(Lookup)
-}
-
-func (f *Lookup)Add(text string){
-  f.List=append(f.List,text)
-}
-
-func (f *Lookup)Delete(i int){
-  copy(f.List[i:], f.List[i+1:]) // Shift a[i+1:] left one index.
-  f.List[len(f.List)-1] = ""     // Erase last element (write zero value).
-  f.List = f.List[:len(f.List)-1]     // Truncate slice.
-}
-
+// Model holds all entities, relations and lookups and is able to persist them as a YAML file
 type Model struct {
 	Entities  map[string]Entity
 	Relations map[string]Relation
   Lookups map[string]Lookup
 }
 
+// NewModel creates a new model and initialize the maps used for entities, relations and lookups
 func NewModel() *Model {
 	m := new(Model)
 	m.Entities = make(map[string]Entity)
@@ -54,6 +25,7 @@ func NewModel() *Model {
 	return m
 }
 
+// ReadYAML reads the model as YAML from an io.Reader
 func (m *Model) ReadYAML(reader io.Reader) error {
 	data, err := io.ReadAll(reader)
 	if err != nil {
@@ -73,6 +45,7 @@ func (m *Model) ReadYAML(reader io.Reader) error {
 	return nil
 }
 
+// WriteYAML writes the model as YAML fiel to an io.Writer
 func (m *Model) WriteYAML(writer io.Writer) error {
 	data, err := yaml.Marshal(m)
 	if err != nil {

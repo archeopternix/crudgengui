@@ -7,7 +7,7 @@
                     <div class="hero-body">
                         <div class="container">
                             <h1 class="title">
-                                {{.title}}
+                                {{.Text.title}}
                             </h1>
                         </div>
                     </div>
@@ -23,7 +23,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                     {{range .model.Relations}}
+                     {{range .Data.model.Relations}}
                     <tr>
                       <td valign="bottom">{{.Type}}</td>
                       <td valign="bottom"><a href="/entities/{{lowercase .Source}}">{{.Source}}</a></td>

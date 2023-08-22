@@ -59,7 +59,7 @@ func main() {
     log.Panic(err)
   }  
   
-  err=templates.AddTemplate("index.html","base.html")
+  err=templates.AddTemplate("index.html","base.html","template/index.html")
   if err!=nil {
     log.Panic(err)
   }  

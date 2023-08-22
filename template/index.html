@@ -1,0 +1,40 @@
+{{define "content"}}
+                <section class="hero is-info welcome is-small">
+                    <div class="hero-body">
+                        <div class="container">
+                            <h1 class="title">
+                                Welcome the CRUDgen GUI
+                            </h1>
+                             <h2 class="subtitle">
+                                Dashboard
+                            </h2>
+                        </div>
+                    </div>
+                </section>
+                <div><br></div>
+                <section>
+                <nav class="level">
+                  <div class="level-item has-text-centered has-background-info-light">
+                    <div>
+                      <a class="is-size-4" href="/entities">Entities</a>
+                      <p class="is-size-4">{{.Text.entitycount}}</p>
+                    </div>
+                  </div>
+                  <div class="level-item has-text-centered has-background-info-light">
+                    <div>
+                      <a class="is-size-4" href="/relations">Relations</a>
+                      <p class="is-size-4">{{.Text.relationcount}}</p>
+                    </div>
+                  </div>
+                  <div class="level-item has-text-centered has-background-info-light">
+                    <div>
+                      <a class="is-size-4" href="/lookups">Lookups</a>
+                      <p class="is-size-4">{{.Text.lookupcount}}</p>
+                    </div>
+                  </div>
+                </nav>
+                </section>
+{{end}}
+
+
+{{template "base.html" .}}
