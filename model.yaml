@@ -3,25 +3,11 @@ entities:
         name: Alpha
         type: Entity
         fields:
-            abc:
-                name: ABC
-                type: Lookup
-                optional: false
-                length: ""
-                size: ""
-                maxlength: ""
-                minlength: ""
-                placeholder: Some text...
-                pattern: ""
-                datetime: Date
-                max: ""
-                min: ""
-                step: ""
-                lookup: dr
             fofo:
                 name: FOFO
                 type: Date
                 optional: false
+                auto: true
                 length: ""
                 size: ""
                 maxlength: ""
@@ -37,21 +23,23 @@ entities:
                 name: monster
                 type: E-Mail
                 optional: true
+                auto: false
                 length: "25"
                 size: "25"
                 maxlength: ""
                 minlength: "0"
                 placeholder: test@yahoo.de
                 pattern: ""
-                datetime: ""
+                datetime: Date
                 max: ""
                 min: ""
                 step: ""
-                lookup: ""
+                lookup: dr
             nostroemailo:
                 name: nostroemailo
                 type: Number
                 optional: true
+                auto: false
                 length: "13"
                 size: "23"
                 maxlength: ""
@@ -71,6 +59,7 @@ entities:
                 name: ABC
                 type: Boolean
                 optional: true
+                auto: false
                 length: "4"
                 size: "4"
                 maxlength: "0"
@@ -86,6 +75,7 @@ entities:
                 name: cde
                 type: Text
                 optional: true
+                auto: false
                 length: "2"
                 size: "2"
                 maxlength: "1"
@@ -101,6 +91,7 @@ entities:
                 name: Monster
                 type: Number
                 optional: true
+                auto: false
                 length: "1"
                 size: "1"
                 maxlength: "0"
@@ -115,7 +106,39 @@ entities:
     warframe:
         name: Warframe
         type: Entity
-        fields: {}
+        fields:
+            briefkopf:
+                name: Briefkopf
+                type: Text
+                optional: false
+                auto: false
+                length: ""
+                size: ""
+                maxlength: ""
+                minlength: ""
+                placeholder: Hier kommt die Maus..
+                pattern: ""
+                datetime: Date
+                max: ""
+                min: ""
+                step: ""
+                lookup: dr
+            cde:
+                name: CDE
+                type: Text
+                optional: false
+                auto: false
+                length: "12"
+                size: "12"
+                maxlength: ""
+                minlength: ""
+                placeholder: Neuer Text
+                pattern: ""
+                datetime: Date
+                max: ""
+                min: ""
+                step: ""
+                lookup: liste
     yoyo:
         name: YoYo
         type: Entity
@@ -124,6 +147,7 @@ entities:
                 name: Monster
                 type: Text
                 optional: false
+                auto: false
                 length: "3"
                 size: "3"
                 maxlength: "0"
@@ -139,6 +163,7 @@ entities:
                 name: Test Neu
                 type: Lookup
                 optional: false
+                auto: false
                 length: "1"
                 size: "1"
                 maxlength: ""
@@ -154,6 +179,7 @@ entities:
                 name: Test2
                 type: Boolean
                 optional: false
+                auto: false
                 length: "1"
                 size: "1"
                 maxlength: "0"

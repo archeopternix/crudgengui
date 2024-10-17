@@ -61,8 +61,14 @@ func (mc ModelController) InsertRelation(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-	if (r.Source == "Please Select") || (r.Destination == "Please Select") || (r.Destination == r.Source) {
-		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Source '%s' and/or destination '%s' Entity are conflicting", r.Source, r.Destination))
+	// Button Cancel hit or Source / Destination nor set
+	if (r.Source == "Please Select") || (r.Destination == "Please Select")  {
+		return mc.ShowAllEntities(c)
+	}
+
+	// Source and Destination must not be the same
+	if (r.Destination == r.Source) {
+		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Source '%s' and destination '%s' Entity must not be the same", r.Source, r.Destination))
 	}
 
 	rname := r.Source + r.Type + r.Destination

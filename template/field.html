@@ -22,8 +22,10 @@
                 <section>
                   <form action="/fields" method="post">   
                     {{$lookupname := .Data.lookupnames}}
+                    {{$entityname := .Text.entityname}}
                     {{ with .Data.field}}
                     <section>
+                      <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase $entityname}}" />  
                       <div class="field">
                         <label class="label">Name</label>
                         <div class="control">
@@ -165,7 +167,7 @@
                       <button class="button is-success" type="submit">Save changes</button>
                       <a class="button is-info" href="/entities/{{lowercase .Text.entityname}}">Cancel</a>
                     </footer>
-                    <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase .Text.entityname}}" />                
+                                
                   </form>
                 </section>
 

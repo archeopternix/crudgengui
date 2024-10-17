@@ -4,6 +4,7 @@ type Field struct {
   Name string `json:"name" form:"field_name" `
   Type string `json:"type" form:"field_type" `
   Optional bool `json:"optional" form:"field_optional" `
+  Auto bool `json:"auto" form:"field_auto" `
   Length string `json:"length" form:"field_length" `
   Size string `json:"size" form:"field_size" `
   MaxLength string `json:"maxlength" form:"field_maxlength" ` // Specifies the maximum number of characters allowed 

@@ -32,7 +32,7 @@
                     {{$entity := .Data.entity }}
                     {{range .Data.entity.Fields}}
                     <tr>
-                      <td valign="bottom"><a href="/entities/{{lowercase $entity.Name}}?field={{lowercase .Name}}">{{.Name}}</a></td>  
+                      <td valign="bottom">{{if not .Auto}}<a href="/entities/{{lowercase $entity.Name}}?field={{lowercase .Name}}">{{.Name}}</a>{{else}}{{.Name}}{{end}}</td>  
                       <td valign="bottom">{{.Type}}</td>
                       <td valign="bottom">{{.Optional}}</td>
                       <td valign="bottom">{{.Size}}</td>
@@ -41,12 +41,17 @@
                         <form action="/fields/{{lowercase .Name}}" method="post">
                           <input type="hidden" id="field_name" name="field_name" value="{{lowercase .Name}}" />
                           <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase $entity.Name}}" />
-                        <p align="right" class="buttons">
-                            <button class="button is-danger is-outlined" >
-                            <span class="icon is-small">
-                              <i class="fas fa-trash"></i>
-                            </span>
-                            </button> 
+                        {{if not .Auto}}<p align="right" class="buttons">
+                          <button class="button is-danger is-outlined" >
+                          <span class="icon is-small">
+                            <i class="fas fa-trash"></i>
+                          </span>
+                          </button>
+                        </p>                          
+                        {{else}}<p align="left">
+                          <span class="icon is-small has-text-warning">
+                            <i class="fas fa-lock has-text-warning"></i>
+                          </span>{{end}}
                         </p>   
                         </form>
                       </td>
