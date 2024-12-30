@@ -16,22 +16,23 @@ To install and set up the project locally, follow these steps:
 1. Clone the repository:
    ```sh
    git clone https://github.com/archeopternix/crudgengui.git
-Navigate to the project directory:
-cd crudgengui
-Install the necessary dependencies:
-npm install
-Usage
-Start the development server:
-npm start
-Open your browser and navigate to http://localhost:3000 to access the GUI.
-Contributing
+
+2. Navigate to the project directory:
+   ```sh
+   cd crudgengui
+
+3. Start the development server:
+Open your browser and navigate to http://localhost:1323 to access the GUI.
+
+## Contributing
 Contributions are welcome! Please follow these steps:
 
-Fork the repository.
+## Fork the repository.
 Create a new branch for your feature or bugfix.
 Commit your changes and push them to your fork.
 Open a pull request with a detailed description of your changes.
-Commit History
+
+## Commit History
 Here are some recent commits to the project:
 
 dc9ce2b6: Project settings page added
@@ -41,5 +42,5 @@ d4f3f82b: Clean up
 749edc6f: Documentation added
 For more commits and detailed history, visit the commit history page.
 
-License
+## License
 This project is licensed under the MIT License. See the LICENSE file for more details.
