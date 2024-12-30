@@ -35,11 +35,11 @@ Open a pull request with a detailed description of your changes.
 ## Commit History
 Here are some recent commits to the project:
 
-dc9ce2b6: Project settings page added
-45ebe8dd: Add settings and name
-d4f3f82b: Clean up
-93240a3f: Bugs fixed
-749edc6f: Documentation added
+* dc9ce2b6: Project settings page added
+* 45ebe8dd: Add settings and name
+* d4f3f82b: Clean up
+* 93240a3f: Bugs fixed
+* 749edc6f: Documentation added
 For more commits and detailed history, visit the commit history page.
 
 ## License
