@@ -4,6 +4,7 @@ type Field struct {
 	Name        string `yaml:"name" json:"name" form:"field_name" `
 	Type        string `yaml:"type" json:"type" form:"field_type" `
 	Optional    bool   `yaml:"optional" json:"optional" form:"field_optional" `
+	Label       bool   `yaml:"label" json:"label" form:"field_label" `
 	Auto        bool   `yaml:"auto" json:"auto" form:"field_auto" `
 	Length      string `yaml:"length,omitempty" json:"length" form:"field_length" `
 	Size        string `yaml:"size,omitempty" json:"size" form:"field_size" `

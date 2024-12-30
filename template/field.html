@@ -53,8 +53,12 @@
                         </div>
                         <div class="column">
                           <div class="field" id="optional">
-                            <label class="label">Optional</label>
+                            <label class="label">Optional?</label>
                               <input name="field_optional" type="checkbox" value="true" {{if .Optional}}checked{{end}} />                            
+                          </div>   
+                          <div class="field" id="label">
+                            <label class="label">Label?</label>
+                              <input name="field_label" type="checkbox" value="true" {{if .Label}}checked{{end}} />                            
                           </div>   
                         </div>   
                       </div> <!-- columns -->
@@ -133,6 +137,7 @@
                         <div class="control">
                           <div class="select">
                             <select name="field_datetime" value="{{.DateTime}}">
+                              <option{{if eq .DateTime ""}} selected{{end}}></option>
                               <option{{if eq .DateTime "Date"}} selected{{end}}>Date</option>
                               <option{{if eq .DateTime "Time"}} selected{{end}}>Time</option>
                               <option{{if eq .DateTime "Date+Time"}} selected{{end}}>Date+Time</option>
