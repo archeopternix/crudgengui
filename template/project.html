@@ -1,0 +1,84 @@
+{{define "content"}}
+                <section class="hero is-info welcome is-small">
+                    <div class="hero-body">
+                        <div class="container">
+                            <h1 class="title">
+                                Welcome the CRUDgen GUI
+                            </h1>
+                             <h2 class="subtitle">
+                                Enter project name and settings
+                            </h2>
+                        </div>
+                    </div>
+                </section>
+                <div><br></div>
+                <section>
+                  <form action="/project" method="post">    
+                   {{ with .Data.model}}                  
+                    <section>
+                      <div class="field">
+                        <label class="label">Name</label>
+                        <div class="control">
+                          <input name="field_name" class="input" type="text" value="{{.Name}}" required />
+                        </div>
+                      </div>
+                      <div class="field">
+                        <label class="label">Currency Symbol(*)</label>
+                        <div class="control">
+                          <input name="field_currency" class="input" type="text" size="2" maxlength="1" value="{{.Currency}}" required />
+                        </div>
+                      </div>
+                       <div class="field">
+                        <label class="label">Decimal Seperator(*)</label>
+                        <div class="control">
+                          <input name="field_decimal" class="input" type="text" size="2" maxlength="1" value="{{.Decimal}}" required />
+                        </div>
+                      </div>
+                       <div class="field">
+                        <label class="label">Thousend Seperator(*)</label>
+                        <div class="control">
+                          <input name="field_thousend" class="input" type="text" size="2" maxlength="1" value="{{.Thousend}}" required />
+                        </div>
+                      </div>
+                      <div class="columns is-mobile">
+                        <div class="column">
+                          <div class="field">
+                            <label class="label">Date Format</label>
+                            <div class="control">
+                              <div class="select">
+                                <select id="dateformat_select" name="field_dateformat" value="{{.DateFormat}}">
+                                  <option value="01.02.2006">DD.MM.YYYY</option>
+                                  <option value="02.01.2006">MM.DD.YYYY</option>
+                                  <option value="2006.01.02">YYYY.MM.DD</option>
+                                </select>
+                              </div>
+                             </div>
+                          </div>
+                        </div>
+                     </div> <!-- columns -->
+                      <div class="columns is-mobile">
+                        <div class="column">
+                          <div class="field">
+                            <label class="label">Time Format</label>
+                            <div class="control">
+                              <div class="select">
+                                <select id="timeformat_select" name="field_timeformat" value="{{.TimeFormat}}">
+                                  <option>15:04:05</option>
+                                </select>
+                              </div>
+                             </div>
+                          </div>
+                        </div>
+                     </div> <!-- columns -->
+                     </section>
+                    <footer>
+                      <button class="button is-success" type="submit">Save changes</button>
+                      <a class="button is-info" href="/">Cancel</a>
+                    </footer>
+                       {{end}}         
+                  </form>
+
+               
+                </section>
+{{end}}
+{{template "base.html" .}}

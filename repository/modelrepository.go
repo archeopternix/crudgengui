@@ -16,21 +16,28 @@ type ModelReaderWriter interface {
 // ModelRepository provides all the data manipulation logic to the model
 type ModelRepository struct {
 	modelRW ModelReaderWriter
-  m *model.Model
+	m       *model.Model
 }
 
 // NewModelRepository createas an new instance of ModelRepository with injected persistence functionality
 func NewModelRepository(mrw ModelReaderWriter) *ModelRepository {
 	mrep := new(ModelRepository)
 	mrep.modelRW = mrw
-  mrep.m = model.NewModel()
-  mrep.modelRW.ReadModel(mrep.m)
+	mrep.m = model.NewModel()
+	mrep.modelRW.ReadModel(mrep.m)
 	return mrep
 }
 
 // GetModel returns the model
-func (mrep *ModelRepository)GetModel() *model.Model {
+func (mrep *ModelRepository) GetModel() *model.Model {
 	return mrep.m
+}
+
+// SaveModel saves the model
+func (mrep *ModelRepository) SaveModel(name string, settings model.Settings) error {
+	mrep.m.Settings = settings
+	mrep.m.Name = name
+	return mrep.modelRW.WriteModel(mrep.m)
 }
 
 // SaveOrUpdateEntity saves or updates an entity in the model
@@ -42,14 +49,14 @@ func (mrep *ModelRepository) SaveOrUpdateEntity(e *model.Entity) error {
 
 // DeleteEntity deletes one entity from the model
 func (mrep *ModelRepository) DeleteEntity(name string) error {
-  _, ok := mrep.GetEntity(strings.ToLower(name))
+	_, ok := mrep.GetEntity(strings.ToLower(name))
 	if !ok {
 		return fmt.Errorf("Entity '%s' not found", name)
 	}
-  if mrep.m.EntityInRealtions(name) {
-    return fmt.Errorf("Cannot delete as Entity '%s' is linked in a relation", name)
-  }
-  
+	if mrep.m.EntityInRealtions(name) {
+		return fmt.Errorf("Cannot delete as Entity '%s' is linked in a relation", name)
+	}
+
 	delete(mrep.m.Entities, strings.ToLower(name))
 
 	return mrep.modelRW.WriteModel(mrep.m)
@@ -115,7 +122,7 @@ func (mrep *ModelRepository) SaveOrUpdateRelation(rname string, r *model.Relatio
 
 	_, ok := mrep.GetRelation(strings.ToLower(rname))
 	if !ok {
-    log.Println("Create new relation with name: ",strings.ToLower(rname))		
+		log.Println("Create new relation with name: ", strings.ToLower(rname))
 	}
 
 	mrep.m.Relations[strings.ToLower(rname)] = *r
@@ -150,19 +157,19 @@ func (mrep *ModelRepository) GetRelation(name string) (*model.Relation, bool) {
 
 // GetField of an Entity from the model
 func (mrep *ModelRepository) GetField(entityname string, name string) (*model.Field, bool) {
-  var ent model.Entity
-  var field model.Field
-  var ok bool
-  
-  if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
+	var ent model.Entity
+	var field model.Field
+	var ok bool
+
+	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
 		return nil, false
 	}
 
 	if ent, ok = mrep.m.Entities[strings.ToLower(entityname)]; !ok {
-    return nil,false
-  }
+		return nil, false
+	}
 
-  field, ok = ent.Fields[strings.ToLower(name)]
+	field, ok = ent.Fields[strings.ToLower(name)]
 	return &field, ok
 }
 
@@ -188,7 +195,7 @@ func (mrep *ModelRepository) SaveOrUpdateLookup(name string, lookup *model.Looku
 
 	_, ok := mrep.GetLookup(strings.ToLower(name))
 	if !ok {
-    log.Println("Create new lookup with name: ",strings.ToLower(name))		
+		log.Println("Create new lookup with name: ", strings.ToLower(name))
 	}
 	mrep.m.Lookups[strings.ToLower(name)] = *lookup
 
@@ -207,9 +214,9 @@ func (mrep ModelRepository) GetAllLookupNames() (names []string) {
 	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
 		return nil
 	}
-  
-  for key,_:= range mrep.m.Lookups {
-    names=append(names,key)  
-  }
+
+	for key, _ := range mrep.m.Lookups {
+		names = append(names, key)
+	}
 	return names
 }

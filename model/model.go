@@ -10,7 +10,7 @@ import (
 
 // Model holds all entities, relations and lookups and is able to persist them as a YAML file
 type Model struct {
-	Name string
+	Name string `yaml:"name"`
 	Settings
 	Entities  map[string]Entity
 	Relations map[string]Relation
