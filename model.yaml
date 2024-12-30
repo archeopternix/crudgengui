@@ -1,4 +1,4 @@
-name: DoTo
+name: SampleProject
 settings:
     currency_symbol: €
     decimal_separator: ','
@@ -6,229 +6,67 @@ settings:
     time_format: "15:04:05"
     date_format: 01.02.2006
 entities:
-    alpha:
-        name: Alpha
+    customers:
+        name: Customers
         type: Entity
         fields:
-            fofo:
-                name: FOFO
-                type: Date
-                optional: false
-                auto: true
-                length: ""
-                size: ""
-                maxlength: ""
-                minlength: "0"
-                placeholder: Some text...
-                pattern: ""
-                datetime: Date+Time
-                max: ""
-                min: ""
-                step: ""
-                lookup: dr
-            monster:
-                name: monster
-                type: E-Mail
+            city:
+                name: City
+                type: Text
                 optional: true
                 auto: false
-                length: "25"
-                size: "25"
-                maxlength: ""
-                minlength: "0"
-                placeholder: test@yahoo.de
-                pattern: ""
                 datetime: Date
-                max: ""
-                min: ""
-                step: ""
-                lookup: dr
-            nostroemailo:
-                name: nostroemailo
-                type: Number
-                optional: true
-                auto: false
-                length: "13"
-                size: "23"
-                maxlength: ""
-                minlength: "0"
-                placeholder: "123"
-                pattern: ""
-                datetime: ""
-                max: ""
-                min: ""
-                step: ""
-                lookup: ""
-    super:
-        name: Super
-        type: Entity
-        fields:
-            abc:
-                name: ABC
-                type: Boolean
-                optional: true
-                auto: false
-                length: "4"
-                size: "4"
-                maxlength: "0"
-                minlength: "0"
-                placeholder: test@yahoo.de
-                pattern: ""
-                datetime: ""
-                max: "0"
-                min: "0"
-                step: "0"
-                lookup: ""
-            cde:
-                name: cde
-                type: Text
-                optional: true
-                auto: false
-                length: "2"
-                size: "2"
-                maxlength: "1"
-                minlength: "1"
-                placeholder: ""
-                pattern: ""
-                datetime: ""
-                max: "0"
-                min: "0"
-                step: "0"
-                lookup: ""
-            monster:
-                name: Monster
-                type: Number
-                optional: true
-                auto: false
-                length: "1"
-                size: "1"
-                maxlength: "0"
-                minlength: "0"
-                placeholder: +34 5603821
-                pattern: ""
-                datetime: ""
-                max: "0"
-                min: "0"
-                step: "0"
-                lookup: ""
-    warframe:
-        name: Warframe
-        type: Entity
-        fields:
-            briefkopf:
-                name: Briefkopf
-                type: Text
-                optional: false
-                auto: false
-                length: ""
-                size: ""
-                maxlength: ""
-                minlength: ""
-                placeholder: Hier kommt die Maus..
-                pattern: ""
-                datetime: Date
-                max: ""
-                min: ""
-                step: ""
-                lookup: dr
-            cde:
-                name: CDE
-                type: Text
-                optional: false
-                auto: false
-                length: "12"
-                size: "12"
-                maxlength: ""
-                minlength: ""
-                placeholder: Neuer Text
-                pattern: ""
-                datetime: Date
-                max: ""
-                min: ""
-                step: ""
-                lookup: liste
-    yoyo:
-        name: YoYo
-        type: Entity
-        fields:
-            monster:
-                name: Monster
-                type: Text
-                optional: false
-                auto: false
-                length: "3"
-                size: "3"
-                maxlength: "0"
-                minlength: "0"
-                placeholder: ""
-                pattern: ""
-                datetime: ""
-                max: "0"
-                min: "0"
-                step: "0"
-                lookup: ""
-            test neu:
-                name: Test Neu
+                lookup: customertype
+            classification:
+                name: Classification
                 type: Lookup
                 optional: false
                 auto: false
-                length: "1"
-                size: "1"
-                maxlength: ""
-                minlength: "0"
-                placeholder: Some text...
-                pattern: ""
                 datetime: Date
-                max: ""
-                min: "0"
-                step: ""
-                lookup: liste
-            test2:
-                name: Test2
-                type: Boolean
+                lookup: customertype
+            email:
+                name: EMail
+                type: E-Mail
                 optional: false
                 auto: false
-                length: "1"
-                size: "1"
-                maxlength: "0"
-                minlength: "0"
-                placeholder: ""
-                pattern: ""
-                datetime: ""
-                max: "0"
-                min: "0"
-                step: "0"
-                lookup: ""
+                placeholder: test@yahoo.de
+                datetime: Date
+                lookup: customertype
+            name:
+                name: Name
+                type: Text
+                optional: false
+                auto: false
+                maxlength: "5"
+                datetime: Date
+                lookup: customertype
+    projects:
+        name: Projects
+        type: Entity
+        fields:
+            name:
+                name: Name
+                type: Text
+                optional: false
+                auto: false
+                datetime: Date
+                lookup: customertype
+            startdate:
+                name: StartDate
+                type: Date
+                optional: false
+                auto: false
+                datetime: Date
+                lookup: customertype
 relations:
-    alphamany-to-manysuper:
-        name: ""
-        type: Many-to-Many
-        source: Alpha
-        destination: Super
-    alphaone-to-manywarframe:
+    customersone-to-manyprojects:
         name: ""
         type: One-to-Many
-        source: Alpha
-        destination: Warframe
-    warframeone-to-manyyoyo:
-        name: ""
-        type: One-to-Many
-        source: Warframe
-        destination: YoYo
+        source: Customers
+        destination: Projects
 lookups:
-    dr:
+    customertype:
         list:
-            - "123"
-            - DTTGS
-            - ZULU
-            - ZULUnew
-    drstein:
-        list:
-            - ZULU
-            - DTTGS
-    enum:
-        list:
-            - DTTGS
-            - asd
-    liste:
-        list:
-            - DTTGS
+            - A-Customer
+            - B-Customer
+            - C-Customer
