@@ -27,15 +27,15 @@
                     <section>
                       <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase $entityname}}" />  
                       <div class="field">
-                        <label class="label">Name</label>
+                        <label for="field_name" class="label">Name</label>
                         <div class="control">
-                          <input name="field_name" class="input" type="text" value="{{.Name}}" required />
+                          <input name="field_name" id="field_name" class="input" type="text" value="{{.Name}}" required />
                         </div>
                       </div>
-                      <div class="columns is-mobile">
+                      <div class="columns">
                         <div class="column">
                           <div class="field">
-                            <label class="label">Type</label>
+                            <label for="type_select" class="label">Type</label>
                             <div class="control">
                               <div class="select">
                                 <select id="type_select" name="field_type" value="{{.Type}}" autofocus onchange="fieldVisibilty()" onfocus="fieldVisibilty()">
@@ -51,123 +51,137 @@
                              </div>
                           </div>
                         </div>
-                        <div class="column">
-                          <div class="field" id="optional">
-                            <label class="label">Optional?</label>
-                              <input name="field_optional" type="checkbox" value="true" {{if .Optional}}checked{{end}} />                            
+                        <div class="column" id="required">
+                          <div class="field" >
+                            <label for="field_required" class="label">Required</label>
+                              <input name="field_required" id="field_required" type="checkbox" value="true" {{if .Required}}checked{{end}} />                            
                           </div>   
-                          <div class="field" id="label">
-                            <label class="label">Label?</label>
-                              <input name="field_label" type="checkbox" value="true" {{if .Label}}checked{{end}} />                            
+                        </div>
+                        <div class="column" id="label">
+                          <div class="field">
+                            <label for="field_label" class="label">Label</label>
+                              <input name="field_label" id="field_label" type="checkbox" value="true" {{if .Label}}checked{{end}} />                            
                           </div>   
                         </div>   
                       </div> <!-- columns -->
-                      <div class="columns is-mobile">
-                        <div class="column">
-                          <div class="field" id="size">
-                            <label class="label">Size</label>
+                      <div class="columns" >
+                        <div class="column is-half" id="size">
+                          <div class="field">
+                            <label for="field_size" class="label">Size of Field</label>
                             <div class="control">
-                              <input name="field_size" class="input" type="number" step="1" min="0" value="{{.Size}}">
+                              <input name="field_size" id="field_size" class="input" type="number" size="4" step="1" min="0" value="{{.Size}}">
                             </div>
                           </div> 
                         </div>   
-                        <div class="column">
-                          <div class="field" id="length">
-                            <label class="label">Length</label>
+                        <div class="column is-half" id="length">
+                          <div class="field">
+                            <label for="field_length" class="label">Length</label>
                             <div class="control">
-                              <input name="field_length" class="input" type="number" step="1" min="0" value="{{.Length}}">
+                              <input name="field_length" id="field_length" class="input" type="number" size="4" step="1" min="0" value="{{.Length}}">
                             </div>
                           </div>   
                         </div>  
                       </div> <!-- columns -->
-                      <div class="columns is-mobile">
-                        <div class="column">
-                          <div class="field" id="maxlength">
-                            <label class="label">Maximum Length</label>
+                      <div class="columns" >
+                        <div class="column is-half" id="minlength">
+                          <div class="field">
+                            <label for="field_minlength" class="label">Minimum Length</label>
                             <div class="control">
-                              <input name="field_maxlength" class="input" type="number" step="1" min="0" value="{{.MaxLength}}">
+                              <input name="field_minlength" id="field_minlength" class="input" type="number" size="4" step="1" min="0" value="{{.MinLength}}">
                             </div>
                           </div>   
-                        </div>   
-                        <div class="column">
-                          <div class="field" id="minlength">
-                            <label class="label">Minimum Length</label>
+                        </div> 
+                        <div class="column is-half" id="maxlength">
+                          <div class="field" >
+                            <label for="field_maxlength" class="label">Maximum Length</label>
                             <div class="control">
-                              <input name="field_minlength" class="input" type="number" step="1" min="0" value="{{.MinLength}}">
+                              <input name="field_maxlength" id="field_maxlength" class="input" type="number" size="4" step="1" min="0" value="{{.MaxLength}}">
                             </div>
                           </div>   
-                        </div>   
+                        </div>     
                       </div> <!-- columns -->
-                      <div class="columns is-mobile">
-                        <div class="column">
-                          <div class="field" id="minval">
-                            <label class="label">Minimum Value</label>
+                      <div class="columns">
+                        <div class="column is-one-third"  id="minval">
+                          <div class="field">
+                            <label for="field_min" class="label">Minimum Value</label>
                             <div class="control">
-                              <input name="field_min" class="input" type="number" value="{{.Min}}">
+                              <input name="field_min" id="field_min" class="input" type="number" value="{{.Min}}">
                             </div>
                           </div> 
                         </div>  
-                        <div class="column">
-                          <div class="field" id="maxval">
-                            <label class="label">Maximum Value</label>
+                        <div class="column is-one-third"  id="maxval">
+                          <div class="field">
+                            <label for="field_max" class="label">Maximum Value</label>
                             <div class="control">
-                              <input name="field_max" class="input" type="number" value="{{.Max}}">
+                              <input name="field_max" id="field_max" class="input" type="number" value="{{.Max}}">
                             </div>
                           </div> 
                         </div>                         
-                      </div> <!-- columns -->
-                      <div class="columns is-mobile">
-                        <div class="column">
-                          <div class="field" id="stepval">
-                            <label class="label">Step</label>
+                        <div class="column is-one-third"  id="stepval">
+                          <div class="field" >
+                            <label for="field_step" class="label">Step</label>
                             <div class="control">
-                              <input name="field_step" class="input" type="number" value="{{.Step}}">
+                              <input name="field_step" id="field_step" class="input" type="number" value="{{.Step}}">
                             </div>
                           </div>  
                         </div>                         
                       </div> <!-- columns -->
-                      <div class="field" id="placeholder">
-                        <label class="label">Placeholder</label>
-                        <div class="control">
-                          <input id="placeholder_field" name="field_placeholder" class="input" type="text" value="{{.Placeholder}}">
-                        </div>
-                      </div>     
-                      <div class="field" id="datetime">
-                        <label class="label">Date/Time</label>
-                        <div class="control">
-                          <div class="select">
-                            <select name="field_datetime" value="{{.DateTime}}">
-                              <option{{if eq .DateTime ""}} selected{{end}}></option>
-                              <option{{if eq .DateTime "Date"}} selected{{end}}>Date</option>
-                              <option{{if eq .DateTime "Time"}} selected{{end}}>Time</option>
-                              <option{{if eq .DateTime "Date+Time"}} selected{{end}}>Date+Time</option>
-                              <option{{if eq .DateTime "Week"}} selected{{end}}>Week</option>
-                              <option{{if eq .DateTime "Month"}} selected{{end}}>Month</option>
-                            </select>
+                       <div class="column">
+                        <div class="field" id="datetime">
+                          <label class="label">Date/Time</label>
+                          <div class="control">
+                            <div class="select">
+                              <select name="field_datetime" value="{{.DateTime}}">
+                                <option{{if eq .DateTime ""}} selected{{end}}></option>
+                                <option{{if eq .DateTime "Date"}} selected{{end}}>Date</option>
+                                <option{{if eq .DateTime "Time"}} selected{{end}}>Time</option>
+                                <option{{if eq .DateTime "Date+Time"}} selected{{end}}>Date+Time</option>
+                                <option{{if eq .DateTime "Week"}} selected{{end}}>Week</option>
+                                <option{{if eq .DateTime "Month"}} selected{{end}}>Month</option>
+                              </select>
+                            </div>
+                          </div> 
+                        </div>                        
+                       </div>
+                       <div class="columns" >
+                         <div class="column is-half" id="placeholder">
+                          <div class="field">
+                            <label for="placeholder_field" class="label">Placeholder</label>
+                            <div class="control">
+                              <input id="placeholder_field" name="field_placeholder" class="input" type="text" value="{{.Placeholder}}">
+                            </div>
+                          </div>     
+                         </div>
+                         <div class="column is-half">
+                          <div class="field" id="pattern">
+                            <label for="pattern_field" class="label">Validation Pattern</label>
+                            <div class="control">
+                              <input id="pattern_field" name="field_pattern" class="input" type="text" value="{{.Pattern}}">
+                            </div>
                           </div>
-                        </div> 
-                      </div>                        
-                      <div class="field" id="pattern">
-                        <label class="label">Validation Pattern</label>
-                        <div class="control">
-                          <input id="pattern_field" name="field_pattern" class="input" type="text" value="{{.Pattern}}">
-                        </div>
-                      </div>
-                      <div class="field" id="lookup">
+                         </div>
+                       </div> <!-- columns -->
+                       <div class="column">
+                          <div class="field" id="lookup">
                             <label class="label">Lookup</label>
                             <div class="control">
                               <div class="select">
                                 <select id="lookup_select" name="field_lookup" value="{{.Lookup}}" autofocus onchange="fieldVisibilty()" onfocus="fieldVisibilty()">
+                                 <option></option> 
                                   {{$lk:= .Lookup}}
-                                  {{range $value:=$lookupname}}
+                                  {{range $value:=$lookupname}}                                 
                                   <option{{if eq $lk $value}} selected{{end}}>{{$value}}</option>          
                                   {{end}}
                                 </select>
                               </div>
-                             </div>
+                            </div>
                           </div>
+                        </div>
                     </section>
                     {{end}}
+                    
+                    <hr>
+                    
                     <footer>
                       <button class="button is-success" type="submit">Save changes</button>
                       <a class="button is-info" href="/entities/{{lowercase .Text.entityname}}">Cancel</a>
@@ -188,61 +202,64 @@ window.onload = function(){
   switch(select) {
     case "Boolean":
       document.getElementById("pattern").style.display = "none";
-      document.getElementById("optional").style.display = "none";
-      document.getElementById("maxlength").style.display = "none";
-      document.getElementById("minlength").style.display = "none";
       document.getElementById("placeholder").style.display = "none";
+      document.getElementById("required").style.display = "none";
+      document.getElementById("minlength").style.display = "none";
+      document.getElementById("maxlength").style.display = "none";
       document.getElementById("size").style.display = "none";
       document.getElementById("length").style.display = "none";
       document.getElementById("datetime").style.display = "none";
-      document.getElementById("maxval").style.display = "none";
       document.getElementById("minval").style.display = "none";
+      document.getElementById("maxval").style.display = "none";
       document.getElementById("stepval").style.display = "none";
       document.getElementById("lookup").style.display = "none";
+      document.getElementById("label").style.display = "none";
       break;
     case "Lookup":
       document.getElementById("pattern").style.display = "none";
-      document.getElementById("optional").style.display = "none";
-      document.getElementById("maxlength").style.display = "none";
+      document.getElementById("required").style.display = "none";
       document.getElementById("minlength").style.display = "none";
+      document.getElementById("maxlength").style.display = "none";
       document.getElementById("placeholder").style.display = "none";
       document.getElementById("size").style.display = "none";
       document.getElementById("length").style.display = "none";
       document.getElementById("datetime").style.display = "none";
-      document.getElementById("maxval").style.display = "none";
       document.getElementById("minval").style.display = "none";
+      document.getElementById("maxval").style.display = "none";
       document.getElementById("stepval").style.display = "none";
       document.getElementById("lookup").style.display = "block";
       break;
     case "Text":
       document.getElementById("pattern").style.display = "block";
-      document.getElementById("optional").style.display = "block";
-      document.getElementById("maxlength").style.display = "block";
+      document.getElementById("required").style.display = "block";
       document.getElementById("minlength").style.display = "block";
+      document.getElementById("maxlength").style.display = "block";
       document.getElementById("placeholder").style.display = "block";
       document.getElementById("size").style.display = "block";
-      document.getElementById("length").style.display = "block";
+      document.getElementById("length").style.display = "none";
       document.getElementById("datetime").style.display = "none";
-      document.getElementById("maxval").style.display = "none";
       document.getElementById("minval").style.display = "none";
+      document.getElementById("maxval").style.display = "none";
       document.getElementById("stepval").style.display = "none";
       document.getElementById("lookup").style.display = "none";
+      document.getElementById("label").style.display = "block";
       if (!document.getElementById("placeholder_field").value) {
         document.getElementById("placeholder_field").value="Some text..."
       }
       break;   
     case "E-Mail":
       document.getElementById("pattern").style.display = "block";
-      document.getElementById("optional").style.display = "block";
-      document.getElementById("maxlength").style.display = "block";
+      document.getElementById("required").style.display = "block";
       document.getElementById("minlength").style.display = "block";
+      document.getElementById("maxlength").style.display = "block";
       document.getElementById("placeholder").style.display = "block";
       document.getElementById("size").style.display = "block";
-      document.getElementById("length").style.display = "block";
+      document.getElementById("length").style.display = "none";
       document.getElementById("datetime").style.display = "none";
-      document.getElementById("maxval").style.display = "none";
       document.getElementById("minval").style.display = "none";
+      document.getElementById("maxval").style.display = "none";
       document.getElementById("lookup").style.display = "none";
+      document.getElementById("label").style.display = "none";
       document.getElementById("stepval").style.display = "none";
       if (!document.getElementById("placeholder_field").value) {
         document.getElementById("placeholder_field").value="test@yahoo.de"
@@ -250,16 +267,17 @@ window.onload = function(){
       break;
     case "Phone":
       document.getElementById("pattern").style.display = "block";
-      document.getElementById("optional").style.display = "block";
-      document.getElementById("maxlength").style.display = "none";
-      document.getElementById("minlength").style.display = "none";
+      document.getElementById("required").style.display = "block";
+      document.getElementById("minlength").style.display = "block";
+      document.getElementById("maxlength").style.display = "block";
       document.getElementById("placeholder").style.display = "block";
       document.getElementById("size").style.display = "block";
-      document.getElementById("length").style.display = "block";
+      document.getElementById("length").style.display = "none";
       document.getElementById("datetime").style.display = "none";
-      document.getElementById("maxval").style.display = "none";
       document.getElementById("minval").style.display = "none";
+      document.getElementById("maxval").style.display = "none";
       document.getElementById("stepval").style.display = "none";
+      document.getElementById("label").style.display = "none";
       document.getElementById("lookup").style.display = "none";
       if (!document.getElementById("placeholder_field").value) {
         document.getElementById("placeholder_field").value="+34 5603821"
@@ -267,30 +285,32 @@ window.onload = function(){
       break;
      case "Date":
       document.getElementById("pattern").style.display = "none";
-      document.getElementById("optional").style.display = "block";
-      document.getElementById("maxlength").style.display = "none";
+      document.getElementById("required").style.display = "block";
       document.getElementById("minlength").style.display = "none";
+      document.getElementById("maxlength").style.display = "none";
       document.getElementById("placeholder").style.display = "none";
       document.getElementById("size").style.display = "none";
       document.getElementById("length").style.display = "none";
       document.getElementById("datetime").style.display = "block";
-      document.getElementById("maxval").style.display = "none";
       document.getElementById("minval").style.display = "none";
+      document.getElementById("maxval").style.display = "none";
       document.getElementById("stepval").style.display = "none";
+      document.getElementById("label").style.display = "none";
       document.getElementById("lookup").style.display = "none";
       break;     
     case "Number":
       document.getElementById("pattern").style.display = "none";
-      document.getElementById("optional").style.display = "block";
-      document.getElementById("maxlength").style.display = "none";
+      document.getElementById("required").style.display = "block";
       document.getElementById("minlength").style.display = "none";
+      document.getElementById("maxlength").style.display = "none";
       document.getElementById("placeholder").style.display = "block";
       document.getElementById("size").style.display = "block";
-      document.getElementById("length").style.display = "block";
+      document.getElementById("length").style.display = "none";
       document.getElementById("datetime").style.display = "none";
-      document.getElementById("maxval").style.display = "block";
       document.getElementById("minval").style.display = "block";
+      document.getElementById("maxval").style.display = "block";
       document.getElementById("stepval").style.display = "block";
+      document.getElementById("label").style.display = "none";
       document.getElementById("lookup").style.display = "none";
       if (!document.getElementById("placeholder_field").value) {
         document.getElementById("placeholder_field").value="123"
@@ -298,12 +318,15 @@ window.onload = function(){
       break;     
     default:
       document.getElementById("pattern").style.display = "block";
-      document.getElementById("optional").style.display = "block";
-      document.getElementById("maxlength").style.display = "block";
+      document.getElementById("required").style.display = "block";
       document.getElementById("minlength").style.display = "block";
+      document.getElementById("maxlength").style.display = "block";
       document.getElementById("placeholder").style.display = "block";
       document.getElementById("size").style.display = "block";
-      document.getElementById("length").style.display = "block";
+      document.getElementById("length").style.display = "none";
+      document.getElementById("label").style.display = "block";
+      document.getElementById("minval").style.display = "block";
+      document.getElementById("maxval").style.display = "block";
       document.getElementById("lookup").style.display = "none";
       console.log("no hit");
     }
