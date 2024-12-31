@@ -23,9 +23,9 @@
                     <tr>
                       <th>Name</th>
                       <th>Type</th>
-                      <th>Optional</th>
+                      <th>Required</th>
                       <th>Size</th>
-                      <th>Length</th>
+                      <th>Special</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -36,7 +36,9 @@
                       <td valign="bottom">{{.Type}}</td>
                       <td valign="bottom">{{.Required}}</td>
                       <td valign="bottom">{{.Size}}</td>
-                      <td valign="bottom">{{.Length}}</td>
+                      {{- if eq .Type "Date"}}<td valign="bottom">{{.DateTime}}</td>{{else}}
+                      {{- if eq .Type "Lookup"}}<td valign="bottom">{{.Lookup}}</td>
+                      {{- else}}<td valign="bottom"></td>{{end}}{{end}}
                       <td align="right" >
                         <form action="/fields/{{lowercase .Name}}" method="post">
                           <input type="hidden" id="field_name" name="field_name" value="{{lowercase .Name}}" />

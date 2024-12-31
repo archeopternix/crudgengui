@@ -2,7 +2,7 @@ package controller
 
 import (
 	model "crudgengui/model"
-	
+
 	"fmt"
 	"net/http"
 	"sync"
@@ -13,33 +13,33 @@ import (
 // ------------- Fields -------------
 // showField helper function to show detail page for field
 func (mc ModelController) showField(c echo.Context, entityname string, fieldname string) error {
-  var rd *RequestData
-  field:= &model.Field{}
-  titletext := "Create a new field: "
-  
-  // if filename defined show field detail page
-  if len(fieldname)> 0 {
-    var ok bool
-    // show field detail page
-    field, ok = mc.repo.GetField(entityname,fieldname)
-    if !ok {
-      return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Field '%v' in Entity '%v' not found", fieldname, entityname))
-    	}  
-    titletext = "Field: "+ fieldname
-  }
-  
-  text:=map[string]string{
-    "title": titletext,
-    "menu": "menu_entities",
-    "entityname" : entityname,
-  }
-  
-  rd = newRequestData(text,map[string]interface{}{
-    "field": field,
-    "lookupnames": mc.repo.GetAllLookupNames(),
-  })
-  
-  return c.Render(http.StatusOK, "field.html", rd) 
+	var rd *RequestData
+	field := &model.Field{}
+	titletext := "Create a new field: "
+
+	// if filename defined show field detail page
+	if len(fieldname) > 0 {
+		var ok bool
+		// show field detail page
+		field, ok = mc.repo.GetField(entityname, fieldname)
+		if !ok {
+			return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Field '%v' in Entity '%v' not found", fieldname, entityname))
+		}
+		titletext = "Field: " + fieldname
+	}
+
+	text := map[string]string{
+		"title":      titletext,
+		"menu":       "menu_entities",
+		"entityname": entityname,
+	}
+
+	rd = newRequestData(text, map[string]interface{}{
+		"field":       field,
+		"lookupnames": mc.repo.GetAllLookupNames(),
+	})
+
+	return c.Render(http.StatusOK, "field.html", rd)
 }
 
 // DeleteField shows detail page to model or edit screen for new model
@@ -55,8 +55,8 @@ func (mc ModelController) DeleteField(c echo.Context) error {
 	if err := mc.repo.DeleteField(ename, fname); err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, err.Error())
 	}
-  
-  return mc.showEntity(c,ename)
+
+	return mc.showEntity(c, ename)
 }
 
 // InsertField
@@ -72,22 +72,22 @@ func (mc ModelController) InsertField(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-  if (field.Length =="0") {
-     field.Length ="" 
-  }
-    if (field.MaxLength =="0") {
-     field.MaxLength ="" 
-  }
-  if (field.Size =="0") {
-     field.Size ="" 
-  }
-  if (field.Max =="0") {
-     field.Max ="" 
-  }
-  if (field.Step =="0") {
-     field.Step ="" 
-  }
-  
+	if field.Decimals == "0" {
+		field.Decimals = ""
+	}
+	if field.MaxLength == "0" {
+		field.MaxLength = ""
+	}
+	if field.Size == "0" {
+		field.Size = ""
+	}
+	if field.Max == "0" {
+		field.Max = ""
+	}
+	if field.Step == "0" {
+		field.Step = ""
+	}
+
 	if (len(field.Name) < 3) || (len(ename) < 3) {
 		return nil
 	}
@@ -96,8 +96,8 @@ func (mc ModelController) InsertField(c echo.Context) error {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
 
-  // Show entity with the name: ename 
-  return mc.showEntity(c,ename)
+	// Show entity with the name: ename
+	return mc.showEntity(c, ename)
 }
 
 // ShowField shows detail page for Field
@@ -105,16 +105,16 @@ func (mc ModelController) InsertField(c echo.Context) error {
 // or
 // /fields/:id?field=myfield shows detail page for the Field . :id is the entity
 func (mc ModelController) ShowField(c echo.Context) error {
-	
-  // Entity id from path `/entities/:id`
+
+	// Entity id from path `/entities/:id`
 	id := c.Param("id")
 	_, ok := mc.repo.GetEntity(id)
 	if !ok {
 		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Entity '%v' not found", id))
 	}
-  
-  // Query parameter ?field=myfield
-  fieldname := c.QueryParam("field")
 
-  return mc.showField(c,id,fieldname)
+	// Query parameter ?field=myfield
+	fieldname := c.QueryParam("field")
+
+	return mc.showField(c, id, fieldname)
 }

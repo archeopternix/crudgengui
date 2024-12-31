@@ -41,8 +41,11 @@
                                 <select id="type_select" name="field_type" value="{{.Type}}" autofocus onchange="fieldVisibilty()" onfocus="fieldVisibilty()">
                                   <option{{if eq .Type "Boolean"}} selected{{end}}>Boolean</option>
                                   <option{{if eq .Type "Text"}} selected{{end}}>Text</option>
+                                  <option{{if eq .Type "Longtext"}} selected{{end}}>Longtext</option>
+                                  <option{{if eq .Type "Password"}} selected{{end}}>Password</option>
                                   <option{{if eq .Type "E-Mail"}} selected{{end}}>E-Mail</option>
                                   <option{{if eq .Type "Phone"}} selected{{end}}>Phone</option>
+                                  <option{{if eq .Type "Integer"}} selected{{end}}>Integer</option>
                                   <option{{if eq .Type "Number"}} selected{{end}}>Number</option>
                                   <option{{if eq .Type "Date"}} selected{{end}}>Date</option>
                                   <option{{if eq .Type "Lookup"}} selected{{end}}>Lookup</option>
@@ -69,18 +72,26 @@
                           <div class="field">
                             <label for="field_size" class="label">Size of Field</label>
                             <div class="control">
-                              <input name="field_size" id="field_size" class="input" type="number" size="4" step="1" min="0" value="{{.Size}}">
+                              <input name="field_size" id="field_size" class="input" type="number" size="4" step="1" min="1" value="{{.Size}}">
                             </div>
                           </div> 
                         </div>   
-                        <div class="column is-half" id="length">
+                        <div class="column is-half" id="height">
                           <div class="field">
-                            <label for="field_length" class="label">Length</label>
+                            <label for="field_height" class="label">Height of Field</label>
                             <div class="control">
-                              <input name="field_length" id="field_length" class="input" type="number" size="4" step="1" min="0" value="{{.Length}}">
+                              <input name="field_height" id="field_height" class="input" type="number" size="2" step="1" min="1" value="{{.Height}}">
                             </div>
                           </div>   
                         </div>  
+                        <div class="column is-half" id="decimals">
+                          <div class="field">
+                            <label for="field_decimals" class="label">Minimum Length</label>
+                            <div class="control">
+                              <input name="field_decimals" id="field_decimals" class="input" type="number" size="2" step="1" min="0" value="{{.Decimals}}">
+                            </div>
+                          </div>   
+                        </div> 
                       </div> <!-- columns -->
                       <div class="columns" >
                         <div class="column is-half" id="minlength">
@@ -207,13 +218,14 @@ window.onload = function(){
       document.getElementById("minlength").style.display = "none";
       document.getElementById("maxlength").style.display = "none";
       document.getElementById("size").style.display = "none";
-      document.getElementById("length").style.display = "none";
+      document.getElementById("height").style.display = "none";
       document.getElementById("datetime").style.display = "none";
       document.getElementById("minval").style.display = "none";
       document.getElementById("maxval").style.display = "none";
       document.getElementById("stepval").style.display = "none";
       document.getElementById("lookup").style.display = "none";
       document.getElementById("label").style.display = "none";
+      document.getElementById("decimals").style.display = "none";
       break;
     case "Lookup":
       document.getElementById("pattern").style.display = "none";
@@ -222,12 +234,13 @@ window.onload = function(){
       document.getElementById("maxlength").style.display = "none";
       document.getElementById("placeholder").style.display = "none";
       document.getElementById("size").style.display = "none";
-      document.getElementById("length").style.display = "none";
+      document.getElementById("height").style.display = "none";
       document.getElementById("datetime").style.display = "none";
       document.getElementById("minval").style.display = "none";
       document.getElementById("maxval").style.display = "none";
       document.getElementById("stepval").style.display = "none";
       document.getElementById("lookup").style.display = "block";
+      document.getElementById("decimals").style.display = "none";
       break;
     case "Text":
       document.getElementById("pattern").style.display = "block";
@@ -236,17 +249,56 @@ window.onload = function(){
       document.getElementById("maxlength").style.display = "block";
       document.getElementById("placeholder").style.display = "block";
       document.getElementById("size").style.display = "block";
-      document.getElementById("length").style.display = "none";
+      document.getElementById("height").style.display = "none";
       document.getElementById("datetime").style.display = "none";
       document.getElementById("minval").style.display = "none";
       document.getElementById("maxval").style.display = "none";
       document.getElementById("stepval").style.display = "none";
       document.getElementById("lookup").style.display = "none";
       document.getElementById("label").style.display = "block";
+      document.getElementById("decimals").style.display = "none";
       if (!document.getElementById("placeholder_field").value) {
         document.getElementById("placeholder_field").value="Some text..."
       }
-      break;   
+      break;      
+    case "Password":
+      document.getElementById("pattern").style.display = "block";
+      document.getElementById("required").style.display = "block";
+      document.getElementById("minlength").style.display = "block";
+      document.getElementById("maxlength").style.display = "block";
+      document.getElementById("placeholder").style.display = "block";
+      document.getElementById("size").style.display = "block";
+      document.getElementById("height").style.display = "none";
+      document.getElementById("datetime").style.display = "none";
+      document.getElementById("minval").style.display = "none";
+      document.getElementById("maxval").style.display = "none";
+      document.getElementById("stepval").style.display = "none";
+      document.getElementById("lookup").style.display = "none";
+      document.getElementById("label").style.display = "none";
+      document.getElementById("decimals").style.display = "none";
+      if (!document.getElementById("placeholder_field").value) {
+        document.getElementById("placeholder_field").value="Some text..."
+      }
+      break;  
+    case "Longtext":
+      document.getElementById("pattern").style.display = "block";
+      document.getElementById("required").style.display = "block";
+      document.getElementById("minlength").style.display = "block";
+      document.getElementById("maxlength").style.display = "block";
+      document.getElementById("placeholder").style.display = "block";
+      document.getElementById("size").style.display = "block";
+      document.getElementById("height").style.display = "block";
+      document.getElementById("datetime").style.display = "none";
+      document.getElementById("minval").style.display = "none";
+      document.getElementById("maxval").style.display = "none";
+      document.getElementById("stepval").style.display = "none";
+      document.getElementById("lookup").style.display = "none";
+      document.getElementById("label").style.display = "block";
+      document.getElementById("decimals").style.display = "none";
+      if (!document.getElementById("placeholder_field").value) {
+        document.getElementById("placeholder_field").value="Some text..."
+      }
+      break;  
     case "E-Mail":
       document.getElementById("pattern").style.display = "block";
       document.getElementById("required").style.display = "block";
@@ -254,13 +306,14 @@ window.onload = function(){
       document.getElementById("maxlength").style.display = "block";
       document.getElementById("placeholder").style.display = "block";
       document.getElementById("size").style.display = "block";
-      document.getElementById("length").style.display = "none";
+      document.getElementById("height").style.display = "none";
       document.getElementById("datetime").style.display = "none";
       document.getElementById("minval").style.display = "none";
       document.getElementById("maxval").style.display = "none";
       document.getElementById("lookup").style.display = "none";
       document.getElementById("label").style.display = "none";
       document.getElementById("stepval").style.display = "none";
+      document.getElementById("decimals").style.display = "none";
       if (!document.getElementById("placeholder_field").value) {
         document.getElementById("placeholder_field").value="test@yahoo.de"
       }
@@ -272,13 +325,14 @@ window.onload = function(){
       document.getElementById("maxlength").style.display = "block";
       document.getElementById("placeholder").style.display = "block";
       document.getElementById("size").style.display = "block";
-      document.getElementById("length").style.display = "none";
+      document.getElementById("height").style.display = "none";
       document.getElementById("datetime").style.display = "none";
       document.getElementById("minval").style.display = "none";
       document.getElementById("maxval").style.display = "none";
       document.getElementById("stepval").style.display = "none";
       document.getElementById("label").style.display = "none";
       document.getElementById("lookup").style.display = "none";
+      document.getElementById("decimals").style.display = "none";
       if (!document.getElementById("placeholder_field").value) {
         document.getElementById("placeholder_field").value="+34 5603821"
       }
@@ -290,22 +344,24 @@ window.onload = function(){
       document.getElementById("maxlength").style.display = "none";
       document.getElementById("placeholder").style.display = "none";
       document.getElementById("size").style.display = "none";
-      document.getElementById("length").style.display = "none";
+      document.getElementById("height").style.display = "none";
       document.getElementById("datetime").style.display = "block";
       document.getElementById("minval").style.display = "none";
       document.getElementById("maxval").style.display = "none";
       document.getElementById("stepval").style.display = "none";
       document.getElementById("label").style.display = "none";
       document.getElementById("lookup").style.display = "none";
+      document.getElementById("decimals").style.display = "none";
       break;     
     case "Number":
+      document.getElementById("decimals").style.display = "block";
       document.getElementById("pattern").style.display = "none";
       document.getElementById("required").style.display = "block";
       document.getElementById("minlength").style.display = "none";
       document.getElementById("maxlength").style.display = "none";
       document.getElementById("placeholder").style.display = "block";
       document.getElementById("size").style.display = "block";
-      document.getElementById("length").style.display = "none";
+      document.getElementById("height").style.display = "none";
       document.getElementById("datetime").style.display = "none";
       document.getElementById("minval").style.display = "block";
       document.getElementById("maxval").style.display = "block";
@@ -317,13 +373,14 @@ window.onload = function(){
       }
       break;     
     default:
+      document.getElementById("decimals").style.display = "none";
       document.getElementById("pattern").style.display = "block";
       document.getElementById("required").style.display = "block";
       document.getElementById("minlength").style.display = "block";
       document.getElementById("maxlength").style.display = "block";
       document.getElementById("placeholder").style.display = "block";
       document.getElementById("size").style.display = "block";
-      document.getElementById("length").style.display = "none";
+      document.getElementById("height").style.display = "none";
       document.getElementById("label").style.display = "block";
       document.getElementById("minval").style.display = "block";
       document.getElementById("maxval").style.display = "block";

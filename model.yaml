@@ -13,21 +13,25 @@ entities:
             city:
                 name: City
                 type: Text
-                optional: true
+                required: false
+                label: false
                 auto: false
                 datetime: Date
                 lookup: customertype
             classification:
                 name: Classification
                 type: Lookup
-                optional: false
+                required: false
+                label: false
                 auto: false
+                placeholder: Some text...
                 datetime: Date
                 lookup: customertype
             email:
                 name: EMail
                 type: E-Mail
-                optional: false
+                required: false
+                label: false
                 auto: false
                 placeholder: test@yahoo.de
                 datetime: Date
@@ -35,7 +39,8 @@ entities:
             name:
                 name: Name
                 type: Text
-                optional: false
+                required: false
+                label: false
                 auto: false
                 maxlength: "5"
                 datetime: Date
@@ -47,16 +52,18 @@ entities:
             name:
                 name: Name
                 type: Text
-                optional: false
+                required: false
+                label: false
                 auto: false
                 datetime: Date
                 lookup: customertype
             startdate:
                 name: StartDate
                 type: Date
-                optional: false
+                required: false
+                label: false
                 auto: false
-                datetime: Date
+                datetime: Week
                 lookup: customertype
 relations:
     customersone-to-manyprojects:
