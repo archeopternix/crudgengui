@@ -32,7 +32,7 @@
                     {{$entity := .Data.entity }}
                     {{range .Data.entity.Fields}}
                     <tr>
-                      <td valign="bottom">{{if not .Auto}}<a href="/entities/{{lowercase $entity.Name}}?field={{lowercase .Name}}">{{.Name}}</a>{{else}}{{.Name}}{{end}}</td>  
+                      <td valign="bottom">{{if not .Auto}}<a href="/entities/{{lowercase $entity.Name}}?field={{.Name}}">{{.Name}}</a>{{else}}{{.Name}}{{end}}</td>  
                       <td valign="bottom">{{.Type}}</td>
                       <td valign="bottom">{{.Required}}</td>
                       <td valign="bottom">{{.Size}}</td>
@@ -41,7 +41,7 @@
                       {{- else}}<td valign="bottom"></td>{{end}}{{end}}
                       <td align="right" >
                         <form action="/fields/{{lowercase .Name}}" method="post">
-                          <input type="hidden" id="field_name" name="field_name" value="{{lowercase .Name}}" />
+                          <input type="hidden" id="field_name" name="field_name" value="{{.Name}}" />
                           <input type="hidden" id="entity_name" name="entity_name" value="{{lowercase $entity.Name}}" />
                         {{if not .Auto}}<p align="right" class="buttons">
                           <button class="button is-danger is-outlined" >

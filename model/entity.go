@@ -1,20 +1,48 @@
 package model
 
 import (
+	"slices"
+
 	validation "github.com/go-ozzo/ozzo-validation"
 	is "github.com/go-ozzo/ozzo-validation/is"
 )
 
 type Entity struct {
-	Name   string           `yaml:"name" form:"entity-name" `
-	Type   string           `yaml:"type" form:"entity-type" ` // 'Entity' || 'Key-Values'
-	Fields map[string]Field `yaml:"fields" form:"entity-fields" `
+	Name   string  `yaml:"name" form:"entity-name" `
+	Type   string  `yaml:"type" form:"entity-type" ` // 'Entity' || 'Key-Values'
+	Fields []Field `yaml:"fields" form:"entity-fields" `
 }
 
 func NewEntity() *Entity {
 	e := new(Entity)
-	e.Fields = make(map[string]Field)
 	return e
+}
+
+func (e *Entity) Add(f Field) {
+	e.Fields = append(e.Fields, f)
+}
+
+func (e Entity) GetFieldIndexByName(name string) int {
+	for i, f := range e.Fields {
+		if f.Name == name {
+			return i
+		}
+	}
+	return -1
+}
+
+func (e Entity) GetFieldByName(name string) *Field {
+	f := new(Field)
+	if i := e.GetFieldIndexByName(name); i > -1 {
+		f = &e.Fields[i]
+		return f
+	}
+	return nil
+}
+
+func (e *Entity) DeleteFieldByName(name string) {
+	i := e.GetFieldIndexByName(name)
+	e.Fields = slices.Delete(e.Fields, i, i+1)
 }
 
 type ErrorMap map[string]error

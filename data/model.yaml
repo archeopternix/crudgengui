@@ -1,4 +1,4 @@
-name: Cybercafe
+name: CyberAlarm
 settings:
     currency_symbol: €
     decimal_separator: ','
@@ -6,59 +6,48 @@ settings:
     time_format: "15:04:05"
     date_format: 01.02.2006
 entities:
-    role:
-        name: Role
+    haus:
+        name: Haus
         type: Entity
         fields:
-            name:
-                name: Name
-                type: Text
-                required: true
-                label: true
-                auto: false
-                size: "21"
-                placeholder: Some text...
-    user:
-        name: User
+            - name: Name
+              type: Text
+              required: true
+              label: true
+              auto: false
+              placeholder: Some text...
+            - name: Floors
+              type: Number
+              required: false
+              label: false
+              auto: false
+              min: "1"
+    window:
+        name: Window
         type: Entity
         fields:
-            e-mail:
-                name: E-Mail
-                type: E-Mail
-                required: true
-                label: false
-                auto: false
-                placeholder: test@yahoo.de
-            firstname:
-                name: Firstname
-                type: Text
-                required: false
-                label: false
-                auto: false
-                placeholder: Some text...
-            lastname:
-                name: Lastname
-                type: Text
-                required: false
-                label: false
-                auto: false
-                placeholder: Some text...
-            username:
-                name: Username
-                type: Text
-                required: true
-                label: true
-                auto: false
-                placeholder: Some text...
-relations:
-    userone-to-manyrole:
-        name: ""
-        type: One-to-Many
-        source: User
-        destination: Role
-lookups:
-    roletypes:
-        list:
-            - Global Admin
-            - Superuser
-            - Normal
+            - name: Name
+              type: Text
+              required: true
+              label: true
+              auto: false
+              placeholder: Some text...
+            - name: Test
+              type: Boolean
+              required: false
+              label: false
+              auto: false
+            - name: e-Mail
+              type: E-Mail
+              required: false
+              label: false
+              auto: false
+              placeholder: test@yahoo.de
+            - name: Türe
+              type: Number
+              required: false
+              label: false
+              auto: false
+              placeholder: "123"
+relations: {}
+lookups: {}

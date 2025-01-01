@@ -75,6 +75,7 @@ func (mrep *ModelRepository) GetEntity(name string) (*model.Entity, bool) {
 	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
 		return nil, false
 	}
+
 	r, ok := mrep.m.Entities[strings.ToLower(name)]
 	return &r, ok
 }
@@ -85,8 +86,14 @@ func (mrep *ModelRepository) SaveOrUpdateField(ename string, f *model.Field) err
 	if !ok {
 		return fmt.Errorf("Entity '%s' not found", ename)
 	}
-	e.Fields[strings.ToLower(f.Name)] = *f
 
+	if e.GetFieldIndexByName(f.Name) == -1 {
+		// Save new field
+		e.Fields = append(e.Fields, *f)
+	} else {
+		// Update field
+		e.Fields[e.GetFieldIndexByName(f.Name)] = *f
+	}
 	mrep.m.Entities[strings.ToLower(ename)] = *e
 
 	return mrep.modelRW.WriteModel(mrep.m)
@@ -98,18 +105,18 @@ func (mrep *ModelRepository) DeleteField(ename string, fname string) error {
 	if !ok {
 		return fmt.Errorf("Entity '%s' not found", ename)
 	}
-
-	delete(e.Fields, strings.ToLower(fname))
+	e.DeleteFieldByName(fname)
 	mrep.m.Entities[strings.ToLower(ename)] = *e
 
 	return mrep.modelRW.WriteModel(mrep.m)
 }
 
 // GetAllFields gets all fields from the model
-func (mrep *ModelRepository) GetAllFields(ename string) (map[string]model.Field, error) {
+func (mrep *ModelRepository) GetAllFields(ename string) ([]model.Field, error) {
 	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
 		return nil, err
 	}
+
 	e, ok := mrep.GetEntity(strings.ToLower(ename))
 	if !ok {
 		return nil, fmt.Errorf("Entity '%s' not found", ename)
@@ -158,7 +165,6 @@ func (mrep *ModelRepository) GetRelation(name string) (*model.Relation, bool) {
 // GetField of an Entity from the model
 func (mrep *ModelRepository) GetField(entityname string, name string) (*model.Field, bool) {
 	var ent model.Entity
-	var field model.Field
 	var ok bool
 
 	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
@@ -169,8 +175,10 @@ func (mrep *ModelRepository) GetField(entityname string, name string) (*model.Fi
 		return nil, false
 	}
 
-	field, ok = ent.Fields[strings.ToLower(name)]
-	return &field, ok
+	if field := ent.GetFieldByName(name); field != nil {
+		return field, true
+	}
+	return nil, false
 }
 
 // GetAllLookups gets all entities from the model
