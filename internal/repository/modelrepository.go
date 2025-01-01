@@ -20,11 +20,24 @@ type ModelRepository struct {
 }
 
 // NewModelRepository createas an new instance of ModelRepository with injected persistence functionality
-func NewModelRepository(mrw ModelReaderWriter) *ModelRepository {
+
+/*func NewModelRepository(mrw ModelReaderWriter) *ModelRepository {
 	mrep := new(ModelRepository)
 	mrep.modelRW = mrw
 	mrep.m = model.NewModel()
 	mrep.modelRW.ReadModel(mrep.m)
+	return mrep
+}
+*/
+
+func NewModelRepository(mrw ModelReaderWriter) *ModelRepository {
+	mrep := &ModelRepository{
+		modelRW: mrw,
+		m:       model.NewModel(),
+	}
+	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
+		log.Panic(err)
+	}
 	return mrep
 }
 
@@ -42,23 +55,21 @@ func (mrep *ModelRepository) SaveModel(name string, settings model.Settings) err
 
 // SaveOrUpdateEntity saves or updates an entity in the model
 func (mrep *ModelRepository) SaveOrUpdateEntity(e *model.Entity) error {
-	mrep.m.Entities[strings.ToLower(e.Name)] = *e
-
+	name := strings.ToLower(e.Name)
+	mrep.m.Entities[name] = *e
 	return mrep.modelRW.WriteModel(mrep.m)
 }
 
 // DeleteEntity deletes one entity from the model
 func (mrep *ModelRepository) DeleteEntity(name string) error {
-	_, ok := mrep.GetEntity(strings.ToLower(name))
-	if !ok {
-		return fmt.Errorf("Entity '%s' not found", name)
+	name = strings.ToLower(name)
+	if _, ok := mrep.m.Entities[name]; !ok {
+		return fmt.Errorf("entity '%s' not found", name)
 	}
 	if mrep.m.EntityInRealtions(name) {
-		return fmt.Errorf("Cannot delete as Entity '%s' is linked in a relation", name)
+		return fmt.Errorf("cannot delete as entity '%s' is linked in a relation", name)
 	}
-
-	delete(mrep.m.Entities, strings.ToLower(name))
-
+	delete(mrep.m.Entities, name)
 	return mrep.modelRW.WriteModel(mrep.m)
 }
 
@@ -82,21 +93,20 @@ func (mrep *ModelRepository) GetEntity(name string) (*model.Entity, bool) {
 
 // SaveOrUpdateField saves or updates a field in the model
 func (mrep *ModelRepository) SaveOrUpdateField(ename string, f *model.Field) error {
-	e, ok := mrep.GetEntity(strings.ToLower(ename))
+	ename = strings.ToLower(ename)
+	e, ok := mrep.GetEntity(ename)
 	if !ok {
-		return fmt.Errorf("Entity '%s' not found", ename)
+		return fmt.Errorf("entity '%s' not found", ename)
 	}
-
-	if e.GetFieldIndexByName(f.Name) == -1 {
-		// Save new field
+	idx := e.GetFieldIndexByName(f.Name)
+	if idx == -1 {
 		e.Fields = append(e.Fields, *f)
 	} else {
-		// Update field
-		e.Fields[e.GetFieldIndexByName(f.Name)] = *f
+		e.Fields[idx] = *f
 	}
-	mrep.m.Entities[strings.ToLower(ename)] = *e
-
+	mrep.m.Entities[ename] = *e
 	return mrep.modelRW.WriteModel(mrep.m)
+
 }
 
 // DeleteField deletes one field from the model
@@ -113,34 +123,25 @@ func (mrep *ModelRepository) DeleteField(ename string, fname string) error {
 
 // GetAllFields gets all fields from the model
 func (mrep *ModelRepository) GetAllFields(ename string) ([]model.Field, error) {
-	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
-		return nil, err
-	}
-
-	e, ok := mrep.GetEntity(strings.ToLower(ename))
+	ename = strings.ToLower(ename)
+	e, ok := mrep.GetEntity(ename)
 	if !ok {
-		return nil, fmt.Errorf("Entity '%s' not found", ename)
+		return nil, fmt.Errorf("entity '%s' not found", ename)
 	}
 	return e.Fields, nil
 }
 
 // SaveOrUpdateRelation saves or updates a relation in the model
 func (mrep *ModelRepository) SaveOrUpdateRelation(rname string, r *model.Relation) error {
-
-	_, ok := mrep.GetRelation(strings.ToLower(rname))
-	if !ok {
-		log.Println("Create new relation with name: ", strings.ToLower(rname))
-	}
-
-	mrep.m.Relations[strings.ToLower(rname)] = *r
-
+	rname = strings.ToLower(rname)
+	mrep.m.Relations[rname] = *r
 	return mrep.modelRW.WriteModel(mrep.m)
 }
 
 // DeleteRelation deletes one relation from the model
 func (mrep *ModelRepository) DeleteRelation(name string) error {
-	delete(mrep.m.Relations, strings.ToLower(name))
-
+	name = strings.ToLower(name)
+	delete(mrep.m.Relations, name)
 	return mrep.modelRW.WriteModel(mrep.m)
 }
 
@@ -155,30 +156,20 @@ func (mrep *ModelRepository) GetAllRelations() map[string]model.Relation {
 
 // GetRelation gets one single relation from the model
 func (mrep *ModelRepository) GetRelation(name string) (*model.Relation, bool) {
-	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
-		return nil, false
-	}
-	r, ok := mrep.m.Relations[strings.ToLower(name)]
+	name = strings.ToLower(name)
+	r, ok := mrep.m.Relations[name]
 	return &r, ok
 }
 
 // GetField of an Entity from the model
 func (mrep *ModelRepository) GetField(entityname string, name string) (*model.Field, bool) {
-	var ent model.Entity
-	var ok bool
-
-	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
+	entityname = strings.ToLower(entityname)
+	ent, ok := mrep.m.Entities[entityname]
+	if !ok {
 		return nil, false
 	}
-
-	if ent, ok = mrep.m.Entities[strings.ToLower(entityname)]; !ok {
-		return nil, false
-	}
-
-	if field := ent.GetFieldByName(name); field != nil {
-		return field, true
-	}
-	return nil, false
+	field := ent.GetFieldByName(name)
+	return field, field != nil
 }
 
 // GetAllLookups gets all entities from the model
@@ -191,29 +182,22 @@ func (mrep ModelRepository) GetAllLookups() map[string]model.Lookup {
 
 // GetLookup gets one single entity from the model
 func (mrep *ModelRepository) GetLookup(name string) (*model.Lookup, bool) {
-	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
-		return nil, false
-	}
-	r, ok := mrep.m.Lookups[strings.ToLower(name)]
+	name = strings.ToLower(name)
+	r, ok := mrep.m.Lookups[name]
 	return &r, ok
 }
 
 // SaveOrUpdateLookup saves or updates a relation in the model
 func (mrep *ModelRepository) SaveOrUpdateLookup(name string, lookup *model.Lookup) error {
-
-	_, ok := mrep.GetLookup(strings.ToLower(name))
-	if !ok {
-		log.Println("Create new lookup with name: ", strings.ToLower(name))
-	}
-	mrep.m.Lookups[strings.ToLower(name)] = *lookup
-
+	name = strings.ToLower(name)
+	mrep.m.Lookups[name] = *lookup
 	return mrep.modelRW.WriteModel(mrep.m)
 }
 
 // DeleteLookup deletes one relation from the model
 func (mrep *ModelRepository) DeleteLookup(name string) error {
-	delete(mrep.m.Lookups, strings.ToLower(name))
-
+	name = strings.ToLower(name)
+	delete(mrep.m.Lookups, name)
 	return mrep.modelRW.WriteModel(mrep.m)
 }
 
@@ -222,7 +206,6 @@ func (mrep ModelRepository) GetAllLookupNames() (names []string) {
 	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
 		return nil
 	}
-
 	for key, _ := range mrep.m.Lookups {
 		names = append(names, key)
 	}
