@@ -4,6 +4,8 @@ package model
 import (
 	"fmt"
 	"io"
+	"strings"
+	"time"
 
 	"gopkg.in/yaml.v3"
 )
@@ -58,6 +60,12 @@ func NewModel() *Model {
 	return m
 }
 
+// TimeStamp needed for file generation. Will be added in the header of each file
+// to track the creation date and time of each file
+func (m *Model) TimeStamp() string {
+	return time.Now().Format(m.DateFormat + " " + m.TimeFormat)
+}
+
 // ReadYAML reads the model as YAML from an io.Reader
 func (m *Model) ReadYAML(reader io.Reader) error {
 	data, err := io.ReadAll(reader)
@@ -100,4 +108,66 @@ func (m Model) EntityInRealtions(entityname string) bool {
 		}
 	}
 	return false
+}
+
+// parseDependencies parse all entities for lookup fields, add unique ID field
+// and parse relations between entities and therefore adds dedicated fields for
+// parent/child relations and scans for lookups and parent-child relationships
+// and therefore creates necessary additional entities (e.g. lookup entities)
+// or add additional fields (e.g. Id field for every entity)
+func (m *Model) ParseDependencies() error {
+
+	for key, entity := range m.Entities {
+		// Parse fields
+		for i := range entity.Fields {
+			field := &entity.Fields[i]
+
+			// If a lookup field is present check for lookup table
+			if field.Type == "Lookup" {
+				lookup := strings.ToLower(field.Lookup)
+				if _, ok := m.Lookups[lookup]; !ok {
+					return fmt.Errorf("lookup with name '%s' could not be found", field.Lookup)
+				}
+				field.Object = lookup
+			}
+		}
+
+		// Add an ID field to all entities if not yet exists
+		if idx := entity.GetFieldIndexByName("ID"); idx < 0 {
+			entity := m.Entities[key]
+			entity.Add(Field{Name: "ID", Type: "Integer", Required: true, Auto: true})
+			m.Entities[key] = entity
+		}
+	}
+
+	// Add fields for relationships between entities
+	// Source .. Parent
+	// Destination .. Child
+	for _, relation := range m.Relations {
+		sourcename := strings.ToLower(relation.Source)
+		destname := strings.ToLower(relation.Destination)
+
+		if relation.Type == "One-to-Many" {
+			// add child field
+			dest := m.Entities[destname]
+			if idx := dest.GetFieldIndexByName(sourcename + "ID"); idx < 0 {
+				dest.Add(Field{Name: strings.Title(sourcename) + "_ID", Type: "Child", Object: sourcename, Auto: true})
+				m.Entities[sourcename] = dest
+			}
+
+			// add parent field
+			source := m.Entities[sourcename]
+			if idx := dest.GetFieldIndexByName(destname + "ID"); idx < 0 {
+				source.Add(Field{Name: strings.Title(destname) + "_ID", Type: "Child", Object: destname, Auto: true})
+				m.Entities[destname] = source
+			}
+		}
+	}
+
+	/*	for _,lookup := range a.Lookups {
+			// do nothing so far
+		}
+	*/
+
+	return nil
 }

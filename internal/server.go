@@ -69,6 +69,8 @@ func (s *GuiServer) setRoutes() {
 	s.e.GET("/project", mc.ShowProject)
 	s.e.POST("/project", mc.SaveProject)
 
+	s.e.GET("/generate", mc.StartGeneration)
+
 	// Group for "/entities" routes
 	entitiesGroup := s.e.Group("/entities")
 	{

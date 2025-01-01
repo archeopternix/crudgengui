@@ -20,16 +20,6 @@ type ModelRepository struct {
 }
 
 // NewModelRepository createas an new instance of ModelRepository with injected persistence functionality
-
-/*func NewModelRepository(mrw ModelReaderWriter) *ModelRepository {
-	mrep := new(ModelRepository)
-	mrep.modelRW = mrw
-	mrep.m = model.NewModel()
-	mrep.modelRW.ReadModel(mrep.m)
-	return mrep
-}
-*/
-
 func NewModelRepository(mrw ModelReaderWriter) *ModelRepository {
 	mrep := &ModelRepository{
 		modelRW: mrw,
@@ -210,4 +200,13 @@ func (mrep ModelRepository) GetAllLookupNames() (names []string) {
 		names = append(names, key)
 	}
 	return names
+}
+
+// GetAllLookupNames gets all names of lookups from the model
+func (mrep ModelRepository) StartGeneration() error {
+	if err := mrep.m.ParseDependencies(); err != nil {
+		fmt.Println("Fehler beim Parsen des Models")
+	}
+	fmt.Println("Model geladen")
+	return nil
 }

@@ -27,4 +27,6 @@ type Field struct {
 	Decimals string `yaml:"decimals,omitempty" json:"decimals" form:"field_decimal `
 	// Name of the Lookup list
 	Lookup string `yaml:"lookup,omitempty" json:"lookup" form:"field_lookup" `
+	// Holding the name of the related object (parent / child)
+	Object string `yaml:"object,omitempty" json:"object" `
 }
