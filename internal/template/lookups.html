@@ -26,7 +26,7 @@
                   <tbody>
                     {{range $key, $value := .Data.lookups}}
                     <tr>
-                      <td valign="bottom"><a href="/lookups/{{$key}}">{{$key}}</a></td>  
+                      <td valign="bottom"><a href="/lookups/{{$key}}">{{$value.Name}}</a></td>  
                       <td align="right" >
                         <form action="/lookups/{{$key}}" method="post">
                         <input type="hidden" id="name" name="name" value="{{$key}}" />

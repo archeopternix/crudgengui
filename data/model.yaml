@@ -63,6 +63,7 @@ relations:
         destination: Window
 lookups:
     schalter:
+        name: Schalter
         list:
-            - Eins
             - Zwei
+            - Drei

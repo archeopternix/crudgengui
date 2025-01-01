@@ -1,23 +1,33 @@
 package model
 
+import (
+	"fmt"
+	"slices"
+)
+
 // Lookup is a string list
 type Lookup struct {
-  List []string     // list that contains the text values
+	Name string
+	List []string // list that contains the text values
 }
 
 // NewLookup creates a pointer to a new Lookup
-func NewLookup() *Lookup {
-  return new(Lookup)
+func NewLookup(name string) *Lookup {
+	return &Lookup{Name: name}
 }
 
-// Add adds an text entry
-func (f *Lookup)Add(text string){
-  f.List=append(f.List,text)
+// Add adds a text entry to the Lookup's list.
+func (l *Lookup) Add(text string) {
+	l.List = append(l.List, text)
 }
 
-// Delete deletes and text entry and preserves the order
-func (f *Lookup)Delete(i int){
-  copy(f.List[i:], f.List[i+1:]) // Shift a[i+1:] left one index.
-  f.List[len(f.List)-1] = ""     // Erase last element (write zero value).
-  f.List = f.List[:len(f.List)-1]     // Truncate slice.
+// Delete removes a text entry at the specified index from the Lookup's list.
+// It preserves the order of the remaining elements.
+// Returns an error if the index is out of range.
+func (l *Lookup) Delete(i int) error {
+	if i < 0 || i >= len(l.List) {
+		return fmt.Errorf("index %d out of range", i)
+	}
+	l.List = slices.Delete(l.List, i, i+1)
+	return nil
 }
