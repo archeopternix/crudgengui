@@ -5,9 +5,10 @@ featured web application incl. database layer and tests
 
 ## Features
 
-- User-friendly graphical interface to manage CRUD operations.
-- Easy customization of CRUD operations.
-- Integration with various backend systems.
+- User-friendly graphical interface to create CRUD applications.
+- Manage Entitites.
+- Manage Fields.
+- Manage fixed value Lookup tables
 
 ## Installation
 
