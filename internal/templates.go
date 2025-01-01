@@ -1,4 +1,4 @@
-package controller
+package internal
 
 import (
 	"html/template"
@@ -12,7 +12,7 @@ import (
 )
 
 // TemplateRegistry defines the template registry struct
-// Usage with echo:  
+// Usage with echo:
 //      templates := controller.NewTemplateRegistry()
 //      e.Renderer = templates
 type TemplateRegistry struct {
@@ -82,4 +82,3 @@ func (tr *TemplateRegistry) AddTemplate(name string, basetemplate string, filena
 	}
 	return nil
 }
-

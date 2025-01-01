@@ -1,0 +1,63 @@
+name: Cybercafe
+settings:
+    currency_symbol: €
+    decimal_separator: ','
+    thousend_separator: .
+    time_format: "15:04:05"
+    date_format: 01.02.2006
+entities:
+    role:
+        name: Role
+        type: Entity
+        fields:
+            name:
+                name: Name
+                type: Text
+                required: true
+                label: true
+                auto: false
+                placeholder: Some text...
+    user:
+        name: User
+        type: Entity
+        fields:
+            e-mail:
+                name: E-Mail
+                type: E-Mail
+                required: true
+                label: false
+                auto: false
+                placeholder: test@yahoo.de
+            firstname:
+                name: Firstname
+                type: Text
+                required: false
+                label: false
+                auto: false
+                placeholder: Some text...
+            lastname:
+                name: Lastname
+                type: Text
+                required: false
+                label: false
+                auto: false
+                placeholder: Some text...
+            username:
+                name: Username
+                type: Text
+                required: true
+                label: true
+                auto: false
+                placeholder: Some text...
+relations:
+    userone-to-manyrole:
+        name: ""
+        type: One-to-Many
+        source: User
+        destination: Role
+lookups:
+    roletypes:
+        list:
+            - Global Admin
+            - Superuser
+            - Normal
