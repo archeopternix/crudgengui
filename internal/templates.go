@@ -49,7 +49,7 @@ func NewTemplateRegistry() *TemplateRegistry {
 }
 
 // AddTemplate adds another template into the registry which could referenced by its name and could have a base template. To define a base template keep 2nd parameter empty ""
-func (tr *TemplateRegistry) AddTemplate(name string, basetemplate string, filenames ...string) error {
+func (tr *TemplateRegistry) addTemplate(name string, basetemplate string, filenames ...string) error {
 	var err error
 	if len(name) < 1 {
 		return fmt.Errorf("Template name must be defined")
@@ -81,4 +81,10 @@ func (tr *TemplateRegistry) AddTemplate(name string, basetemplate string, filena
 		}
 	}
 	return nil
+}
+
+func (tr *TemplateRegistry) AddTemplateOrPanic(name, base string, files ...string) {
+	if err := tr.addTemplate(name, base, files...); err != nil {
+		log.Panic(err)
+	}
 }

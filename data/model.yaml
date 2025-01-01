@@ -22,6 +22,12 @@ entities:
               label: false
               auto: false
               min: "1"
+            - name: Schalter
+              type: Lookup
+              required: false
+              label: false
+              auto: false
+              lookup: schalter
     window:
         name: Window
         type: Entity
@@ -49,5 +55,14 @@ entities:
               label: false
               auto: false
               placeholder: "123"
-relations: {}
-lookups: {}
+relations:
+    hausone-to-manywindow:
+        name: ""
+        type: One-to-Many
+        source: Haus
+        destination: Window
+lookups:
+    schalter:
+        list:
+            - Eins
+            - Zwei
