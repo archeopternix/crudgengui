@@ -16,6 +16,7 @@ entities:
                 required: true
                 label: true
                 auto: false
+                size: "21"
                 placeholder: Some text...
     user:
         name: User

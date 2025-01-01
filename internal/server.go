@@ -1,8 +1,8 @@
 package internal
 
 import (
-	"crudgengui/controller"
-	"crudgengui/repository"
+	controller "crudgengui/internal/controller"
+	repository "crudgengui/internal/repository"
 	"fmt"
 	"log"
 	"os"
@@ -13,7 +13,7 @@ import (
 
 const (
 	base = "../../"
-	tpl = "../../internal/template/"
+	tpl  = "../../internal/template/"
 )
 
 type GuiServer struct {
