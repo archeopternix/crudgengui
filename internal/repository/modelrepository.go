@@ -204,9 +204,12 @@ func (mrep ModelRepository) GetAllLookupNames() (names []string) {
 
 // GetAllLookupNames gets all names of lookups from the model
 func (mrep ModelRepository) StartGeneration() error {
-	if err := mrep.m.ParseDependencies(); err != nil {
+	copy, err := mrep.m.ParseDependencies()
+	if err != nil {
 		fmt.Println("Fehler beim Parsen des Models")
 	}
+	model.WriteToFile(copy, "../../data/generated.yaml")
+
 	fmt.Println("Model geladen")
 	return nil
 }

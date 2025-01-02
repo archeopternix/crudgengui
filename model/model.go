@@ -4,9 +4,11 @@ package model
 import (
 	"fmt"
 	"io"
+	"os"
 	"strings"
 	"time"
 
+	"github.com/gertd/go-pluralize"
 	"gopkg.in/yaml.v3"
 )
 
@@ -110,14 +112,36 @@ func (m Model) EntityInRealtions(entityname string) bool {
 	return false
 }
 
+// creates a deep copy of the Model
+func (om *Model) deepCopy() *Model {
+	copy := &Model{
+		Name:      om.Name,
+		Settings:  om.Settings,
+		Entities:  make(map[string]Entity),
+		Relations: make(map[string]Relation),
+		Lookups:   make(map[string]Lookup),
+	}
+	for key, entity := range om.Entities {
+		copy.Entities[key] = entity
+	}
+	for key, relations := range om.Relations {
+		copy.Relations[key] = relations
+	}
+	for key, lookups := range om.Lookups {
+		copy.Lookups[key] = lookups
+	}
+	return copy
+}
+
 // parseDependencies parse all entities for lookup fields, add unique ID field
 // and parse relations between entities and therefore adds dedicated fields for
 // parent/child relations and scans for lookups and parent-child relationships
 // and therefore creates necessary additional entities (e.g. lookup entities)
 // or add additional fields (e.g. Id field for every entity)
-func (m *Model) ParseDependencies() error {
+func (m Model) ParseDependencies() (*Model, error) {
+	copy := m.deepCopy()
 
-	for key, entity := range m.Entities {
+	for key, entity := range copy.Entities {
 		// Parse fields
 		for i := range entity.Fields {
 			field := &entity.Fields[i]
@@ -125,8 +149,8 @@ func (m *Model) ParseDependencies() error {
 			// If a lookup field is present check for lookup table
 			if field.Type == "Lookup" {
 				lookup := strings.ToLower(field.Lookup)
-				if _, ok := m.Lookups[lookup]; !ok {
-					return fmt.Errorf("lookup with name '%s' could not be found", field.Lookup)
+				if _, ok := copy.Lookups[lookup]; !ok {
+					return nil, fmt.Errorf("lookup with name '%s' could not be found", field.Lookup)
 				}
 				field.Object = lookup
 			}
@@ -134,40 +158,55 @@ func (m *Model) ParseDependencies() error {
 
 		// Add an ID field to all entities if not yet exists
 		if idx := entity.GetFieldIndexByName("ID"); idx < 0 {
-			entity := m.Entities[key]
+			entity := copy.Entities[key]
 			entity.Add(Field{Name: "ID", Type: "Integer", Required: true, Auto: true})
-			m.Entities[key] = entity
+			copy.Entities[key] = entity
 		}
 	}
 
 	// Add fields for relationships between entities
 	// Source .. Parent
 	// Destination .. Child
-	for _, relation := range m.Relations {
+	for _, relation := range copy.Relations {
 		sourcename := strings.ToLower(relation.Source)
 		destname := strings.ToLower(relation.Destination)
 
 		if relation.Type == "One-to-Many" {
-			// add child field
-			dest := m.Entities[destname]
-			if idx := dest.GetFieldIndexByName(sourcename + "ID"); idx < 0 {
-				dest.Add(Field{Name: strings.Title(sourcename) + "_ID", Type: "Child", Object: sourcename, Auto: true})
-				m.Entities[sourcename] = dest
+			// Add Child to Parent field
+			dest := copy.Entities[destname]
+			fieldname := strings.Title(sourcename) + "_ID"
+			if idx := dest.GetFieldIndexByName(fieldname); idx < 0 {
+				dest.Add(Field{Name: fieldname, Type: "Child", Object: sourcename, Auto: true}) // it is the child field
+				copy.Entities[destname] = dest
 			}
 
-			// add parent field
-			source := m.Entities[sourcename]
-			if idx := dest.GetFieldIndexByName(destname + "ID"); idx < 0 {
-				source.Add(Field{Name: strings.Title(destname) + "_ID", Type: "Child", Object: destname, Auto: true})
-				m.Entities[destname] = source
+			// Add Childs to Parent field
+			plural := pluralize.NewClient()
+			source := copy.Entities[sourcename]
+			fieldname = plural.Plural(strings.Title(destname))
+			if idx := dest.GetFieldIndexByName(fieldname); idx < 0 {
+				source.Add(Field{Name: fieldname, Type: "Parent", Object: destname, Auto: true}) // it is the parent field
+				copy.Entities[sourcename] = source
 			}
 		}
 	}
-
-	/*	for _,lookup := range a.Lookups {
+	/*
+		for _,lookup := range a.Lookups {
 			// do nothing so far
 		}
 	*/
 
+	return copy, nil
+}
+
+func WriteToFile(m *Model, filename string) error {
+	file, err := os.Create(filename)
+	if err != nil {
+		return err
+	}
+	err = m.WriteYAML(file)
+	if err != nil {
+		return err
+	}
 	return nil
 }

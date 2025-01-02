@@ -3,6 +3,7 @@ module crudgengui
 go 1.20
 
 require (
+	github.com/gertd/go-pluralize v0.2.1
 	github.com/go-ozzo/ozzo-validation v3.6.0+incompatible
 	github.com/labstack/echo/v4 v4.10.2
 	gopkg.in/yaml.v3 v3.0.1
