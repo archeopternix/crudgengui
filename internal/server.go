@@ -15,15 +15,14 @@ const (
 )
 
 type GuiServer struct {
-	echo.Echo
+	e *echo.Echo
 }
 
 func NewGuiServer() GuiServer {
-	s := GuiServer{}
-	s.Echo = *echo.New()
-	s.HideBanner = true
-	s.Use(middleware.Static("/static"))
-	s.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
+	s := GuiServer{e: echo.New()}
+	s.e.HideBanner = true
+	s.e.Use(middleware.Static("/static"))
+	s.e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "${method}:${status}, uri:\"${uri}\", path:\"${path}\", error:\"${error}\"\n",
 	}))
 	return s
@@ -60,21 +59,21 @@ func (s *GuiServer) setTemplates() {
 		templates.AddTemplateOrPanic(tmpl.name, tmpl.base, tmpl.files...)
 	}
 
-	s.Renderer = templates
+	s.e.Renderer = templates
 }
 
 func (s *GuiServer) setRoutes() {
 	// Create Repository
 	mc := controller.NewModelController(repository.NewModelRepository(repository.NewYAMLModel(base + "data/model.yaml")))
 
-	s.GET("/", mc.ShowDashboard)
-	s.GET("/project", mc.ShowProject)
-	s.POST("/project", mc.SaveProject)
+	s.e.GET("/", mc.ShowDashboard)
+	s.e.GET("/project", mc.ShowProject)
+	s.e.POST("/project", mc.SaveProject)
 
-	s.GET("/generate", mc.StartGeneration)
+	s.e.GET("/generate", mc.StartGeneration)
 
 	// Group for "/entities" routes
-	entitiesGroup := s.Group("/entities")
+	entitiesGroup := s.e.Group("/entities")
 	{
 		entitiesGroup.GET("/:id", mc.ShowEntity)
 		entitiesGroup.POST("/:id", mc.DeleteEntity)
@@ -83,7 +82,7 @@ func (s *GuiServer) setRoutes() {
 	}
 
 	// Group for "/relations" routes
-	relationsGroup := s.Group("/relations")
+	relationsGroup := s.e.Group("/relations")
 	{
 		relationsGroup.GET("/:id", mc.ShowRelation)
 		relationsGroup.POST("/:id", mc.DeleteRelation)
@@ -92,7 +91,7 @@ func (s *GuiServer) setRoutes() {
 	}
 
 	// Group for "/fields" routes
-	fieldsGroup := s.Group("/fields")
+	fieldsGroup := s.e.Group("/fields")
 	{
 		fieldsGroup.GET("/:id", mc.ShowField) // :id is the entityname where the field belongs
 		fieldsGroup.POST("", mc.InsertField)
@@ -100,7 +99,7 @@ func (s *GuiServer) setRoutes() {
 	}
 
 	// Group for "/lookups" routes
-	lookupsGroup := s.Group("/lookups")
+	lookupsGroup := s.e.Group("/lookups")
 	{
 		lookupsGroup.GET("", mc.ShowAllLookups)
 		lookupsGroup.POST("", mc.InsertLookup)
@@ -111,5 +110,5 @@ func (s *GuiServer) setRoutes() {
 }
 
 func (s GuiServer) StartServer(port int) {
-	s.Logger.Fatal(s.Start(fmt.Sprint(":", port)))
+	s.e.Logger.Fatal(s.e.Start(fmt.Sprint(":", port)))
 }
