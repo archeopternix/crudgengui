@@ -1,5 +1,5 @@
 // Package internal GenerationDSL project main.go
-package internal
+package repository
 
 import (
 	"fmt"
@@ -12,6 +12,7 @@ import (
 	"text/template"
 
 	model "crudgengui/model"
+	"crudgengui/pkg"
 
 	"github.com/gertd/go-pluralize"
 	"gopkg.in/yaml.v3"
@@ -62,31 +63,33 @@ func NewGenerator() *Generator {
 	return generator
 }
 
-// AddModule reads in a 'Module' from an YAML file and adds it to the generator configuration
+// AddModules reads in 1..n 'Module' from an YAML file and adds it to the generator configuration
 // In a post processing step source/target filenames and filepaths will be cleaned
-func (c *Generator) AddModule(filename string) error {
-	yamlFile, err := ioutil.ReadFile(filename)
-	if err != nil {
-		return fmt.Errorf("YAML file %v could not be loaded: #%v ", filename, err)
+func (c *Generator) AddModules(filenames ...string) error {
+	for _, filename := range filenames {
+		yamlFile, err := ioutil.ReadFile(filename)
+		if err != nil {
+			return fmt.Errorf("YAML file %v could not be loaded: #%v ", filename, err)
+		}
+
+		var m Module
+
+		err = yaml.Unmarshal(yamlFile, &m)
+		if err != nil {
+			return fmt.Errorf("YAML file %v could not be unmarshalled: #%v ", filename, err)
+		}
+
+		m.path = filepath.Dir(filename)
+		var tasks []Task
+		for _, t := range m.Tasks {
+			tasks = append(tasks, t.CleanPaths(m.path))
+		}
+		m.Tasks = tasks
+
+		c.Modules[m.Name] = m
+
+		log.Printf("read in module '%s' from file '%s'", m.Name, filename)
 	}
-
-	var m Module
-
-	err = yaml.Unmarshal(yamlFile, &m)
-	if err != nil {
-		return fmt.Errorf("YAML file %v could not be unmarshalled: #%v ", filename, err)
-	}
-
-	m.path = filepath.Dir(filename)
-	var tasks []Task
-	for _, t := range m.Tasks {
-		tasks = append(tasks, t.CleanPaths(m.path))
-	}
-	m.Tasks = tasks
-
-	c.Modules[m.Name] = m
-
-	log.Printf("read in module '%s' from file '%s'", m.Name, filename)
 	return nil
 }
 
@@ -168,8 +171,8 @@ func (m *Module) GenerateModule(app *model.Model, genpath string) error {
 	for _, t := range m.Tasks {
 		// check or create path
 		path := filepath.Join(genpath, app.Name, t.Target)
-		if err := CheckMkdir(path); err != nil {
-			_, ok := err.(*DirectoryExistError)
+		if err := pkg.CheckMkdir(path); err != nil {
+			_, ok := err.(*pkg.DirectoryExistError)
 			if ok {
 				log.Printf("directory '%s' already exists\n", path)
 			} else {
@@ -184,8 +187,8 @@ func (m *Module) GenerateModule(app *model.Model, genpath string) error {
 			// copying all files from .Source to .Target
 			for _, src := range t.Source {
 				path := filepath.Join(genpath, app.Name, t.Target, filepath.Base(src))
-				if err := CopyFile(src, path); err != nil {
-					_, ok := err.(*FileExistError)
+				if err := pkg.CopyFile(src, path); err != nil {
+					_, ok := err.(*pkg.FileExistError)
 					if ok {
 						log.Println(err)
 					} else {
@@ -223,11 +226,13 @@ func (m *Module) GenerateModule(app *model.Model, genpath string) error {
 					}
 					defer writer.Close()
 					entityStruct := struct {
-						Entity  model.Entity
-						AppName string
+						Entity    model.Entity
+						AppName   string
+						TimeStamp string
 					}{
-						Entity:  entity,
-						AppName: app.Name,
+						Entity:    entity,
+						AppName:   app.Name,
+						TimeStamp: app.TimeStamp(),
 					}
 					if err := tmpl.ExecuteTemplate(writer, t.Template, entityStruct); err != nil {
 						return fmt.Errorf("templategenerator %v", err)

@@ -2,6 +2,7 @@
 package model
 
 import (
+	"crudgengui/pkg"
 	"fmt"
 	"io"
 	"os"
@@ -62,9 +63,14 @@ func NewModel() *Model {
 	return m
 }
 
+// CleanName removes all non-numeric and non-alphanumeric characters from the input string.
+func (m Model) CleanName() string {
+	return pkg.CleanString(m.Name)
+}
+
 // TimeStamp needed for file generation. Will be added in the header of each file
 // to track the creation date and time of each file
-func (m *Model) TimeStamp() string {
+func (m Model) TimeStamp() string {
 	return time.Now().Format(m.DateFormat + " " + m.TimeFormat)
 }
 
@@ -176,7 +182,7 @@ func (m Model) ParseDependencies() (*Model, error) {
 			dest := copy.Entities[destname]
 			fieldname := strings.Title(sourcename) + "_ID"
 			if idx := dest.GetFieldIndexByName(fieldname); idx < 0 {
-				dest.Add(Field{Name: fieldname, Type: "Child", Object: sourcename, Auto: true}) // it is the child field
+				dest.Add(Field{Name: fieldname, Type: "Child", Object: relation.Source, Auto: true}) // it is the child field
 				copy.Entities[destname] = dest
 			}
 
@@ -185,7 +191,7 @@ func (m Model) ParseDependencies() (*Model, error) {
 			source := copy.Entities[sourcename]
 			fieldname = plural.Plural(strings.Title(destname))
 			if idx := dest.GetFieldIndexByName(fieldname); idx < 0 {
-				source.Add(Field{Name: fieldname, Type: "Parent", Object: destname, Auto: true}) // it is the parent field
+				source.Add(Field{Name: fieldname, Type: "Parent", Object: relation.Destination, Auto: true}) // it is the parent field
 				copy.Entities[sourcename] = source
 			}
 		}

@@ -1,0 +1,20 @@
+# Configuration
+name: Database Testcase Generator
+tasks:
+
+- kind: template
+  fileext: repo_test.go
+  source:
+  - databaserepo_test.go
+  - databaserepo_testtypes.go
+  target: database
+  template: databaserepotest
+
+- kind: template
+  fileext: _test.go
+  source:
+  - databasebasics_test.go
+  target: database
+  template: databasebasicstest
+  filename: databasebasics
+

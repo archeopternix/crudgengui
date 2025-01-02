@@ -1,7 +1,9 @@
 package model
 
 import (
+	"crudgengui/pkg"
 	"slices"
+	"time"
 
 	validation "github.com/go-ozzo/ozzo-validation"
 	is "github.com/go-ozzo/ozzo-validation/is"
@@ -16,6 +18,17 @@ type Entity struct {
 func NewEntity() *Entity {
 	e := new(Entity)
 	return e
+}
+
+// CleanName removes all non-numeric and non-alphanumeric characters from the input string.
+func (e Entity) CleanName() string {
+	return pkg.CleanString(e.Name)
+}
+
+// TimeStamp needed for file generation. Will be added in the header of each file
+// to track the creation date and time of each file
+func (e Entity) TimeStamp() string {
+	return time.Now().Format("01.02.2006 15:04:05")
 }
 
 func (e *Entity) Add(f Field) {

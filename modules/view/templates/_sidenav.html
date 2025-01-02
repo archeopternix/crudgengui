@@ -1,0 +1,36 @@
+{{define "sidenav" -}}
+{{"{{"}}define "sidenav" {{"}}"}}
+<!-- Time: {{.TimeStamp}} -->
+                <aside class="menu is-hidden-mobile">
+                  <p class="menu-label">
+                      General
+                  </p>
+                    <ul class="menu-list">
+                        <li><a {{"{{"}}if eq .Slug "Dashboard" {{"}}"}}class="is-active"{{"{{"}}end{{"}}"}}  href="/">Dashboard</a></li>
+                    </ul>
+                  <p class="menu-label">
+                      Administration
+                  </p>
+                    <ul class="menu-list">
+                    <li><a>Masterdata</a>
+                    {{range .Entities}}
+                    {{- if ne .Type "Lookup"}}               
+                          <ul>
+                              <li><a {{"{{"}}if eq .Slug "{{.Name | plural}}" {{"}}"}}class="is-active"{{"{{"}}end{{"}}"}} href="/{{.Name | plural | lowercase}}">{{plural .Name}}</a></li>
+                          </ul>
+                     {{- end}}
+                    {{- end}}
+                    </li>
+                    <li><a>Lookup's</a>
+                    {{range .Entities}}
+                    {{- if eq .Type "Lookup"}}
+                          <ul>
+                              <li><a {{"{{"}}if eq .Slug "{{.Name | plural}}" {{"}}"}}class="is-active"{{"{{"}}end{{"}}"}} href="/{{.Name | plural | lowercase}}">{{plural .Name}}</a></li>
+                          </ul>
+                    {{- end}}
+                    {{- end}}
+                      </li>
+                     </ul>
+                </aside>
+{{"{{"}}end{{"}}"}}
+{{end}}

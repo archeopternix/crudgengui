@@ -1,0 +1,49 @@
+{{define "repository" -}}
+// Package model holds all entities and cross application definitions
+// Generated code - do not modify it will be overwritten!!
+// Time of generation: {{.TimeStamp}}
+package model
+
+import (
+
+)
+
+// Env holds all interfaces describing the methods of the entity access structs.
+// Interfaces have to be implemented by concrete DB access functions 
+type Env struct {
+{{- range .Entities }}
+	{{.CleanName | plural}} {{.CleanName}}Repository
+{{- end}}	
+{{- range $key, $value := .Lookups }}
+	{{title $key}} {{title $key}}Repository
+{{- end}}	
+}
+
+// Labels will be populated by the unique id and all fields tagged with isLabel=true
+type Labels map[uint64]string
+
+{{range .Entities }}
+// {{.CleanName}}Repository is the interface that has to be implemented with concrete
+// data access functions (databases)
+type {{.CleanName}}Repository interface {
+	Get(id uint64) (*{{.CleanName}}, error)
+	GetAll() ({{.CleanName}}List, error) 
+	Delete(id uint64) error 
+	Update({{.CleanName | lowercase}} *{{.CleanName}}) error 
+	Insert({{.CleanName | lowercase}} *{{.CleanName}}) error 
+ 	GetLabels() (Labels, error)
+	{{- range .Fields}}{{if eq .Type "Parent"}}
+	GetAll{{.Name | plural}}ByParentID(parentID uint64) ({{.Object}}List)				
+	{{- end}}{{end}}
+}
+{{end}}
+
+// {{.CleanName}}Repository is the interface for lookup tables
+{{- range $key, $value := .Lookups }}
+type {{title $key}}Repository interface {
+ 	Get(id uint64) (string, error)
+	GetAll() (Labels, error)  
+}
+{{- end}}	
+
+{{- end}}

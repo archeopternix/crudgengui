@@ -1,11 +1,13 @@
 // GenerationDSL project main.go
-package internal
+package pkg
 
 import (
 	"errors"
 	"fmt"
 	"io"
 	"os"
+	"strings"
+	"unicode"
 
 	"gopkg.in/yaml.v3"
 )
@@ -110,4 +112,36 @@ func StringYAML(obj interface{}) (string, error) {
 		return "", err
 	}
 	return string(data), nil
+}
+
+// CleanString converts or removes all non-numeric and non-alphanumeric characters from the input string.
+func CleanString(input string) string {
+	// Map for converting non-ASCII characters to ASCII equivalents
+	conversions := map[rune]string{
+		'ä': "ae",
+		'ö': "oe",
+		'ü': "ue",
+		'Ä': "Ae",
+		'Ö': "Oe",
+		'Ü': "Ue",
+		'ß': "ss",
+		'é': "e",
+		'è': "e",
+		'ê': "e",
+		'ç': "c",
+		'ñ': "n",
+		// Add more conversions as needed
+	}
+
+	var result strings.Builder
+	for _, r := range input {
+		if val, ok := conversions[r]; ok {
+			result.WriteString(val)
+		} else {
+			if unicode.IsLetter(r) || unicode.IsDigit(r) {
+				result.WriteRune(r)
+			}
+		}
+	}
+	return result.String()
 }

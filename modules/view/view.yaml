@@ -1,0 +1,82 @@
+# Configuration
+name: View Generator
+tasks:
+# Server 
+- kind: template
+  fileext: .go
+  source:
+  - server\server.tmpl
+  target: view
+  template: server
+  filename: server
+
+# Page   
+- kind: copy
+  source:
+  - server\page.go
+  target: view
+
+# Controller handlers 
+- kind: copy
+  source:
+  - server\dashboardhandler.go
+  target: view
+  
+- kind: template
+  fileext: handler.go
+  source:
+  - server\handler.tmpl
+  target: view
+  template: handler
+  
+- kind: template
+  fileext: .html
+  source:
+  - templates\_dashboard.html
+  target: view\html
+  template: dashboard
+  filename: dashboard
+  
+# Navigation and page parts  
+- kind: template
+  fileext: .html
+  source:
+  - templates\_sidenav.html
+  target: view\html
+  template: sidenav
+  filename: _sidenav 
+  
+- kind: copy
+  source:
+  - templates\html\_base.html
+  - templates\html\_footer.html
+  - templates\html\_header.html
+  - templates\html\_hero.html
+  - templates\html\_mainnav.html
+  target: view\html
+
+# List and Detail page parts  
+- kind: template
+  fileext: list.html
+  source:
+  - templates\list.html
+  target: view\html
+  template: list
+  
+- kind: template
+  fileext: listtable.html
+  source:
+  - templates\listtable.html
+  target: view\html
+  template: listtable
+  
+- kind: template
+  fileext: detail.html
+  source:
+  - templates\detail.html
+  - templates\detailtypes.html
+  target: view\html
+  template: detail
+  
+
+

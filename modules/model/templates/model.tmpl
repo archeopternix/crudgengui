@@ -1,0 +1,33 @@
+{{define "model" -}}
+// Package model holds all entities and cross application definitions
+// Generated code - do not modify it will be overwritten!!
+// Time of generation: {{.TimeStamp}}
+package model
+
+import (
+	"time"
+	"fmt"
+)
+{{with .Entity}}
+
+// {{.CleanName}} entity that consists of all attributes and provides key functions.
+// tags for database mapping is included
+type {{.CleanName}} struct {
+{{range .Fields}}{{template "modeltypes" .}}
+{{end}}
+	CreatedAt time.Time 	`json:"created_at", db:"created_at"`
+}
+
+// {{.CleanName}}List definition for a slice of {{plural .CleanName}}
+type {{.CleanName}}List []{{.CleanName}}
+
+// Label for {{.CleanName}} that will be shown in select boxes for one-2-many relationships
+// Select boxes returns the the ID of the parent Entity
+func (obj {{.CleanName}}) Label() (string) {
+	label:=fmt.Sprintf("{{range .Fields}}{{if eq .Label true}}%v {{end}}{{end}}"{{range .Fields}}{{if eq .Label true}}, obj.{{.CleanName}}{{end}}{{end}})
+	return label
+}
+{{end}}
+{{end}}
+
+

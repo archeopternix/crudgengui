@@ -1,0 +1,4 @@
+{{define "repoinsert"}}"INSERT INTO {{.Name | lowercase | plural}} (
+{{- range $index, $element := .Fields}}{{if ne $element.Name "ID"}}{{if gt $index 0}},{{end}} {{$element.Name | lowercase}}{{end}}{{end}} ) VALUES (
+{{- range $index, $element := .Fields}}{{if gt $index 0}}{{if gt $index 1}}, {{end}}${{$index}}{{end}}{{end}})"
+{{- end}}

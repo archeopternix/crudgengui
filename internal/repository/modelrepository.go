@@ -210,6 +210,22 @@ func (mrep ModelRepository) StartGeneration() error {
 	}
 	model.WriteToFile(copy, "../../data/generated.yaml")
 
+	generator := NewGenerator()
+
+	basepath := "../../"
+	modules := []string{
+		basepath + "modules/application/app.yaml",
+		basepath + "modules/model/models.yaml",
+		basepath + "modules/mockdatabase/mockdatabase.yaml",
+		basepath + "modules/view/view.yaml",
+	}
+	if err := generator.AddModules(modules...); err != nil {
+		fmt.Println("Fehler beim Hinzufügen des Models: ", err)
+	}
+	if err := generator.GenerateAll(copy, "/Users/Andreas Eisner/go/src"); err != nil {
+		fmt.Println("Fehler beim Hinzufügen des Models: ", err)
+	}
+
 	fmt.Println("Model geladen")
 	return nil
 }

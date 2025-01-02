@@ -1,0 +1,12 @@
+{{define "base"}}
+{{template "_header" .}}
+{{template "_mainnav" .}}
+      <div class="container">
+        <div class="columns">
+            <div class="column is-3 ">
+{{template "sidenav" .}}
+            </div>
+            <div class="column is-9">
+{{template "_hero" .}}
+<!-- here comes the content -->
+{{end}}

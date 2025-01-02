@@ -1,0 +1,18 @@
+{{define "schematypes" -}}
+{{- if eq .Kind "Text"}}{{lowercase .Name}}	varchar{{if eq .Required true}} NOT NULL{{end}},{{end}}
+{{- if eq .Kind "Password"}}{{lowercase .Name}}	varchar{{if eq .Required true}} NOT NULL{{end}},{{end}}
+{{- if eq .Kind "Integer"}}{{lowercase .Name}}	bigint{{end}}
+{{- if eq .Kind "Number"}}{{lowercase .Name}}	decimal{{end}}
+{{- if eq .Kind "Boolean"}}{{lowercase .Name}}	bool{{end}}
+{{- if eq .Kind "Email"}}{{lowercase .Name}}	varchar{{if eq .Required true}} NOT NULL{{end}},{{end}}
+{{- if eq .Kind "Tel"}}{{lowercase .Name}}	varchar{{if eq .Required true}} NOT NULL{{end}},{{end}}
+{{- if eq .Kind "Longtext"}}{{lowercase .Name}}	varchar{{if eq .Required true}} NOT NULL{{end}},{{end}}
+{{- if eq .Kind "Lookup"}}{{lowercase .Name}}_id	int,{{end}}
+{{- if eq .Kind "Parent"}}{{end -}}
+{{- if eq .Kind "Child"}}{{lowercase .Name}}_id bigint,{{end}}
+{{- end}}
+
+
+
+
+

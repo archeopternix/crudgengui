@@ -1,0 +1,7 @@
+{{define "repoupdate"}}
+{{- $name := .Name }}"UPDATE {{.Name | lowercase| plural}} SET 
+{{- range $index, $element := .Fields}}{{if ne .Name "ID"}}{{if ne .Kind "Parent"}}
+{{- if gt $index 0}},{{end}} {{$element.Name | lowercase}}= ${{$index}}
+{{- end}}{{end}}{{end}} WHERE id= $1 " 
+{{- range .Fields}}{{if ne .Name "ID"}}{{if ne .Kind "Parent"}},{{$name | lowercase}}.{{.Name}}{{end}}{{end}}{{end}},{{$name | lowercase}}.ID)
+{{- end}}
