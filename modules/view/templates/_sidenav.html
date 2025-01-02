@@ -13,21 +13,17 @@
                   </p>
                     <ul class="menu-list">
                     <li><a>Masterdata</a>
-                    {{range .Entities}}
-                    {{- if ne .Type "Lookup"}}               
+                    {{range .Entities}}           
                           <ul>
-                              <li><a {{"{{"}}if eq .Slug "{{.Name | plural}}" {{"}}"}}class="is-active"{{"{{"}}end{{"}}"}} href="/{{.Name | plural | lowercase}}">{{plural .Name}}</a></li>
+                              <li><a {{"{{"}}if eq .Slug "{{.CleanName | plural}}" {{"}}"}}class="is-active"{{"{{"}}end{{"}}"}} href="/{{.CleanName | plural | lowercase}}">{{plural .Name}}</a></li>
                           </ul>
-                     {{- end}}
                     {{- end}}
                     </li>
                     <li><a>Lookup's</a>
-                    {{range .Entities}}
-                    {{- if eq .Type "Lookup"}}
+                    {{range .Lookups}}
                           <ul>
-                              <li><a {{"{{"}}if eq .Slug "{{.Name | plural}}" {{"}}"}}class="is-active"{{"{{"}}end{{"}}"}} href="/{{.Name | plural | lowercase}}">{{plural .Name}}</a></li>
+                              <li><a {{"{{"}}if eq .Slug "{{.CleanName | plural}}" {{"}}"}}class="is-active"{{"{{"}}end{{"}}"}} href="/{{.CleanName | plural | lowercase}}">{{plural .Name}}</a></li>
                           </ul>
-                    {{- end}}
                     {{- end}}
                       </li>
                      </ul>

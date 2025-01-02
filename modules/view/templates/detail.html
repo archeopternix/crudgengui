@@ -1,17 +1,17 @@
 {{define "detail" -}}
 {{with .Entity}}
-{{"{{"}}define "{{lowercase .Name}}detail" {{"}}"}}
+{{"{{"}}define "{{lowercase .CleanName}}detail" {{"}}"}}
 {{"{{"}}template "base" .{{"}}"}}
 <!-- Time: {{.TimeStamp}} -->
 {{"{{"}}$errors:= .Errors{{"}}"}}
 {{"{{"}}with .Data{{"}}"}}
-                      <form method="post" action="/{{.Name | plural | lowercase}}{{"{{if .Entity.ID}}"}}/{{"{{.Entity.ID}}"}}{{"{{end}}"}}" name="{{.Name | lowercase}}">
+                      <form method="post" action="/{{.CleanName | plural | lowercase}}{{"{{if .Entity.ID}}"}}/{{"{{.Entity.ID}}"}}{{"{{end}}"}}" name="{{.CleanName | lowercase}}">
                         <input type="hidden" id="id" name="id" value="{{"{{.Entity.ID}}"}}">     
                         <div class="card events-card">      
                             <div class="card-table">
                               <div class="content">
                                 {{- range .Fields}}
-                    {{if ne .Name "ID"}}{{template "detailtypes" . }}{{end}}
+                    {{if ne .CleanName "ID"}}{{template "detailtypes" . }}{{end}}
                                 {{end -}}
                               </div>
                             </div>    

@@ -2,7 +2,7 @@ package controller
 
 import (
 	model "crudgengui/model"
-
+	"crudgengui/pkg"
 	"fmt"
 	"net/http"
 	"sync"
@@ -71,12 +71,12 @@ func (mc ModelController) InsertField(c echo.Context) error {
 	if err := c.Bind(field); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
-
+	field.Id = pkg.CleanID(field.Name)
 	if field.Decimals == "0" {
 		field.Decimals = ""
 	}
-	if field.MaxLength == "0" {
-		field.MaxLength = ""
+	if field.Min == "0" {
+		field.Min = ""
 	}
 	if field.Size == "0" {
 		field.Size = ""

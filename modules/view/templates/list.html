@@ -1,9 +1,9 @@
 {{define "list" -}}
 {{with .Entity}}
-{{"{{"}}define "{{lowercase .Name}}list" {{"}}"}}
+{{"{{"}}define "{{lowercase .CleanName}}list" {{"}}"}}
 {{"{{"}}template "base" .{{"}}"}}
 <!-- Time: {{.TimeStamp}} -->
-{{"{{"}}template "{{lowercase .Name}}listtable" .Data.Records{{"}}"}}
+{{"{{"}}template "{{lowercase .CleanName}}listtable" .Data.Records{{"}}"}}
 
 {{"{{"}}template "_footer" .{{"}}"}}
 {{"{{"}}end{{"}}"}}         

@@ -12,6 +12,14 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// IsFirstLetterUppercase checks if the first letter of the input string is uppercase.
+func IsFirstLetterUppercase(str string) bool {
+	if len(str) == 0 {
+		return false
+	}
+	return unicode.IsUpper(rune(str[0]))
+}
+
 // DirectoryExistError will bne thrown by CheckMkdir when a directory already exists
 type DirectoryExistError struct {
 	Dir string
@@ -144,4 +152,17 @@ func CleanString(input string) string {
 		}
 	}
 	return result.String()
+}
+
+// CleanID converts any name into a clean ID with just unicode letters and the
+// first letter is uppercase
+func CleanID(name string) string {
+	if len(name) == 0 {
+		return ""
+	}
+	txt := CleanString(name)
+	if !IsFirstLetterUppercase(txt) {
+		return strings.Title(txt)
+	}
+	return txt
 }
