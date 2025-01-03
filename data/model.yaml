@@ -12,49 +12,50 @@ entities:
         fields:
             - name: Name
               type: Text
+              id: Name
               required: true
               label: true
               auto: false
-              placeholder: Some text...
-            - name: Floors
-              type: Number
-              required: false
-              label: false
-              auto: false
-              min: "1"
-            - name: Schalter
-              type: Lookup
-              required: false
-              label: false
-              auto: false
-              lookup: schalter
-    window:
-        name: Window
-        type: Entity
-        fields:
-            - name: Name
-              type: Text
-              required: true
-              label: true
-              auto: false
-              placeholder: Some text...
-            - name: Test
-              type: Boolean
-              required: false
-              label: false
-              auto: false
-            - name: e-Mail
+              size: "25"
+              minlength: "3"
+            - name: e-Mail Adresse
               type: E-Mail
-              required: false
+              id: EMailAdresse
+              required: true
               label: false
               auto: false
               placeholder: test@yahoo.de
             - name: Türe
               type: Number
+              id: Tuere
               required: false
               label: false
               auto: false
-              placeholder: "123"
+              size: "3"
+              step: "1"
+    window:
+        name: Window
+        type: Entity
+        fields:
+            - name: Height
+              type: Number
+              id: Height
+              required: false
+              label: false
+              auto: false
+              size: "8"
+            - name: Width
+              type: Number
+              id: Width
+              required: false
+              label: false
+              auto: false
+            - name: isGlass?
+              type: Boolean
+              id: IsGlass
+              required: false
+              label: false
+              auto: false
 relations:
     hausone-to-manywindow:
         name: ""
@@ -67,3 +68,5 @@ lookups:
         list:
             - Zwei
             - Drei
+            - Vier
+            - Fünf
