@@ -1,13 +1,17 @@
 {{define "detailtypes"}}
-{{- if eq .Type "Text"}}           <div class="field">
+{{- $lookups:=.Lookups}}
+{{- range .Entity.Fields}}{{if ne .Name "ID"}}
+{{- if eq .Type "Text"}}        
+                                <div class="field">
                                   <label class="label">{{.Name}} {{with .Required}}*{{end}}</label>
                                   <div class="control">
                                     <input class="input{{"{{"}}with $errors.{{.CleanName}}{{"}}"}} is-danger{{"{{"}}end{{"}}"}}" type="text" placeholder="Text input" name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" {{with .Max}}size="{{.}}"{{end}} {{with .Size}}size="{{.}}"{{end}} value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
                                   </div>
                                   {{- "{{"}}with $errors.{{.CleanName}}{{"}}"}} <p class="help is-danger">{{"{{"}}.{{"}}"}} </p>{{"{{"}}end{{"}}"}}
                                 </div>{{end}}
-{{- if eq .Type "Password"}}           <label class="label">{{.Name}} {{with .Required}}*{{end}}</label>
-                                <div class="field is-grouped">                                  
+{{- if eq .Type "Password"}}                                      
+                                <div class="field is-grouped">      
+                                  <label class="label">{{.Name}} {{with .Required}}*{{end}}</label>                            
                                   <div class="control">
                                     <input class="input{{"{{"}}with $errors.{{.CleanName}}{{"}}"}} is-danger{{"{{"}}end{{"}}"}}" type="password" placeholder="****" name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" {{with .Max}}size="{{.}}"{{end}} {{with .Size}}size="{{.}}"{{end}} value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
                                   </div>
@@ -18,14 +22,16 @@
                                   </div>
                                   {{- "{{"}}with $errors.{{.CleanName}}{{"}}"}} <p class="help is-danger">{{"{{"}}.{{"}}"}} </p>{{"{{"}}end{{"}}"}}
                                 </div>{{end}}
-{{- if eq .Type "Longtext"}}           <div class="field">
+{{- if eq .Type "Longtext"}}           
+                                <div class="field">
                                   <label class="label">{{.Name}} {{with .Required}}*{{end}}</label>
                                   <div class="control">
                                     <textarea class="textarea" placeholder="Text input" name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" {{with .Max}}size="{{.}}"{{end}} {{with .Height}}rows="{{.}}"{{end}} {{with .Size}}cols="{{.}}"{{end}} {{with .Required}}required{{end}}>{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}</textarea>
                                   </div>
                                   {{- "{{"}}with $errors.{{.CleanName}}{{"}}"}} <p class="help is-danger">{{"{{"}}.{{"}}"}} </p>{{"{{"}}end{{"}}"}}
                                 </div>{{end}}
-{{- if eq .Type "E-Mail"}}          <div class="field">
+{{- if eq .Type "E-Mail"}}          
+                                <div class="field">
                                   <label class="label">{{.Name}} {{with .Required}}*{{end}}</label>
                                   <div class="control has-icons-left">
                                     <input class="input{{"{{"}}with $errors.{{.CleanName}}{{"}}"}} is-danger{{"{{"}}end{{"}}"}}" type="email" placeholder="test@yahoo.de" name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" {{with .Max}}size="{{.}}"{{end}} {{with .Size}}size="{{.}}"{{end}} value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
@@ -80,10 +86,12 @@
                                   <div class="control">
                                     <div class="select">
                                       <select name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}">
-                                       {{"{{"}}$selected:=.Entity.{{.CleanName}}{{"}}"}}
-                                       {{"{{"}}range $key, $value :=(index .Lookups "{{.Object | plural}}"){{"}}"}}
-                                        <option value="{{"{{$value}}"}}" {{"{{"}}if eq $value $selected{{"}}"}}selected{{"{{"}}end{{"}}"}}>{{"{{$value}}"}}</option> 
-                                      {{"{{end}}"}}
+                                      {{"{{"}}$selected:=.Entity.{{.CleanName}}{{"}}"}}
+                                      {{- $lookupname := (.Object)}}
+                                      {{- $object:=(index $lookups $lookupname)}}
+                                      {{- range $value :=$object.List}}
+                                        <option value="{{$value}}" {{"{{"}}if eq "{{$value}}" $selected{{"}}"}}selected{{"{{"}}end{{"}}"}}>{{$value}}</option> 
+                                      {{- end}}
                                       </select>
                                     </div>
                                   </div>
@@ -100,6 +108,8 @@
                                       </select>
                                     </div>
                                   </div>
-                                </div>{{end}}                                
+                                </div>{{end}}      
+                                                      
+{{- end}}{{end}} 
 {{- end}}
 

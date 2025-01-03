@@ -225,15 +225,20 @@ func (m *Module) GenerateModule(app *model.Model, genpath string) error {
 						return fmt.Errorf("template generator %v", err)
 					}
 					defer writer.Close()
-					entityStruct := struct {
+					type DataStruct struct {
 						Entity    model.Entity
+						Lookups   map[string]model.Lookup
 						AppName   string
 						TimeStamp string
-					}{
+					}
+					entityStruct := DataStruct{
 						Entity:    entity,
 						AppName:   app.Name,
 						TimeStamp: app.TimeStamp(),
 					}
+					entityStruct.Lookups = make(map[string]model.Lookup)
+					entityStruct.Lookups = app.Lookups
+
 					if err := tmpl.ExecuteTemplate(writer, t.Template, entityStruct); err != nil {
 						return fmt.Errorf("templategenerator %v", err)
 					}

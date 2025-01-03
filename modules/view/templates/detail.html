@@ -1,18 +1,15 @@
 {{define "detail" -}}
-{{with .Entity}}
-{{"{{"}}define "{{lowercase .CleanName}}detail" {{"}}"}}
+{{"{{"}}define "{{lowercase .Entity.CleanName}}detail" {{"}}"}}
 {{"{{"}}template "base" .{{"}}"}}
 <!-- Time: {{.TimeStamp}} -->
 {{"{{"}}$errors:= .Errors{{"}}"}}
 {{"{{"}}with .Data{{"}}"}}
-                      <form method="post" action="/{{.CleanName | plural | lowercase}}{{"{{if .Entity.ID}}"}}/{{"{{.Entity.ID}}"}}{{"{{end}}"}}" name="{{.CleanName | lowercase}}">
+                      <form method="post" action="/{{.Entity.CleanName | plural | lowercase}}{{"{{if .Entity.ID}}"}}/{{"{{.Entity.ID}}"}}{{"{{end}}"}}" name="{{.Entity.CleanName | lowercase}}">
                         <input type="hidden" id="id" name="id" value="{{"{{.Entity.ID}}"}}">     
                         <div class="card events-card">      
                             <div class="card-table">
-                              <div class="content">
-                                {{- range .Fields}}
-                    {{if ne .CleanName "ID"}}{{template "detailtypes" . }}{{end}}
-                                {{end -}}
+                              <div class="content">                           
+{{- template "detailtypes" .}}
                               </div>
                             </div>    
                             <hr class="hr" style="margin-bottom: 0;">                  
@@ -30,12 +27,11 @@
                         </div>
                       </form>
                       {{"{{- if .Entity.ID}}"}} 
-                      {{- range .Fields}}{{if eq .Type "Parent"}}
+                      {{- range .Entity.Fields}}{{if eq .Type "Parent"}}
                       <hr class="hr" style="margin-bottom: 0;">
                       {{"{{"}}template "{{.Object | singular | lowercase}}listtable" .{{.Object}}Childs{{"}}"}}
                       {{- end}}{{end}}{{"{{"}}end{{"}}"}} 
 {{"{{- end}}"}}  
 {{"{{"}}template "_footer" .{{"}}"}}
 {{"{{"}}end{{"}}"}}         
-{{end}}
 {{end}}

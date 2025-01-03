@@ -5,6 +5,7 @@ import (
 	"crudgengui/pkg"
 	"fmt"
 	"net/http"
+	"strings"
 	"sync"
 
 	"github.com/labstack/echo/v4"
@@ -31,7 +32,7 @@ func (mc ModelController) showField(c echo.Context, entityname string, fieldname
 	text := map[string]string{
 		"title":      titletext,
 		"menu":       "menu_entities",
-		"entityname": entityname,
+		"entityname": strings.Title(entityname),
 	}
 
 	rd = newRequestData(text, map[string]interface{}{

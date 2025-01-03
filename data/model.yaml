@@ -56,6 +56,13 @@ entities:
               required: false
               label: false
               auto: false
+            - name: Schalter
+              type: Lookup
+              id: Schalter
+              required: false
+              label: false
+              auto: false
+              lookup: schalter
 relations:
     hausone-to-manywindow:
         name: ""

@@ -33,12 +33,12 @@
                         </div>
                       </div>
                       <div class="columns">
-                        <div class="column">
+                        <div class="column is-one-quarter">
                           <div class="field">
                             <label for="type_select" class="label">Type</label>
                             <div class="control">
                               <div class="select">
-                                <select id="type_select" name="field_type" value="{{.Type}}" autofocus onchange="fieldVisibilty()" onfocus="fieldVisibilty()">
+                                <select id="type_select" name="field_type" value="{{.Type}}" autofocus onchange="fieldVisibility()" onfocus="fieldVisibility()">
                                   <option{{if eq .Type "Boolean"}} selected{{end}}>Boolean</option>
                                   <option{{if eq .Type "Text"}} selected{{end}}>Text</option>
                                   <option{{if eq .Type "Longtext"}} selected{{end}}>Longtext</option>
@@ -54,18 +54,36 @@
                              </div>
                           </div>
                         </div>
-                        <div class="column" id="required">
+                       <div class="column is-one-quarter">
+                        <div class="field" id="datetime">
+                          <label class="label">Date/Time</label>
+                          <div class="control">
+                            <div class="select">
+                              <select name="field_datetime" value="{{.DateTime}}">
+                                <option{{if eq .DateTime ""}} selected{{end}}></option>
+                                <option{{if eq .DateTime "Date"}} selected{{end}}>Date</option>
+                                <option{{if eq .DateTime "Time"}} selected{{end}}>Time</option>
+                                <option{{if eq .DateTime "Date+Time"}} selected{{end}}>Date+Time</option>
+                                <option{{if eq .DateTime "Week"}} selected{{end}}>Week</option>
+                                <option{{if eq .DateTime "Month"}} selected{{end}}>Month</option>
+                              </select>
+                            </div>
+                          </div> 
+                        </div>                        
+                       </div>        
+                       <div class="column is-one-quarter" id="label">
+                          <div class="field">
+                            <label for="field_label" class="label">Label</label>
+                              <input name="field_label" id="field_label" type="checkbox" value="true" {{if .Label}}checked{{end}} />                            
+                          </div>   
+                        </div>                                        
+                        <div class="column is-one-quarter" id="required">
                           <div class="field" >
                             <label for="field_required" class="label">Required</label>
                               <input name="field_required" id="field_required" type="checkbox" value="true" {{if .Required}}checked{{end}} />                            
                           </div>   
                         </div>
-                        <div class="column" id="label">
-                          <div class="field">
-                            <label for="field_label" class="label">Label</label>
-                              <input name="field_label" id="field_label" type="checkbox" value="true" {{if .Label}}checked{{end}} />                            
-                          </div>   
-                        </div>   
+ 
                       </div> <!-- columns -->
                       <div class="columns" >
                         <div class="column is-half" id="size">
@@ -86,7 +104,7 @@
                         </div>  
                         <div class="column is-half" id="decimals">
                           <div class="field">
-                            <label for="field_decimals" class="label">Minimum Length</label>
+                            <label for="field_decimals" class="label">Decimals</label>
                             <div class="control">
                               <input name="field_decimals" id="field_decimals" class="input" type="number" size="2" step="1" min="0" value="{{.Decimals}}">
                             </div>
@@ -137,23 +155,6 @@
                           </div>  
                         </div>                         
                       </div> <!-- columns -->
-                       <div class="column">
-                        <div class="field" id="datetime">
-                          <label class="label">Date/Time</label>
-                          <div class="control">
-                            <div class="select">
-                              <select name="field_datetime" value="{{.DateTime}}">
-                                <option{{if eq .DateTime ""}} selected{{end}}></option>
-                                <option{{if eq .DateTime "Date"}} selected{{end}}>Date</option>
-                                <option{{if eq .DateTime "Time"}} selected{{end}}>Time</option>
-                                <option{{if eq .DateTime "Date+Time"}} selected{{end}}>Date+Time</option>
-                                <option{{if eq .DateTime "Week"}} selected{{end}}>Week</option>
-                                <option{{if eq .DateTime "Month"}} selected{{end}}>Month</option>
-                              </select>
-                            </div>
-                          </div> 
-                        </div>                        
-                       </div>
                        <div class="columns" >
                          <div class="column is-half" id="placeholder">
                           <div class="field">
@@ -172,6 +173,7 @@
                           </div>
                          </div>
                        </div> <!-- columns -->
+                       <div class="columns" >
                        <div class="column">
                           <div class="field" id="lookup">
                             <label class="label">Lookup</label>
@@ -188,6 +190,7 @@
                             </div>
                           </div>
                         </div>
+                      </div> <!-- columns -->
                     </section>
                     {{end}}
                     
@@ -207,190 +210,45 @@ window.onload = function(){
     element.focus();
     setTimeout(function () { element.focus(); }, 1);
 }
-  
-  function fieldVisibilty() {
+
+function fieldVisibility() {
     var select = document.getElementById("type_select").value;
-  switch(select) {
-    case "Boolean":
-      document.getElementById("pattern").style.display = "none";
-      document.getElementById("placeholder").style.display = "none";
-      document.getElementById("required").style.display = "none";
-      document.getElementById("minlength").style.display = "none";
-      document.getElementById("maxlength").style.display = "none";
-      document.getElementById("size").style.display = "none";
-      document.getElementById("height").style.display = "none";
-      document.getElementById("datetime").style.display = "none";
-      document.getElementById("minval").style.display = "none";
-      document.getElementById("maxval").style.display = "none";
-      document.getElementById("stepval").style.display = "none";
-      document.getElementById("lookup").style.display = "none";
-      document.getElementById("label").style.display = "none";
-      document.getElementById("decimals").style.display = "none";
-      break;
-    case "Lookup":
-      document.getElementById("pattern").style.display = "none";
-      document.getElementById("required").style.display = "none";
-      document.getElementById("minlength").style.display = "none";
-      document.getElementById("maxlength").style.display = "none";
-      document.getElementById("placeholder").style.display = "none";
-      document.getElementById("size").style.display = "none";
-      document.getElementById("height").style.display = "none";
-      document.getElementById("datetime").style.display = "none";
-      document.getElementById("minval").style.display = "none";
-      document.getElementById("maxval").style.display = "none";
-      document.getElementById("stepval").style.display = "none";
-      document.getElementById("lookup").style.display = "block";
-      document.getElementById("decimals").style.display = "none";
-      break;
-    case "Text":
-      document.getElementById("pattern").style.display = "block";
-      document.getElementById("required").style.display = "block";
-      document.getElementById("minlength").style.display = "block";
-      document.getElementById("maxlength").style.display = "block";
-      document.getElementById("placeholder").style.display = "block";
-      document.getElementById("size").style.display = "block";
-      document.getElementById("height").style.display = "none";
-      document.getElementById("datetime").style.display = "none";
-      document.getElementById("minval").style.display = "none";
-      document.getElementById("maxval").style.display = "none";
-      document.getElementById("stepval").style.display = "none";
-      document.getElementById("lookup").style.display = "none";
-      document.getElementById("label").style.display = "block";
-      document.getElementById("decimals").style.display = "none";
-      if (!document.getElementById("placeholder_field").value) {
-        document.getElementById("placeholder_field").value="Some text..."
-      }
-      break;      
-    case "Password":
-      document.getElementById("pattern").style.display = "block";
-      document.getElementById("required").style.display = "block";
-      document.getElementById("minlength").style.display = "block";
-      document.getElementById("maxlength").style.display = "block";
-      document.getElementById("placeholder").style.display = "block";
-      document.getElementById("size").style.display = "block";
-      document.getElementById("height").style.display = "none";
-      document.getElementById("datetime").style.display = "none";
-      document.getElementById("minval").style.display = "none";
-      document.getElementById("maxval").style.display = "none";
-      document.getElementById("stepval").style.display = "none";
-      document.getElementById("lookup").style.display = "none";
-      document.getElementById("label").style.display = "none";
-      document.getElementById("decimals").style.display = "none";
-      if (!document.getElementById("placeholder_field").value) {
-        document.getElementById("placeholder_field").value="Some text..."
-      }
-      break;  
-    case "Longtext":
-      document.getElementById("pattern").style.display = "block";
-      document.getElementById("required").style.display = "block";
-      document.getElementById("minlength").style.display = "block";
-      document.getElementById("maxlength").style.display = "block";
-      document.getElementById("placeholder").style.display = "block";
-      document.getElementById("size").style.display = "block";
-      document.getElementById("height").style.display = "block";
-      document.getElementById("datetime").style.display = "none";
-      document.getElementById("minval").style.display = "none";
-      document.getElementById("maxval").style.display = "none";
-      document.getElementById("stepval").style.display = "none";
-      document.getElementById("lookup").style.display = "none";
-      document.getElementById("label").style.display = "block";
-      document.getElementById("decimals").style.display = "none";
-      if (!document.getElementById("placeholder_field").value) {
-        document.getElementById("placeholder_field").value="Some text..."
-      }
-      break;  
-    case "E-Mail":
-      document.getElementById("pattern").style.display = "block";
-      document.getElementById("required").style.display = "block";
-      document.getElementById("minlength").style.display = "block";
-      document.getElementById("maxlength").style.display = "block";
-      document.getElementById("placeholder").style.display = "block";
-      document.getElementById("size").style.display = "block";
-      document.getElementById("height").style.display = "none";
-      document.getElementById("datetime").style.display = "none";
-      document.getElementById("minval").style.display = "none";
-      document.getElementById("maxval").style.display = "none";
-      document.getElementById("lookup").style.display = "none";
-      document.getElementById("label").style.display = "none";
-      document.getElementById("stepval").style.display = "none";
-      document.getElementById("decimals").style.display = "none";
-      if (!document.getElementById("placeholder_field").value) {
-        document.getElementById("placeholder_field").value="test@yahoo.de"
-      }
-      break;
-    case "Phone":
-      document.getElementById("pattern").style.display = "block";
-      document.getElementById("required").style.display = "block";
-      document.getElementById("minlength").style.display = "block";
-      document.getElementById("maxlength").style.display = "block";
-      document.getElementById("placeholder").style.display = "block";
-      document.getElementById("size").style.display = "block";
-      document.getElementById("height").style.display = "none";
-      document.getElementById("datetime").style.display = "none";
-      document.getElementById("minval").style.display = "none";
-      document.getElementById("maxval").style.display = "none";
-      document.getElementById("stepval").style.display = "none";
-      document.getElementById("label").style.display = "none";
-      document.getElementById("lookup").style.display = "none";
-      document.getElementById("decimals").style.display = "none";
-      if (!document.getElementById("placeholder_field").value) {
-        document.getElementById("placeholder_field").value="+34 5603821"
-      }
-      break;
-     case "Date":
-      document.getElementById("pattern").style.display = "none";
-      document.getElementById("required").style.display = "block";
-      document.getElementById("minlength").style.display = "none";
-      document.getElementById("maxlength").style.display = "none";
-      document.getElementById("placeholder").style.display = "none";
-      document.getElementById("size").style.display = "none";
-      document.getElementById("height").style.display = "none";
-      document.getElementById("datetime").style.display = "block";
-      document.getElementById("minval").style.display = "none";
-      document.getElementById("maxval").style.display = "none";
-      document.getElementById("stepval").style.display = "none";
-      document.getElementById("label").style.display = "none";
-      document.getElementById("lookup").style.display = "none";
-      document.getElementById("decimals").style.display = "none";
-      break;     
-    case "Number":
-      document.getElementById("decimals").style.display = "block";
-      document.getElementById("pattern").style.display = "none";
-      document.getElementById("required").style.display = "block";
-      document.getElementById("minlength").style.display = "none";
-      document.getElementById("maxlength").style.display = "none";
-      document.getElementById("placeholder").style.display = "block";
-      document.getElementById("size").style.display = "block";
-      document.getElementById("height").style.display = "none";
-      document.getElementById("datetime").style.display = "none";
-      document.getElementById("minval").style.display = "block";
-      document.getElementById("maxval").style.display = "block";
-      document.getElementById("stepval").style.display = "block";
-      document.getElementById("label").style.display = "none";
-      document.getElementById("lookup").style.display = "none";
-      if (!document.getElementById("placeholder_field").value) {
-        document.getElementById("placeholder_field").value="123"
-      }
-      break;     
-    default:
-      document.getElementById("decimals").style.display = "none";
-      document.getElementById("pattern").style.display = "block";
-      document.getElementById("required").style.display = "block";
-      document.getElementById("minlength").style.display = "block";
-      document.getElementById("maxlength").style.display = "block";
-      document.getElementById("placeholder").style.display = "block";
-      document.getElementById("size").style.display = "block";
-      document.getElementById("height").style.display = "none";
-      document.getElementById("label").style.display = "block";
-      document.getElementById("minval").style.display = "block";
-      document.getElementById("maxval").style.display = "block";
-      document.getElementById("lookup").style.display = "none";
-      console.log("no hit");
+    var fields = {
+        pattern: ["Text", "Password", "Longtext", "E-Mail", "Phone"],
+        required: ["Text", "Password", "Longtext", "E-Mail", "Phone", "Date", "Number"],
+        minlength: ["Text", "Password", "Longtext", "E-Mail", "Phone"],
+        maxlength: ["Text", "Password", "Longtext", "E-Mail", "Phone"],
+        placeholder: ["Text", "Password", "Longtext", "E-Mail", "Phone"],
+        size: ["Text", "Password", "Longtext", "E-Mail", "Phone", "Number","Integer"],
+        height: ["Longtext"],
+        datetime: ["Date"],
+        decimals: ["Number"],
+        minval: ["Number","Integer"],
+        maxval: ["Number","Integer"],
+        stepval: ["Number","Integer"],
+        lookup: ["Lookup"],
+        label: ["Text", "Longtext", "E-Mail"]
+    };
+
+    for (var field in fields) {
+        var display = fields[field].includes(select) ? "block" : "none";
+        document.getElementById(field).style.display = display;
     }
-  }
 
+    if (document.getElementById("placeholder_field").value === "" && fields["placeholder"].includes(select)) {
+        document.getElementById("placeholder_field").value = getDefaultPlaceholder(select);
+    }
+}
 
-</script>
+function getDefaultPlaceholder(type) {
+    switch(type) {
+        case "Text": return "Some text...";
+        case "E-Mail": return "test@yahoo.de";
+        case "Phone": return "+34 5603821";
+        case "Number": return "12.43";
+        default: return "";
+    }
+}</script>
 {{end}}
 
 

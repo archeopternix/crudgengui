@@ -20,7 +20,7 @@ func (mc ModelController) showEntity(c echo.Context, entityname string) error {
 	}
 
 	text := map[string]string{
-		"title": "Entity: " + entityname,
+		"title": "Entity: " + strings.Title(entityname),
 		"menu":  "menu_entities",
 	}
 	rd := newRequestData(text, map[string]interface{}{

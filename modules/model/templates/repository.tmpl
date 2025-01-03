@@ -14,9 +14,6 @@ type Env struct {
 {{- range .Entities }}
 	{{.CleanName | plural}} {{.CleanName}}Repository
 {{- end}}	
-{{- range $key, $value := .Lookups }}
-	{{title $key}} {{title $key}}Repository
-{{- end}}	
 }
 
 // Labels will be populated by the unique id and all fields tagged with isLabel=true

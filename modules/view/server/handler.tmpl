@@ -23,18 +23,15 @@ func (s Server) List{{plural .CleanName}}(c echo.Context) error {
 	}
 	
 	data := struct {		
-		Lookups map[string]model.Labels
 		Records  model.{{.CleanName}}List
+    Lookups map[string]model.Labels
 	}{}
 	data.Records = {{.CleanName | plural | lowercase}}
-	data.Lookups = make(map[string]model.Labels)
+  data.Lookups = make(map[string]model.Labels)
 		
 	{{- $name := .CleanName}}
 	{{- range .Fields}}{{if eq .Type "Child"}}
 	data.Lookups["{{.Object | plural}}"], _ = s.Env.{{.Object | plural}}.GetLabels()	
-	{{- end}}{{end}}
-	{{- range .Fields}}{{if eq .Type "Lookup"}}
-	data.Lookups["{{.Object | plural}}"], _ = s.Env.{{title .Object}}.GetAll()	
 	{{- end}}{{end}}
   	
 	p:=NewPage("{{.CleanName | plural}}", "{{.CleanName | plural}}")
@@ -73,9 +70,7 @@ func (s Server) Get{{.CleanName}}(c echo.Context) error {
 	data.Lookups["{{.Object | plural}}"], _ = s.Env.{{.Object | plural}}.GetLabels()	
 	{{- end}}{{end}}
 	// Labels for 'Lookup' tables  
-	{{- range .Fields}}{{if eq .Type "Lookup"}}
-	data.Lookups["{{.Object | plural}}"], _ = s.Env.{{title .Object}}.GetAll()		
-	{{- end}}{{end}}   
+
 	
 	p:=NewPage("Edit {{.CleanName}}", "{{.CleanName | plural}}")
 	p.Data = data
@@ -103,10 +98,6 @@ func (s Server) New{{.CleanName}}(c echo.Context) error {
 	data.Lookups["{{.Object | plural}}"], _ = s.Env.{{.Object | plural}}.GetLabels()	
 	{{- end}}{{end}}
 	
-	{{- $name := .CleanName}}
-	{{- range .Fields}}{{if eq .Type "Lookup"}}
-	data.Lookups["{{.Object | plural}}"], _ = s.Env.{{title .Object}}.GetAll()		
-	{{- end}}{{end}} 
   
 	p:=NewPage("New {{.CleanName}}", "{{.CleanName | plural}}")
 	p.Data = data
@@ -127,9 +118,8 @@ func (s Server) Create{{.CleanName}}(c echo.Context) (err error) {
 	
 	if s.validate{{.CleanName}}(p) == false {
     	return c.Render(http.StatusOK, "{{lowercase .CleanName}}detail", p)
-  	}
+  }
 	
-
 	err = s.Env.{{.CleanName | plural}}.Insert({{lowercase .CleanName}})
 	if err != nil {
 		return echo.NewHTTPError(http.StatusNotFound, "Database: {{.CleanName}} could not created")
