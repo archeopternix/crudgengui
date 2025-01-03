@@ -1,0 +1,25 @@
+{{define "main" -}}
+// Package main contains just the initialisation code for the Server and Database
+// access
+//
+// Generated code - do not modify it will be overwritten!!
+// Time: {{.TimeStamp}}
+package main
+
+import (
+	view "{{.CleanName}}/view"
+	model "{{.CleanName}}/model"
+	database "{{.CleanName}}/database"
+)
+
+func main() {
+	env := model.Env{
+  {{- range .Entities}}
+      {{.CleanName | plural}}:  database.New{{.CleanName}}Repo(),
+  {{- end}}		
+	}
+	server := view.NewServer(&env)
+	// Start server
+	server.Logger.Fatal(server.Start(":8080"))
+}
+{{end}}

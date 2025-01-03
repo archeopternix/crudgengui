@@ -1,0 +1,23 @@
+# Configuration
+name: Application Generator
+tasks:
+#Main
+- kind: template
+  fileext: .go
+  source:
+  - main.tmpl
+  target: 
+  template: main
+  filename: main
+- kind: copy
+  source:
+  - go.sum
+  target:  
+- kind: template
+  fileext: .mod
+  source:
+  - go.tmpl
+  target: 
+  template: gomod
+  filename: go
+

@@ -20,6 +20,7 @@ type GuiServer struct {
 
 func NewGuiServer() GuiServer {
 	s := GuiServer{e: echo.New()}
+	s.e.HideBanner = true
 	s.e.Use(middleware.Static("/static"))
 	s.e.Use(middleware.LoggerWithConfig(middleware.LoggerConfig{
 		Format: "${method}:${status}, uri:\"${uri}\", path:\"${path}\", error:\"${error}\"\n",
@@ -68,6 +69,8 @@ func (s *GuiServer) setRoutes() {
 	s.e.GET("/", mc.ShowDashboard)
 	s.e.GET("/project", mc.ShowProject)
 	s.e.POST("/project", mc.SaveProject)
+
+	s.e.GET("/generate", mc.StartGeneration)
 
 	// Group for "/entities" routes
 	entitiesGroup := s.e.Group("/entities")

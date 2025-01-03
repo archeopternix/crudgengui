@@ -1,0 +1,70 @@
+{{define "schema" -}}
+// Package database contains structures and function for generic database access
+// Generated code - do not modify it will be overwritten!!
+// Time: {{.TimeStamp}}
+package database
+
+import (
+//	"github.com/jmoiron/sqlx"	
+)
+
+var defaultSchema = `
+{{- range .Entities }}
+CREATE TABLE {{.Name}} (
+	id serial PRIMARY KEY,
+{{- range .Fields }}
+	{{template "schematypes" .}}
+{{- end}}
+	created_at timestamp with time zone DEFAULT current_timestamp
+);	                                          
+{{- end}}
+`
+var	drop =`
+{{- range .Entities }}
+drop table {{lowercase .Name}};
+{{- end}}
+`
+
+
+
+func init() {
+/*
+	var db *sqlx.DB
+	var err error  
+	
+	// exactly the same as the built-in
+	db, err = sqlx.Open("sqlite3", ":memory:")
+ 
+ 
+	// force a connection and test that it worked
+	err = db.Ping()
+
+
+
+	// from a pre-existing sql.DB; note the required driverName
+	db = sqlx.NewDb(sql.Open("sqlite3", ":memory:"), "sqlite3")
+
+	// execute a query on the server
+	result, err := db.Exec(schema)
+
+
+p := Place{}
+pp := []Place{}
+ 
+// this will pull the first place directly into p
+err = db.Get(&p, "SELECT * FROM place LIMIT 1")
+ 
+// this will pull places with telcode > 50 into the slice pp
+err = db.Select(&pp, "SELECT * FROM place WHERE telcode > ?", 50)
+ 
+// they work with regular types as well
+var id int
+err = db.Get(&id, "SELECT count(*) FROM place")
+ 
+// fetch at most 10 place names
+var names []string
+err = db.Select(&names, "SELECT name FROM place LIMIT 10")
+*/
+}
+
+{{end}}

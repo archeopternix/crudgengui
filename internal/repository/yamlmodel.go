@@ -1,21 +1,19 @@
 package repository
 
 import (
+	model "crudgengui/model"
 	"os"
-  model "crudgengui/model"
 )
 
-
 type YAMLModel struct {
-  yamlfile string
+	yamlfile string
 }
 
 func NewYAMLModel(fname string) *YAMLModel {
-  ym:=new(YAMLModel)
-  ym.yamlfile=fname
-  return ym
+	ym := new(YAMLModel)
+	ym.yamlfile = fname
+	return ym
 }
-
 
 func (ym YAMLModel) WriteModel(m *model.Model) error {
 	file, err := os.Create(ym.yamlfile)
@@ -29,7 +27,7 @@ func (ym YAMLModel) WriteModel(m *model.Model) error {
 	return nil
 }
 
-func (ym *YAMLModel)ReadModel(m *model.Model) (err error) {
+func (ym *YAMLModel) ReadModel(m *model.Model) (err error) {
 	file, err := os.Open(ym.yamlfile)
 	if err != nil {
 		return err

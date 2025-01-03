@@ -1,6 +1,7 @@
 package model
 
 import (
+	"crudgengui/pkg"
 	"fmt"
 	"slices"
 )
@@ -14,6 +15,11 @@ type Lookup struct {
 // NewLookup creates a pointer to a new Lookup
 func NewLookup(name string) *Lookup {
 	return &Lookup{Name: name}
+}
+
+// CleanName removes all non-numeric and non-alphanumeric characters from the input string.
+func (l Lookup) CleanName() string {
+	return pkg.CleanString(l.Name)
 }
 
 // Add adds a text entry to the Lookup's list.

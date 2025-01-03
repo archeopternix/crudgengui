@@ -1,0 +1,197 @@
+{{define "handler" -}}
+// Package view all view related structs and functions
+// Generated code - do not modify it will be overwritten!!
+// Time: {{.TimeStamp}}
+package view
+
+import (
+	"github.com/labstack/echo/v4"
+	"net/http"
+	"fmt"
+	model "{{.AppName}}/model"
+)
+
+{{with .Entity}}
+
+
+// List{{plural .CleanName}} fetches all {{plural .CleanName}} recordes from database and
+// renders it with the '{{lowercase .CleanName}}list' template
+func (s Server) List{{plural .CleanName}}(c echo.Context) error {
+	{{.CleanName | plural | lowercase}},err := s.Env.{{.CleanName | plural}}.GetAll()
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, "{{plural .CleanName}} not found")
+	}
+	
+	data := struct {		
+		Lookups map[string]model.Labels
+		Records  model.{{.CleanName}}List
+	}{}
+	data.Records = {{.CleanName | plural | lowercase}}
+	data.Lookups = make(map[string]model.Labels)
+		
+	{{- $name := .CleanName}}
+	{{- range .Fields}}{{if eq .Type "Child"}}
+	data.Lookups["{{.Object | plural}}"], _ = s.Env.{{.Object | plural}}.GetLabels()	
+	{{- end}}{{end}}
+	{{- range .Fields}}{{if eq .Type "Lookup"}}
+	data.Lookups["{{.Object | plural}}"], _ = s.Env.{{title .Object}}.GetAll()	
+	{{- end}}{{end}}
+  	
+	p:=NewPage("{{.CleanName | plural}}", "{{.CleanName | plural}}")
+	p.Data = data
+	return c.Render(http.StatusOK, "{{lowercase .CleanName}}list", p)
+}
+
+// Get{{.CleanName}} gets one single record with 'id' from the database and  
+// renders it with the '{{lowercase .CleanName}}detail' template
+func (s Server) Get{{.CleanName}}(c echo.Context) error {
+	id := c.Param("id")
+	
+	{{lowercase .CleanName}}, err := s.Env.{{.CleanName | plural}}.Get(asUint(id))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, "{{.CleanName}} with id:"+id+" not found")
+	}
+	
+	data := struct {		
+		Lookups map[string]model.Labels
+		{{- range .Fields}}{{if eq .Type "Parent" }}
+		{{.Object}}Childs model.{{.Object}}List
+		{{- end}}{{end}}
+		Entity  *model.{{.CleanName}}
+	}{}
+	data.Entity = {{lowercase .CleanName}}
+	data.Lookups = make(map[string]model.Labels)
+	
+	{{- $name := .CleanName}}
+	// Child tables when available
+	{{- range .Fields}}{{if eq .Type "Parent"}}
+	data.{{.Object}}Childs = s.Env.{{$name | plural}}.GetAll{{.Object | plural}}ByParentID(asUint(id))
+	{{- end}}{{end}}
+	
+	// Labels for 'Parent' tables
+	{{- range .Fields}}{{if eq .Type  "Child"}}
+	data.Lookups["{{.Object | plural}}"], _ = s.Env.{{.Object | plural}}.GetLabels()	
+	{{- end}}{{end}}
+	// Labels for 'Lookup' tables  
+	{{- range .Fields}}{{if eq .Type "Lookup"}}
+	data.Lookups["{{.Object | plural}}"], _ = s.Env.{{title .Object}}.GetAll()		
+	{{- end}}{{end}}   
+	
+	p:=NewPage("Edit {{.CleanName}}", "{{.CleanName | plural}}")
+	p.Data = data
+
+	return c.Render(http.StatusOK, "{{lowercase .CleanName}}detail", p)
+}
+
+// New{{.CleanName}} creates a new empty record and  
+// renders it with the '{{lowercase .CleanName}}detail' template
+func (s Server) New{{.CleanName}}(c echo.Context) error {
+	{{lowercase .CleanName}} := new(model.{{.CleanName}})
+
+	data := struct {		
+		Lookups map[string]model.Labels
+		{{- range .Fields}}{{if eq .Type "Parent" }}
+		{{.Object}}Childs model.{{.Object}}List
+		{{- end}}{{end}}
+		Entity  *model.{{.CleanName}}
+	}{}
+	data.Entity = {{lowercase .CleanName}}
+	data.Lookups = make(map[string]model.Labels)
+	
+	{{- $name := .CleanName}}
+	{{- range .Fields}}{{if eq .Type "Child"}}
+	data.Lookups["{{.Object | plural}}"], _ = s.Env.{{.Object | plural}}.GetLabels()	
+	{{- end}}{{end}}
+	
+	{{- $name := .CleanName}}
+	{{- range .Fields}}{{if eq .Type "Lookup"}}
+	data.Lookups["{{.Object | plural}}"], _ = s.Env.{{title .Object}}.GetAll()		
+	{{- end}}{{end}} 
+  
+	p:=NewPage("New {{.CleanName}}", "{{.CleanName | plural}}")
+	p.Data = data
+
+	return c.Render(http.StatusOK, "{{lowercase .CleanName}}detail", p)
+}
+
+// Create{{.CleanName}} creates a new record and prefills the record with the form fields
+// saves it to the databse and returns to the list view
+func (s Server) Create{{.CleanName}}(c echo.Context) (err error) {
+	{{lowercase .CleanName}} := new(model.{{.CleanName}})
+  	if err = c.Bind({{lowercase .CleanName}}); err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, "{{.CleanName}} could not bound to params")
+  	}
+
+	p:=NewPage("Error {{.CleanName}}", "{{.CleanName | plural}}")
+	p.Data = {{lowercase .CleanName}}
+	
+	if s.validate{{.CleanName}}(p) == false {
+    	return c.Render(http.StatusOK, "{{lowercase .CleanName}}detail", p)
+  	}
+	
+
+	err = s.Env.{{.CleanName | plural}}.Insert({{lowercase .CleanName}})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, "Database: {{.CleanName}} could not created")
+	}
+	
+	return c.Redirect(http.StatusFound, "/{{.CleanName | plural | lowercase}}")
+}
+
+// Update{{.CleanName}} updates an existing record with values from the form fields
+// saves it to the databse and returns to the list view
+func (s Server) Update{{.CleanName}}(c echo.Context) (err error) {
+	{{lowercase .CleanName}} := new(model.{{.CleanName}})
+  	if err = c.Bind({{lowercase .CleanName}}); err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, "{{.CleanName}} could not bound to params")
+  	}
+
+	err = s.Env.{{.CleanName | plural}}.Update({{lowercase .CleanName}})
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, "Database: {{.CleanName}} could not be updated")
+	}
+
+	return c.Redirect(http.StatusFound, "/{{.CleanName | plural | lowercase}}")
+}
+
+// Delete{{.CleanName}} deletes the record with id and
+// returns to the list view
+func (s Server) Delete{{.CleanName}}(c echo.Context) error {
+	id := c.Param("id")
+	
+	
+	{{- range .Fields}}{{if eq .Type "Parent"}}
+	// one to many childs available do not delete
+	{{.Object | lowercase}}Childs := s.Env.{{$name | plural}}.GetAll{{.Object | plural}}ByParentID(asUint(id))
+	if len({{.Object | lowercase}}Childs)>0 {
+		return echo.NewHTTPError(http.StatusPreconditionFailed, fmt.Sprintf("{{$name}} with id '%s' could not be deleted dependencies to {{.Object | plural}}", id))	
+	}
+	{{- end}}{{end}}
+
+	err := s.Env.{{.CleanName | plural}}.Delete(asUint(id))
+	if err != nil {
+		return echo.NewHTTPError(http.StatusNotFound, fmt.Sprintf("{{.CleanName}} with id '%s' could not be deleted, %v", id, err))
+	}
+	
+	return c.Redirect(http.StatusFound, "/{{.CleanName | plural | lowercase}}")
+}
+
+// generic validation handler for form
+func (s Server) validate{{.CleanName}}(p *Page) bool{
+	return true // ToDo: custom validation
+	/*
+	p.Errors = make(map[string]string)
+	data := p.Data.(*{{.CleanName}})
+	{{range .Fields}}
+	{{- if eq .Type "Longtext" "Email" "Tel" "Text" "Password"}} if (data.{{.CleanName}} != "") {		
+		p.Errors["{{.CleanName}}"]="Please correct error!"	
+	}
+	{{else if eq .Type "Boolean"}} if (data.{{.CleanName}} != true) {		
+		p.Errors["{{.CleanName}}"]="Please correct error!"
+	}
+	{{end}}{{end}}
+	return len(p.Errors) == 0
+	*/
+}
+{{end}}
+{{end}}

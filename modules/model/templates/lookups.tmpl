@@ -1,0 +1,19 @@
+{{define "lookups" -}}
+// Package model holds all entities and cross application definitions
+// Generated code - do not modify it will be overwritten!!
+// Time of generation: {{.TimeStamp}}
+package model
+
+
+// Lookup is a string list
+type Lookup struct {
+	Name string
+	List []string // list that contains the text values
+}
+
+{{range $key, $value := .Lookups -}}
+  type {{title $key}}List []Lookup
+{{- end}}
+
+{{end}} // of define
+

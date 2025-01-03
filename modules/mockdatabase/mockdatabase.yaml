@@ -1,0 +1,19 @@
+# Configuration
+name: Mock Database Generator
+tasks:
+
+- kind: template
+  fileext: repo.go
+  source:
+  - mockrepo.go
+  target: database
+  template: mockrepo
+
+- kind: template
+  fileext: _test.go
+  source:
+  - mockmain_test.go
+  target: database
+  template: mockmaintest
+  filename: databasemain
+

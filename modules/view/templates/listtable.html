@@ -1,0 +1,74 @@
+{{define "listtable" -}}
+{{with .Entity}}
+{{"{{"}}define "{{lowercase .CleanName}}listtable" {{"}}"}}
+<!-- Time: {{.TimeStamp}} -->
+                       <div class="card events-card">      
+                            <div class="card-table">
+                                <div class="content">
+                                    <table class="table is-fullwidth is-striped">
+                                     <thead>
+                                      <tr>
+                                        {{range .Fields -}}
+                                          {{- if ne .Type "Parent" }}
+                                          {{- if eq .Type "Child"}}<th>{{.Object}}</th>
+                                          {{- else if ne .CleanName "ID"}}<th>{{.Name}}</th>{{end}}
+                                          {{- end}}
+                                        {{end -}}
+                                        <th></th>	
+                                      </tr>
+                                    </thead>
+                                        <tbody>
+                                          {{"{{"}}range .{{"}}"}}
+                                          <tr>
+                                          {{- $entityname := .Name}}
+                                            {{range .Fields}}                                                                                          
+                                              {{- if eq .Type "Parent"}}{{end}}
+                                              {{- if eq .Type "Child"}}<td>{{"{{"}}.{{.Object}}{{"}}"}} </td>{{end}}
+                                              {{- if eq .Type "Lookup"}}<td>{{"{{"}}.{{.CleanName}}{{"}}"}} </td>{{end}}                                              
+                                              {{- if eq .Type "Boolean"}}<td><span>{{"{{"}}if eq .{{.CleanName}} true{{"}}"}}<i class="far fa-check-square"></i>{{"{{"}}else{{"}}"}}<i class="far fa-square"></i>{{"{{"}}end{{"}}"}} </span> </td>{{end}}
+                                              {{- if eq .Type "Tel" "Text" "Password" "Longtext" "E-Mail" "Date" "Time"}}
+                                                {{- if eq .Label true}}<td><a href="/{{$entityname | plural | lowercase}}/{{"{{.ID}}"}}">{{"{{"}}.{{.CleanName}}{{"}}"}}</a> </td>
+                                                {{- else}}<td>{{"{{"}}.{{.CleanName}}{{"}}"}} </td>{{end}}{{end}}
+                                              {{- if eq .Type "Number"}}<td>{{"{{"}}.{{.CleanName}}{{"}}"}} </td>{{end}}
+                                              {{- if eq .Type "Integer"}}{{- if ne .CleanName "ID"}}<td>{{"{{"}}.{{.CleanName}}{{"}}"}} </td>{{end}} {{end}}                                        
+                                            {{end}}
+                                            <td>
+                                            <div class="buttons is-right">
+                                            <form method="post" action="/{{.CleanName | plural | lowercase}}/{{"{{.ID}}"}}/delete" name="{{"{{.ID}}"}}">
+                                              <button class="button is-secondary">    
+                                                <span class="icon">
+                                                  <i class="far fa-trash-alt"></i>
+                                                </span>
+                                                <span>Delete</span>
+                                              </button>
+                                              <button class="button is-primary" formmethod="get" formaction="/{{.CleanName | plural | lowercase}}/{{"{{.ID}}"}}">
+                                                <span class="icon">                                                                                                  
+                                                  <i class="far fa-edit"></i>
+                                                </span>
+                                                <span>Edit</span>
+                                              </button>
+                                            </form> 
+                                            </div>
+                                            </td>  
+                                          </tr>
+                                          {{"{{end}}"}}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            <div>
+                            </div>
+                            <footer class="card-footer">
+                              <a class="button is-link" href="/{{.CleanName | plural | lowercase}}/new">
+                                <span class="icon">                                                                                                  
+                                  <i class="fas fa-plus"></i>
+                                </span>
+                                <span>New</span>
+                              </a>      
+                             </footer>                           
+                        </div>  
+{{"{{"}}end{{"}}"}}         
+{{end}}
+{{end}}
+
+

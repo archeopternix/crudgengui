@@ -2,8 +2,10 @@ package controller
 
 import (
 	model "crudgengui/model"
+	"crudgengui/pkg"
 	"fmt"
 	"net/http"
+	"strings"
 	"sync"
 
 	"github.com/labstack/echo/v4"
@@ -54,8 +56,12 @@ func (mc ModelController) InsertEntity(c echo.Context) error {
 	if err := c.Bind(e); err != nil {
 		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
 	}
+	// Tests
+	if !pkg.IsFirstLetterUppercase(e.Name) {
+		e.Name = strings.Title(e.Name)
+	}
 	if (len(e.Name) < 2) || (len(e.Type) < 2) {
-		return nil
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Errorf("Name %v needs to be 3 characters minimum", e.Name))
 	}
 	if _, ok := mc.repo.GetEntity(e.Name); ok {
 		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Name %v is already in use", e.Name))

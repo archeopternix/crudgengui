@@ -1,0 +1,41 @@
+{{define "detail" -}}
+{{with .Entity}}
+{{"{{"}}define "{{lowercase .CleanName}}detail" {{"}}"}}
+{{"{{"}}template "base" .{{"}}"}}
+<!-- Time: {{.TimeStamp}} -->
+{{"{{"}}$errors:= .Errors{{"}}"}}
+{{"{{"}}with .Data{{"}}"}}
+                      <form method="post" action="/{{.CleanName | plural | lowercase}}{{"{{if .Entity.ID}}"}}/{{"{{.Entity.ID}}"}}{{"{{end}}"}}" name="{{.CleanName | lowercase}}">
+                        <input type="hidden" id="id" name="id" value="{{"{{.Entity.ID}}"}}">     
+                        <div class="card events-card">      
+                            <div class="card-table">
+                              <div class="content">
+                                {{- range .Fields}}
+                    {{if ne .CleanName "ID"}}{{template "detailtypes" . }}{{end}}
+                                {{end -}}
+                              </div>
+                            </div>    
+                            <hr class="hr" style="margin-bottom: 0;">                  
+                            <footer class="card-footer">
+                              <div class="field is-grouped">
+                                <div class="control">
+                                  <button type="submit" class="button is-success" name="action" value="0">
+                                    <span class="icon is-small">
+                                      <i class="fas fa-check"></i>
+                                    </span>
+                                    <span>Save</span>
+                                  </button>
+                                </div>                                
+                           </footer>
+                        </div>
+                      </form>
+                      {{"{{- if .Entity.ID}}"}} 
+                      {{- range .Fields}}{{if eq .Type "Parent"}}
+                      <hr class="hr" style="margin-bottom: 0;">
+                      {{"{{"}}template "{{.Object | singular | lowercase}}listtable" .{{.Object}}Childs{{"}}"}}
+                      {{- end}}{{end}}{{"{{"}}end{{"}}"}} 
+{{"{{- end}}"}}  
+{{"{{"}}template "_footer" .{{"}}"}}
+{{"{{"}}end{{"}}"}}         
+{{end}}
+{{end}}
