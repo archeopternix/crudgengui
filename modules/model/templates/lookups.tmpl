@@ -4,53 +4,16 @@
 // Time of generation: {{.TimeStamp}}
 package model
 
-import (
-  "fmt"
-)
 
-{{range $key, $value := .Lookups -}}
-  type {{title $key}}List []string
-{{- end}}
-
-{{range $key, $value := .Lookups -}}
-  type {{title $key}}Repo struct{}
-{{- end}}
-
-var (
-{{range $key, $value := .Lookups -}}
-  {{title $key}} =  {{title $key}}List{ {{range $value.List }}"{{.}} ",{{end}} }
-{{- end}})
-
-{{range $key, $value := .Lookups }}
-// New{{title $key}}Repo() returns a new {{title $key}}Repo()
-func New{{title $key}}Repo() {{title $key}}Repo {
-  return {{title $key}}Repo{}
+// Lookup is a string list
+type Lookup struct {
+	Name string
+	List []string // list that contains the text values
 }
 
-// Get queries a {{$key | lowercase}} by id, throws an error when id is not found
-func (repo {{title $key}}Repo) Get(id uint64) (string, error) {
-  if id >= uint64(len({{title $key}})) {
-        return "", fmt.Errorf("{{title $key}} with id %d not found", id)
-  }
-	return {{title $key}}[id], nil
-}
-
-// GetAll returns all records ordered by the fields  with isLabel=true
-func (repo {{title $key}}Repo) GetAll() (Labels, error) {
-  l := make(Labels)
-	for i, val := range {{title $key}} {
-		l[uint64(i)] = val
-	}
-	return l, nil
-}
-{{end}}
+{{range $key, $value := .Lookups -}}
+  type {{title $key}}List []Lookup
 {{- end}}
 
-/*
-func (repo CustomertypeRepo) GetAll() (Labels, error) {
-	l := make(Labels)
-	for i, val := range Customertype {
-		l[uint64(i)] = val
-	}
-	return l, nil
-  */
+{{end}} // of define
+

@@ -19,13 +19,6 @@
                           </ul>
                     {{- end}}
                     </li>
-                    <li><a>Lookup's</a>
-                    {{range .Lookups}}
-                          <ul>
-                              <li><a {{"{{"}}if eq .Slug "{{.CleanName | plural}}" {{"}}"}}class="is-active"{{"{{"}}end{{"}}"}} href="/{{.CleanName | plural | lowercase}}">{{plural .Name}}</a></li>
-                          </ul>
-                    {{- end}}
-                      </li>
                      </ul>
                 </aside>
 {{"{{"}}end{{"}}"}}

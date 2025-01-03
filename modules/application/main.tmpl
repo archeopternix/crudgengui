@@ -17,9 +17,6 @@ func main() {
   {{- range .Entities}}
       {{.CleanName | plural}}:  database.New{{.CleanName}}Repo(),
   {{- end}}		
-  {{- range $key, $value := .Lookups}}
-      {{title $key}}: model.New{{title $key}}Repo(),
-  {{- end}}		
 	}
 	server := view.NewServer(&env)
 	// Start server

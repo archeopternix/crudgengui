@@ -28,7 +28,7 @@ tasks:
   - server\handler.tmpl
   target: view
   template: handler
-  
+   
 - kind: template
   fileext: .html
   source:

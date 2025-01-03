@@ -240,6 +240,7 @@ func (m *Module) GenerateModule(app *model.Model, genpath string) error {
 					log.Printf("template '%s' for entity '%s' written to file '%s'\n", t.Template, entity.Name, file)
 				}
 			}
+
 		default:
 			return fmt.Errorf("unknown generator operation '%s'", t.Kind)
 		}
