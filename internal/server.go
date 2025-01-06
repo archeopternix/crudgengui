@@ -14,10 +14,12 @@ const (
 	tpl  = "../../internal/template/"
 )
 
+// GuiServer represents the GUI server with Echo framework
 type GuiServer struct {
 	e *echo.Echo
 }
 
+// NewGuiServer initializes a new GuiServer instance
 func NewGuiServer() GuiServer {
 	s := GuiServer{e: echo.New()}
 	s.e.HideBanner = true
@@ -28,11 +30,13 @@ func NewGuiServer() GuiServer {
 	return s
 }
 
+// Init initializes the server by setting templates and routes
 func (s *GuiServer) Init() {
 	s.setTemplates()
 	s.setRoutes()
 }
 
+// setTemplates sets up the template rendering for the server
 func (s *GuiServer) setTemplates() {
 	// Create templates
 	templates := NewTemplateRegistry()
@@ -62,6 +66,7 @@ func (s *GuiServer) setTemplates() {
 	s.e.Renderer = templates
 }
 
+// setRoutes sets up the routes for the server
 func (s *GuiServer) setRoutes() {
 	// Create Repository
 	mc := controller.NewModelController(repository.NewModelRepository(repository.NewYAMLModel(base + "data/model.yaml")))
@@ -109,6 +114,7 @@ func (s *GuiServer) setRoutes() {
 
 }
 
+// StartServer starts the server on the specified port
 func (s GuiServer) StartServer(port int) {
 	s.e.Logger.Fatal(s.e.Start(fmt.Sprint(":", port)))
 }
