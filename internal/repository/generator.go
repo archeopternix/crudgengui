@@ -49,6 +49,20 @@ type Task struct {
 	Filename string   `yaml:"filename,omitempty"` // when Filename is set (not nil) the whole Application will be send to the template execution
 }
 
+// Type returns the type of task based on the Kind and whether Filename is populated
+func (t *Task) Type() string {
+    if t.Kind == "copy" {
+        return "copy"
+    }
+    if t.Kind == "template" {
+        if t.Filename != "" {
+            return "singletemplate"
+        }
+        return "multipletemplate"
+    }
+    return "unknown"
+}
+
 var once sync.Once
 var generator *Generator
 
