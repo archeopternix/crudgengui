@@ -37,11 +37,11 @@
             "type": "go",
             "request": "launch",
             "mode": "auto",
-            "program": "${workspaceFolder}",
+            "program": "${workspaceFolder}/cmd/crudgengui/main.go",
             "env": {},
             "args": ["vet", "./..."],
-            "showLog": true,
-            "preLaunchTask": "go vet"
+            "showLog": true
+    
         }
     ]
 }
