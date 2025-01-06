@@ -43,10 +43,10 @@ In this example, the files header.html and footer.html located in the templates 
 ### Usage
 When the GenerateModule function processes a copy task, it performs the following steps for each file in the source list:
 
-* It combines the genpath and target paths to determine the destination directory.
-* It creates the target directory if it does not already exist.
-* It copies each file from the source list to the target directory.
-* If a file with the same name already exists in the target directory, the existing file will be overwritten.
+1. It combines the genpath and target paths to determine the destination directory.
+2. It creates the target directory if it does not already exist.
+3. It copies each file from the source list to the target directory.
+4. If a file with the same name already exists in the target directory, the existing file will be overwritten.
 
 ## Single File Template Task
 The single file generation task uses a template to generate a single output file based on the entire application structure. This task is useful when you want to create a file that summarizes or utilizes the whole application's data.
@@ -132,10 +132,10 @@ When the GenerateModule function processes a template task, it performs the foll
 2. It creates the target directory if it does not already exist.
 3. It parses the template files specified in the source list.
 4. For single file generation:
-  * It creates a file with the specified filename and fileext.
-  * It passes the entire application data to the template and writes the output to the file.
+    * It creates a file with the specified filename and fileext.
+    * It passes the entire application data to the template and writes the output to the file.
 5. For multiple file generation:
-  * It iterates over each entity in the application.
-  * It creates a file for each entity with the entity name and fileext.
-  * It passes the entity data to the template and writes the output to the file.
+    * It iterates over each entity in the application.
+    * It creates a file for each entity with the entity name and fileext.
+    * It passes the entity data to the template and writes the output to the file.
 
