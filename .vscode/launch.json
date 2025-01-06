@@ -39,9 +39,15 @@
             "mode": "auto",
             "program": "${workspaceFolder}/cmd/crudgengui/main.go",
             "env": {},
+<<<<<<< HEAD
             "args": ["vet", "./..."],
             "showLog": true
     
+=======
+            "args": [],
+            "showLog": true,
+            "preLaunchTask": "go vet"
+>>>>>>> eee815f853b0c7b16f3bbf5c8e6221e735845d21
         }
     ]
 }
