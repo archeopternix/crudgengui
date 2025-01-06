@@ -128,13 +128,13 @@ In this example, the entity.tmpl template is used to generate Go files for each 
 ### Usage
 When the GenerateModule function processes a template task, it performs the following steps:
 
-1 It combines the genpath and target paths to determine the destination directory.
-2 It creates the target directory if it does not already exist.
-3 It parses the template files specified in the source list.
-4 For single file generation:
+1. It combines the genpath and target paths to determine the destination directory.
+2. It creates the target directory if it does not already exist.
+3. It parses the template files specified in the source list.
+4. For single file generation:
   * It creates a file with the specified filename and fileext.
   * It passes the entire application data to the template and writes the output to the file.
-5 For multiple file generation:
+5. For multiple file generation:
   * It iterates over each entity in the application.
   * It creates a file for each entity with the entity name and fileext.
   * It passes the entity data to the template and writes the output to the file.
