@@ -1,0 +1,14 @@
+name: Module1
+tasks:
+  - kind: copy
+    source:
+      - source/file1.txt
+      - source/file2.txt
+    target: target/
+  - kind: template
+    source:
+      - templates/template1.tpl
+    target: target/
+    template: template1
+    fileext: .txt
+    filename: outputfile
