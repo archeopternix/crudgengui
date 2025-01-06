@@ -1,4 +1,11 @@
-// GenerationDSL project main.go
+// Package pkg provides various utility functions and custom error types
+// for handling file operations, string manipulations, and YAML conversions.
+// 
+// The utilities include functions for checking if the first letter of a string
+// is uppercase, creating directories, copying files, and cleaning strings by
+// removing or converting non-alphanumeric characters. It also includes custom
+// error types for file and directory existence errors, and functions for
+// converting data structures to YAML strings.
 package pkg
 
 import (
