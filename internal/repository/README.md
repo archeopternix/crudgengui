@@ -24,9 +24,9 @@ target: "path/to/target/directory"
 ```
 
 ### Fields
-kind: Specifies the type of task. For a copy task, this value should be copy.
-source: A list of file paths that should be copied to the target directory. Each path should point to a file that exists in the source directory.
-target: The directory where the source files will be copied to. The target path should be a valid directory path where the copied files will be placed.
+* kind: Specifies the type of task. For a copy task, this value should be copy.
+* source: A list of file paths that should be copied to the target directory. Each path should point to a file that exists in the source directory.
+* target: The directory where the source files will be copied to. The target path should be a valid directory path where the copied files will be placed.
 
 ### Example
 Below is an example of a copy task defined in a YAML configuration:
@@ -43,10 +43,10 @@ In this example, the files header.html and footer.html located in the templates 
 ### Usage
 When the GenerateModule function processes a copy task, it performs the following steps for each file in the source list:
 
-It combines the genpath and target paths to determine the destination directory.
-It creates the target directory if it does not already exist.
-It copies each file from the source list to the target directory.
-If a file with the same name already exists in the target directory, the existing file will be overwritten.
+1 It combines the genpath and target paths to determine the destination directory.
+2 It creates the target directory if it does not already exist.
+3 It copies each file from the source list to the target directory.
+4 If a file with the same name already exists in the target directory, the existing file will be overwritten.
 
 ## Single File Template Task
 The single file generation task uses a template to generate a single output file based on the entire application structure. This task is useful when you want to create a file that summarizes or utilizes the whole application's data.
@@ -66,12 +66,12 @@ filename: "output_filename"
 ```
 
 ### Fields
-kind: Specifies the type of task. For a single file generation task, this value should be template.
-source: A list of template file paths that will be used for generation.
-target: The directory where the generated file will be placed.
-template: The name of the primary template used for generation.
-fileext: The extension of the generated file.
-filename: The name of the generated file without the extension. When this is set, the whole application will be passed to the template execution.
+* kind: Specifies the type of task. For a single file generation task, this value should be template.
+* source: A list of template file paths that will be used for generation.
+* target: The directory where the generated file will be placed.
+* template: The name of the primary template used for generation.
+* fileext: The extension of the generated file.
+* filename: The name of the generated file without the extension. When this is set, the whole application will be passed to the template execution.
 
 ### Example
 Below is an example of a single file generation task defined in a YAML configuration:
@@ -105,11 +105,11 @@ fileext: ".ext"
 ```
 
 ### Fields
-kind: Specifies the type of task. For a multiple file generation task, this value should be template.
-source: A list of template file paths that will be used for generation.
-target: The directory where the generated files will be placed.
-template: The name of the primary template used for generation.
-fileext: The extension of the generated files.
+* kind: Specifies the type of task. For a multiple file generation task, this value should be template.
+* source: A list of template file paths that will be used for generation.
+* target: The directory where the generated files will be placed.
+* template: The name of the primary template used for generation.
+* fileext: The extension of the generated files.
 
 ### Example
 Below is an example of a multiple file generation task defined in a YAML configuration:
