@@ -20,6 +20,28 @@
             "env": {},
             "args": [],
             "showLog": true
+        },
+        {
+            "name": "Build Go Project",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}/cmd/crudgengui",
+            "env": {},
+            "args": ["build"],
+            "showLog": true,
+            "preLaunchTask": "go build"
+        },
+        {
+            "name": "Lint Go Project",
+            "type": "go",
+            "request": "launch",
+            "mode": "auto",
+            "program": "${workspaceFolder}",
+            "env": {},
+            "args": ["vet", "./..."],
+            "showLog": true,
+            "preLaunchTask": "go vet"
         }
     ]
 }
