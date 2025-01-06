@@ -48,23 +48,23 @@ func (mc ModelController) ShowAllEntities(c echo.Context) error {
 // InsertEntity inserts one entity into the repo and returns to list page
 // route: FORM POST /entities
 func (mc ModelController) InsertEntity(c echo.Context) error {
-    var lock sync.Mutex
-    lock.Lock()
-    defer lock.Unlock()
+	var lock sync.Mutex
+	lock.Lock()
+	defer lock.Unlock()
 
-    entity := model.NewEntity()
-    if err := c.Bind(entity); err != nil {
-        return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-    }
-    // Validate entity
-    if err := validateEntity(entity); err != nil {
-        return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-    }
+	entity := model.NewEntity()
+	if err := c.Bind(entity); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	// Validate entity
+	if err := mc.validateEntity(entity); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
 
-    if err := mc.repo.SaveOrUpdateEntity(entity); err != nil {
-        return echo.NewHTTPError(http.StatusBadRequest, err.Error())
-    }
-    return c.Redirect(http.StatusSeeOther, "/entities")
+	if err := mc.repo.SaveOrUpdateEntity(entity); err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, err.Error())
+	}
+	return c.Redirect(http.StatusSeeOther, "/entities")
 }
 
 // ShowEntity shows detail page for an Entity or if a query parameter is set the respective Field
@@ -73,9 +73,9 @@ func (mc ModelController) InsertEntity(c echo.Context) error {
 func (mc ModelController) ShowEntity(c echo.Context) error {
 	// Entity id from path `/entities/:id`
 	id := c.Param("id")
-    if _, ok := mc.repo.GetEntity(id); !ok {
-        return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Entity '%v' not found", id))
-    }
+	if _, ok := mc.repo.GetEntity(id); !ok {
+		return echo.NewHTTPError(http.StatusNotFound, fmt.Errorf("Entity '%v' not found", id))
+	}
 
 	// Query parameter ?field=myfield
 	fieldname := c.QueryParam("field")
@@ -109,21 +109,21 @@ func (mc ModelController) DeleteEntity(c echo.Context) error {
 }
 
 // validateEntity validates the entity's name and type
-func validateEntity(e *model.Entity) error {
-    if !pkg.IsFirstLetterUppercase(e.Name) {
-        e.Name = strings.Title(e.Name)
-    }
-    if len(e.Name) < 3 || len(e.Type) < 3 {
-        return fmt.Errorf("Name %v needs to be 3 characters minimum", e.Name)
-    }
-    if _, ok := mc.repo.GetEntity(e.Name); ok {
-        return fmt.Errorf("Name %v is already in use", e.Name)
-    }
+func (mc ModelController) validateEntity(e *model.Entity) error {
+	if !pkg.IsFirstLetterUppercase(e.Name) {
+		e.Name = strings.Title(e.Name)
+	}
+	if len(e.Name) < 3 || len(e.Type) < 3 {
+		return fmt.Errorf("Name %v needs to be 3 characters minimum", e.Name)
+	}
+	if _, ok := mc.repo.GetEntity(e.Name); ok {
+		return fmt.Errorf("Name %v is already in use", e.Name)
+	}
 
-// TODO: Check for existing name in lookups
-/* if _, ok := mc.repo.GetEntity(e.Name); ok {
-        return fmt.Errorf("Name %v is already in use", e.Name)
-    }
-*/
-    return nil
+	// TODO: Check for existing name in lookups
+	/* if _, ok := mc.repo.GetEntity(e.Name); ok {
+	       return fmt.Errorf("Name %v is already in use", e.Name)
+	   }
+	*/
+	return nil
 }
