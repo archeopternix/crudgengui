@@ -39,7 +39,7 @@
             "mode": "auto",
             "program": "${workspaceFolder}",
             "env": {},
-            "args": ["vet", "./..."],
+            "args": [],
             "showLog": true,
             "preLaunchTask": "go vet"
         }
