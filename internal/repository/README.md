@@ -3,9 +3,9 @@ Tasks are used to define the needed actions to generate code or copy files to a 
 templates or copy file content without modifying it, and writes the output accordingly. It handles errors and logs the results.
 
 ## Index
-[Copy File Task](Copy-File-Task)
-[Single File Template Task](Single-File-Template-Task)
-[Multiple File Template Task](Multiple-File-Template-Task)
+1 [Copy File Task](Copy-File-Task)
+2 [Single File Template Task](Single-File-Template-Task)
+3 [Multiple File Template Task](Multiple-File-Template-Task)
 
 ## Copy File Task
 
