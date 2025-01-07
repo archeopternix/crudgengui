@@ -1,10 +1,10 @@
 package controller
 
 import (
+	model "crudgengui/internal/model"
+	"fmt"
 	"net/http"
 	"sync"
-	model "crudgengui/model"
-	"fmt"
 
 	"github.com/labstack/echo/v4"
 )
@@ -14,15 +14,15 @@ import (
 func (mc ModelController) ShowAllRelations(c echo.Context) error {
 	m := mc.repo.GetModel()
 
-  text:=map[string]string{
-  "title": "Relations",
-  "menu": "menu_relations",
+	text := map[string]string{
+		"title": "Relations",
+		"menu":  "menu_relations",
 	}
-  rd:= newRequestData(text,map[string]interface{}{
+	rd := newRequestData(text, map[string]interface{}{
 		"model": m,
 	})
-  
-  return c.Render(http.StatusOK, "relations.html", rd)  
+
+	return c.Render(http.StatusOK, "relations.html", rd)
 
 }
 
@@ -62,12 +62,12 @@ func (mc ModelController) InsertRelation(c echo.Context) error {
 	}
 
 	// Button Cancel hit or Source / Destination nor set
-	if (r.Source == "Please Select") || (r.Destination == "Please Select")  {
+	if (r.Source == "Please Select") || (r.Destination == "Please Select") {
 		return mc.ShowAllEntities(c)
 	}
 
 	// Source and Destination must not be the same
-	if (r.Destination == r.Source) {
+	if r.Destination == r.Source {
 		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Source '%s' and destination '%s' Entity must not be the same", r.Source, r.Destination))
 	}
 

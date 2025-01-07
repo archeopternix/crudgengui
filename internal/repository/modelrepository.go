@@ -1,10 +1,15 @@
 package repository
 
 import (
-	"crudgengui/model"
+	"crudgengui/internal/model"
 	"fmt"
-	"log"
+	"log/slog"
 	"strings"
+)
+
+const (
+	basepath     = "../../"
+	gendirectory = "../" + basepath // Target directory for file generation
 )
 
 // ModelReaderWriter must be implemented and injected in the creation of 'ModelRepository' is providing read and write functionalities
@@ -26,7 +31,8 @@ func NewModelRepository(mrw ModelReaderWriter) *ModelRepository {
 		m:       model.NewModel(),
 	}
 	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
-		log.Panic(err)
+		slog.Error("reading model", "error", err)
+		panic(err)
 	}
 	return mrep
 }
@@ -206,13 +212,16 @@ func (mrep ModelRepository) GetAllLookupNames() (names []string) {
 func (mrep ModelRepository) StartGeneration() error {
 	copy, err := mrep.m.ParseDependencies()
 	if err != nil {
-		fmt.Println("Fehler beim Parsen des Models")
+		slog.Warn("parsing of model", "error", err)
+		return err
 	}
-	model.WriteToFile(copy, "../../data/generated.yaml")
+
+	if err := model.WriteToFile(copy, basepath+"data/generated.yaml"); err != nil {
+		slog.Warn("writing model to disk", "error", err)
+	}
 
 	generator := NewGenerator()
 
-	basepath := "../../"
 	modules := []string{
 		basepath + "modules/application/app.yaml",
 		basepath + "modules/model/models.yaml",
@@ -220,12 +229,12 @@ func (mrep ModelRepository) StartGeneration() error {
 		basepath + "modules/view/view.yaml",
 	}
 	if err := generator.AddModules(modules...); err != nil {
-		fmt.Println("Fehler beim Hinzufügen des Models: ", err)
+		slog.Warn("adding modules", "error", err)
 	}
-	if err := generator.GenerateAll(copy, "/Users/Andreas Eisner/go/src"); err != nil {
-		fmt.Println("Fehler beim Hinzufügen des Models: ", err)
+	if err := generator.GenerateAll(copy, gendirectory); err != nil {
+		slog.Warn("generating model", "error", err)
 	}
 
-	fmt.Println("Model geladen")
+	slog.Info("model generation finished", "module count", len(modules))
 	return nil
 }

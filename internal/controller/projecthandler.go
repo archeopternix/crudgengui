@@ -1,7 +1,7 @@
 package controller
 
 import (
-	model "crudgengui/model"
+	model "crudgengui/internal/model"
 	"net/http"
 	"sync"
 

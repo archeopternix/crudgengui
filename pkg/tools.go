@@ -1,6 +1,6 @@
 // Package pkg provides various utility functions and custom error types
 // for handling file operations, string manipulations, and YAML conversions.
-// 
+//
 // The utilities include functions for checking if the first letter of a string
 // is uppercase, creating directories, copying files, and cleaning strings by
 // removing or converting non-alphanumeric characters. It also includes custom
@@ -51,7 +51,7 @@ func (r *FileExistError) Error() string {
 }
 
 // CheckMkdir checks and creates a directory with given path when not yet exists
-// when directory exists a DirectoryExistError will be thrown, in cas ea new
+// when directory exists a DirectoryExistError will be thrown, in case a new
 // directory will be created it returns nil
 func CheckMkdir(path string) error {
 	// throw error when directory already exists
@@ -62,7 +62,7 @@ func CheckMkdir(path string) error {
 		}
 	}
 
-	if err := os.MkdirAll(path, os.ModePerm); err != nil {
+	if err := os.MkdirAll(path, os.ModeSticky|os.ModePerm); err != nil {
 		return fmt.Errorf("directory %s: err %v", path, err)
 	}
 	return nil

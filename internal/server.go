@@ -3,6 +3,7 @@ package internal
 import (
 	controller "crudgengui/internal/controller"
 	repository "crudgengui/internal/repository"
+	template "crudgengui/pkg"
 	"fmt"
 
 	"github.com/labstack/echo/v4"
@@ -39,7 +40,7 @@ func (s *GuiServer) Init() {
 // setTemplates sets up the template rendering for the server
 func (s *GuiServer) setTemplates() {
 	// Create templates
-	templates := NewTemplateRegistry()
+	templates := template.NewTemplateRegistry()
 
 	// Define templates with their files
 	templateDefinitions := []struct {

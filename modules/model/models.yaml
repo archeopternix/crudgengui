@@ -4,15 +4,15 @@ tasks:
 - kind: template
   fileext: .go
   source:
-  - templates\model.tmpl
-  - templates\modeltypes.tmpl
+  - templates/model.tmpl
+  - templates/modeltypes.tmpl
   target: model
   template: model
   
 - kind: template
   fileext: .go
   source:
-  - templates\repository.tmpl
+  - templates/repository.tmpl
   target: model
   template: repository
   filename: repository
@@ -20,7 +20,7 @@ tasks:
 - kind: template
   fileext: .go
   source:
-  - templates\lookups.tmpl
+  - templates/lookups.tmpl
   target: model
   template: lookups
   filename: lookups

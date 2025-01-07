@@ -5,16 +5,16 @@ tasks:
   fileext: .go
   filename: schema
   source:
-  - templates\schema.tmpl
-  - templates\schematypes.tmpl
+  - templates/schema.tmpl
+  - templates/schematypes.tmpl
   target: database
   template: schema
 - kind: template
   fileext: repo.go
   source:
-  - templates\repo.go
-  - templates\repoupdate.tmpl
-  - templates\repoinsert.tmpl
+  - templates/repo.go
+  - templates/repoupdate.tmpl
+  - templates/repoinsert.tmpl
   target: database
   template: repo
 
