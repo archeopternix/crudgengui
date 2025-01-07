@@ -6,7 +6,7 @@ import (
 )
 
 func main() {
-	slog.SetLogLoggerLevel(slog.LevelInfo)
+	slog.SetLogLoggerLevel(slog.LevelDebug)
 
 	server := NewGuiServer()
 	server.Init()

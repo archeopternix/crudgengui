@@ -4,7 +4,7 @@ settings:
     decimal_separator: ','
     thousend_separator: .
     time_format: "15:04:05"
-    date_format: 01.02.2006
+    date_format: 2006.01.02
 entities:
     haus:
         name: Haus
@@ -33,6 +33,13 @@ entities:
               auto: false
               size: "3"
               step: "1"
+            - name: Datum
+              type: Date
+              id: Datum
+              required: false
+              label: false
+              auto: false
+              datetime: Date
     window:
         name: Window
         type: Entity
@@ -70,8 +77,15 @@ relations:
         source: Haus
         destination: Window
 lookups:
+    hoehen:
+        name: Höhen
+        id: hoehen
+        list:
+            - eins
+            - Ändeung
     schalter:
         name: Schalter
+        id: schalter
         list:
             - Zwei
             - Drei

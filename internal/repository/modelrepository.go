@@ -2,6 +2,7 @@ package repository
 
 import (
 	"crudgengui/internal/model"
+	"crudgengui/pkg"
 	"fmt"
 	"log/slog"
 	"strings"
@@ -178,22 +179,22 @@ func (mrep ModelRepository) GetAllLookups() map[string]model.Lookup {
 
 // GetLookup gets one single entity from the model
 func (mrep *ModelRepository) GetLookup(name string) (*model.Lookup, bool) {
-	name = strings.ToLower(name)
-	r, ok := mrep.m.Lookups[name]
+	id := strings.ToLower(pkg.CleanString(name))
+	r, ok := mrep.m.Lookups[id]
 	return &r, ok
 }
 
 // SaveOrUpdateLookup saves or updates a relation in the model
 func (mrep *ModelRepository) SaveOrUpdateLookup(name string, lookup *model.Lookup) error {
-	name = strings.ToLower(name)
-	mrep.m.Lookups[name] = *lookup
+	id := strings.ToLower(pkg.CleanString(name))
+	mrep.m.Lookups[id] = *lookup
 	return mrep.modelRW.WriteModel(mrep.m)
 }
 
 // DeleteLookup deletes one relation from the model
 func (mrep *ModelRepository) DeleteLookup(name string) error {
-	name = strings.ToLower(name)
-	delete(mrep.m.Lookups, name)
+	id := strings.ToLower(pkg.CleanString(name))
+	delete(mrep.m.Lookups, id)
 	return mrep.modelRW.WriteModel(mrep.m)
 }
 
@@ -202,8 +203,26 @@ func (mrep ModelRepository) GetAllLookupNames() (names []string) {
 	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
 		return nil
 	}
-	for key, _ := range mrep.m.Lookups {
-		names = append(names, key)
+	for _, l := range mrep.m.Lookups {
+		names = append(names, l.Name)
+	}
+	return names
+}
+
+type IdName struct {
+	Id   string
+	Name string
+}
+
+type IdNameList []IdName
+
+// GetAllLookupNames gets all names of lookups from the model
+func (mrep ModelRepository) GetAllLookupIdNames() (names IdNameList) {
+	if err := mrep.modelRW.ReadModel(mrep.m); err != nil {
+		return nil
+	}
+	for _, l := range mrep.m.Lookups {
+		names = append(names, IdName{Id: l.Id, Name: l.Name})
 	}
 	return names
 }
@@ -216,10 +235,13 @@ func (mrep ModelRepository) StartGeneration() error {
 		return err
 	}
 
-	if err := model.WriteToFile(copy, basepath+"data/generated.yaml"); err != nil {
+	//	TODO: if slog.Level.Level() == slog.LevelDebug {
+	if err := WriteModelToFile(copy, basepath+"data/generated.yaml"); err != nil {
 		slog.Warn("writing model to disk", "error", err)
+	} else {
+		slog.Debug("generated model written to disk", "path", basepath+"data/generated.yaml")
 	}
-
+	//	}
 	generator := NewGenerator()
 
 	modules := []string{

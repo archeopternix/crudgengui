@@ -70,7 +70,7 @@ func (s *GuiServer) setTemplates() {
 // setRoutes sets up the routes for the server
 func (s *GuiServer) setRoutes() {
 	// Create Repository
-	mc := controller.NewModelController(repository.NewModelRepository(repository.NewYAMLModel(base + "data/model.yaml")))
+	mc := controller.NewModelController(repository.NewModelRepository(repository.NewModelToFile(base + "data/model.yaml")))
 
 	s.e.GET("/", mc.ShowDashboard)
 	s.e.GET("/project", mc.ShowProject)

@@ -48,12 +48,16 @@ func (mc ModelController) InsertLookup(c echo.Context) error {
 	lock.Lock()
 	defer lock.Unlock()
 
+	// Sanity checks
 	name := c.FormValue("lookup_name")
 	if len(name) < 2 {
 		return nil
 	}
 	if _, ok := mc.repo.GetLookup(name); ok {
-		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Name %v is already in use", name))
+		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Name %v is already in use for lookup", name))
+	}
+	if _, ok := mc.repo.GetEntity(name); ok {
+		return echo.NewHTTPError(http.StatusConflict, fmt.Errorf("Name %v is already in use for entity", name))
 	}
 
 	if err := mc.repo.SaveOrUpdateLookup(name, model.NewLookup(name)); err != nil {

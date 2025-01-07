@@ -26,10 +26,11 @@
                   <tbody>
                     {{range $key, $value := .Data.lookups}}
                     <tr>
-                      <td valign="bottom"><a href="/lookups/{{$key}}">{{$value.Name}}</a></td>  
+                      <td valign="bottom"><a href="/lookups/{{$value.Id}}">{{$value.Name}}</a></td>  
                       <td align="right" >
-                        <form action="/lookups/{{$key}}" method="post">
-                        <input type="hidden" id="name" name="name" value="{{$key}}" />
+                        <form action="/lookups/{{$value.Id}}" method="post">
+                        <input type="hidden" id="id" name="id" value="{{$value.Id}}" />
+                        <input type="hidden" id="name" name="name" value="{{$value.Name}}" />
                         <input type="hidden" id="delete" name="delete" value="true" />
                         <p align="right" class="buttons">
                             <button class="button is-danger is-outlined" >

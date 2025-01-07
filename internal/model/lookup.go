@@ -4,17 +4,19 @@ import (
 	"crudgengui/pkg"
 	"fmt"
 	"slices"
+	"strings"
 )
 
 // Lookup is a string list
 type Lookup struct {
-	Name string
+	Name string   // Name that is shown in caption and titles
+	Id   string   // Id that is used for technical references
 	List []string // list that contains the text values
 }
 
 // NewLookup creates a pointer to a new Lookup
 func NewLookup(name string) *Lookup {
-	return &Lookup{Name: name}
+	return &Lookup{Name: name, Id: strings.ToLower(pkg.CleanString(name))}
 }
 
 // CleanName removes all non-numeric and non-alphanumeric characters from the input string.

@@ -8,7 +8,7 @@
                     <div class="hero-body">
                         <div class="container">
                             <h1 class="title">
-                                Lookup: {{.Text.title}}
+                                Lookup: {{.Data.lookup.Name}}
                             </h1>
                             <h2 class="subtitle">
                                 List of entries
@@ -25,7 +25,7 @@
                     </tr>
                   </thead>
                   <tbody>
-                    {{$key := .Text.title}}
+                    {{$key := .Data.lookup.Id}}
                     {{range $index, $value:=.Data.lookup.List}}
                     <tr>
                       <td valign="bottom">{{$value}}</td>  
