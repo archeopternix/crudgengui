@@ -30,3 +30,27 @@ type Field struct {
 func (f Field) CleanName() string {
 	return pkg.CleanID(f.Name)
 }
+
+func (f Field) GetDatabaseType() string {
+	if f.CleanName() == "ID" {
+		return "INTEGER PRIMARY KEY AUTOINCREMENT"
+	}
+	switch f.Type {
+	case "Date":
+		return "DATETIME"
+	case "Integer":
+		return "INTEGER"
+	case "Number":
+		return "REAL"
+	case "Boolean":
+		return "BOOL"
+	case "Password":
+		return "TEXT"
+	case "E-Mail":
+		return "TEXT"
+	case "Phone":
+		return "TEXT"
+	default:
+		return "TEXT"
+	}
+}

@@ -10,6 +10,20 @@ tasks:
   template: mockrepo
 
 - kind: template
+  fileext: sql.go
+  source:
+  - sqlrepo.go
+  target: database
+  template: sqlrepo
+- kind: template
+  fileext: .go
+  source:
+  - databasesql.go
+  target: database
+  template: databasesql
+  filename: databasesql  
+  
+- kind: template
   fileext: _test.go
   source:
   - mockmain_test.go
@@ -17,3 +31,11 @@ tasks:
   template: mockmaintest
   filename: databasemain
 
+- kind: template
+  fileext: .go
+  source:
+  - databasemock.go
+  target: database
+  template: databasemock
+  filename: databasemock  
+  

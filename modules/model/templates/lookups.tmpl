@@ -13,7 +13,7 @@ type Lookup struct {
 
 {{range $key, $value := .Lookups -}}
   type {{title $key}}List []Lookup
-{{- end}}
+{{end}}
 
 {{end}} // of define
 

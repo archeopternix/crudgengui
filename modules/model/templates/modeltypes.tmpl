@@ -1,18 +1,18 @@
 {{define "modeltypes"}}
-{{- if eq .Type "Text"}}	{{.CleanName}}	string	`form:"{{lowercase .CleanName}}", db:"{{lowercase .CleanName}}"`{{end}}
-{{- if eq .Type "Password"}}	{{.CleanName}}	string	`form:"{{lowercase .CleanName}}", db:"{{lowercase .CleanName}}"`{{end}}
-{{- if eq .Type "Integer"}}	{{.CleanName}}	uint64	`form:"{{lowercase .CleanName}}", db:"{{lowercase .CleanName}}"`{{end}}
-{{- if eq .Type "Number"}}	{{.CleanName}}	float64	`form:"{{lowercase .CleanName}}", db:"{{lowercase .CleanName}}"`{{end}}
-{{- if eq .Type "Boolean"}}	{{.CleanName}}	bool	`form:"{{lowercase .CleanName}}", db:"{{lowercase .CleanName}}"`{{end}}
-{{- if eq .Type "E-Mail"}}	{{.CleanName}}	string	`form:"{{lowercase .CleanName}}", db:"{{lowercase .CleanName}}"`{{end}}
-{{- if eq .Type "Phone"}}	{{.CleanName}}	string	`form:"{{lowercase .CleanName}}", db:"{{lowercase .CleanName}}"`{{end}}
-{{- if eq .Type "Longtext"}}	{{.CleanName}}	string	`form:"{{lowercase .CleanName}}" ,db:"{{lowercase .CleanName}}"`{{end}}
-{{- if eq .Type "Time"}}	{{.CleanName}}	string	`form:"{{lowercase .CleanName}}", db:"{{lowercase .CleanName}}"`{{end}}
-{{- if eq .Type "Date"}}	{{.CleanName}}	string	`form:"{{lowercase .CleanName}}", db:"{{lowercase .CleanName}}"`{{end}}
-{{- if eq .Type "Lookup"}}	{{.CleanName}}	string	`form:"{{lowercase .CleanName}}", db:"{{lowercase .CleanName}}"`	// Lookup entity: {{.Lookup}}{{end}}
+{{- if eq .Type "Text"}}	{{.CleanName}}	string	`db:"{{lowercase .CleanName}}",form:"{{lowercase .CleanName}}"`{{end}}
+{{- if eq .Type "Password"}}	{{.CleanName}}	string	`db:"{{lowercase .CleanName}}",form:"{{lowercase .CleanName}}",`{{end}}
+{{- if eq .Type "Integer"}}	{{.CleanName}}	uint64	`db:"{{lowercase .CleanName}}",form:"{{lowercase .CleanName}}"`{{end}}
+{{- if eq .Type "Number"}}	{{.CleanName}}	float64	`db:"{{lowercase .CleanName}}",form:"{{lowercase .CleanName}}"`{{end}}
+{{- if eq .Type "Boolean"}}	{{.CleanName}}	bool	  `db:"{{lowercase .CleanName}}",form:"{{lowercase .CleanName}}"`{{end}}
+{{- if eq .Type "E-Mail"}}	{{.CleanName}}	string	  `db:"{{lowercase .CleanName}}",form:"{{lowercase .CleanName}}"`{{end}}
+{{- if eq .Type "Phone"}}	{{.CleanName}}	string	  `db:"{{lowercase .CleanName}}",form:"{{lowercase .CleanName}}"`{{end}}
+{{- if eq .Type "Longtext"}}	{{.CleanName}}	string	  `db:"{{lowercase .CleanName}}",form:"{{lowercase .CleanName}}"`{{end}}
+{{- if eq .Type "Time"}}	{{.CleanName}}	string	  `db:"{{lowercase .CleanName}}",form:"{{lowercase .CleanName}}"`{{end}}
+{{- if eq .Type "Date"}}	{{.CleanName}}	string	  `db:"{{lowercase .CleanName}},form:"{{lowercase .CleanName}}""`{{end}}
+{{- if eq .Type "Lookup"}}	{{.CleanName}}	string	  `db:"{{lowercase .CleanName}}",form:"{{lowercase .CleanName}}"`	// Lookup entity: {{.Lookup}}{{end}}
 {{- if eq .Type "Parent"}}	{{.CleanName | plural}}	{{.Object}}List	`form:"-"`	// one2many: childs only for view (not persistet){{end}}
-{{- if eq .Type "Child"}}	{{.CleanName}}	uint64	`form:"{{lowercase .CleanName}}", db:"{{lowercase .CleanName}}"`	// one2many: parent entity {{.CleanName}}
+{{- if eq .Type "Child"}}	{{.CleanName}}	uint64	`db:"{{lowercase .CleanName}}",form:"{{lowercase .CleanName}}"`	// one2many: parent entity {{.CleanName}}
 	{{.Object}}	string // {{.Object}} label will not be persistet is for list view{{end}}
-{{- if eq .Type "manychild"}}	{{.CleanName}}Id	string	`json:"{{lowercase .CleanName}}", db:"{{lowercase .CleanName}}"`	// many2many: Id of parent object, mappingtable: {{.Object}}{{end}}
-{{- if eq .Type "manyparent"}}	{{.CleanName | plural}}	{{.CleanName}}List	`json:"-"`	// many2many: childs of target, mappingtable: {{.Object}}{{end}}
+{{- if eq .Type "manychild"}}	{{.CleanName}}Id	string	`db:"{{lowercase .CleanName}}",form:"{{lowercase .CleanName}}", `	// many2many: Id of parent object, mappingtable: {{.Object}}{{end}}
+{{- if eq .Type "manyparent"}}	{{.CleanName | plural}}	{{.CleanName}}List	`db:"-"`	// many2many: childs of target, mappingtable: {{.Object}}{{end}}
 {{- end}}

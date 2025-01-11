@@ -8,17 +8,13 @@ package main
 
 import (
 	view "{{.CleanName}}/view"
-	model "{{.CleanName}}/model"
 	database "{{.CleanName}}/database"
 )
 
 func main() {
-	env := model.Env{
-  {{- range .Entities}}
-      {{.CleanName | plural}}:  database.New{{.CleanName}}Repo(),
-  {{- end}}		
-	}
-	server := view.NewServer(&env)
+	env := database.GetMockEnv()
+//  env := database.GetSQLEnv()
+	server := view.NewServer(env)
 	// Start server
 	server.Logger.Fatal(server.Start(":8080"))
 }
