@@ -8,14 +8,14 @@ import (
 	"time"
 	"fmt"
 )
-{{with .Entity}}
 
+{{with .Entity}}
 // {{.CleanName}} entity that consists of all attributes and provides key functions.
 // tags for database mapping is included
 type {{.CleanName}} struct {
-{{range .Fields}}{{template "modeltypes" .}}
-{{end}}
-	CreatedAt time.Time 	`json:"created_at", db:"created_at"`
+  ID           uint64    `db:"id",form:"id"`    // unique database id
+{{range .Fields}}{{if ne .CleanName "ID"}}{{template "modeltypes" .}}{{end}}{{end}}
+	CreatedAt   time.Time  `db:"created_at", form:"created_at"`  // datetime of record creation
 }
 
 // {{.CleanName}}List definition for a slice of {{plural .CleanName}}

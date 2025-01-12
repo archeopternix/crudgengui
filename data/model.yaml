@@ -47,14 +47,17 @@ entities:
             - name: Height
               type: Number
               id: Height
-              required: false
+              required: true
               label: false
               auto: false
               size: "8"
+              min: "10"
+              step: "1"
+              decimals: "2"
             - name: Width
               type: Number
               id: Width
-              required: false
+              required: true
               label: false
               auto: false
             - name: isGlass?

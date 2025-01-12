@@ -5,7 +5,7 @@
                                 <div class="field">
                                   <label class="label">{{.Name}} {{with .Required}}*{{end}}</label>
                                   <div class="control">
-                                    <input class="input{{"{{"}}with $errors.{{.CleanName}}{{"}}"}} is-danger{{"{{"}}end{{"}}"}}" type="text" placeholder="Text input" name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" {{with .Max}}size="{{.}}"{{end}} {{with .Size}}size="{{.}}"{{end}} value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
+                                    <input class="input{{"{{"}}with $errors.{{.CleanName}}{{"}}"}} is-danger{{"{{"}}end{{"}}"}}" type="text" {{with .Placeholder}}max="{{.}}"{{end}} name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" {{with .Max}}size="{{.}}"{{end}} {{with .Size}}size="{{.}}"{{end}} value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
                                   </div>
                                   {{- "{{"}}with $errors.{{.CleanName}}{{"}}"}} <p class="help is-danger">{{"{{"}}.{{"}}"}} </p>{{"{{"}}end{{"}}"}}
                                 </div>{{end}}
@@ -13,7 +13,7 @@
                                 <div class="field is-grouped">      
                                   <label class="label">{{.Name}} {{with .Required}}*{{end}}</label>                            
                                   <div class="control">
-                                    <input class="input{{"{{"}}with $errors.{{.CleanName}}{{"}}"}} is-danger{{"{{"}}end{{"}}"}}" type="password" placeholder="****" name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" {{with .Max}}size="{{.}}"{{end}} {{with .Size}}size="{{.}}"{{end}} value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
+                                    <input class="input{{"{{"}}with $errors.{{.CleanName}}{{"}}"}} is-danger{{"{{"}}end{{"}}"}}" type="password" {{with .Placeholder}}max="{{.}}"{{end}} name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" {{with .Max}}size="{{.}}"{{end}} {{with .Size}}size="{{.}}"{{end}} value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
                                   </div>
                                   <div class="control">
                                     <a class="button is-info" onmousedown="togglePassword('{{.CleanName | lowercase}}')" onmouseup="togglePassword('{{.CleanName | lowercase}}')">
@@ -34,7 +34,7 @@
                                 <div class="field">
                                   <label class="label">{{.Name}} {{with .Required}}*{{end}}</label>
                                   <div class="control has-icons-left">
-                                    <input class="input{{"{{"}}with $errors.{{.CleanName}}{{"}}"}} is-danger{{"{{"}}end{{"}}"}}" type="email" placeholder="test@yahoo.de" name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" {{with .Max}}size="{{.}}"{{end}} {{with .Size}}size="{{.}}"{{end}} value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
+                                    <input class="input{{"{{"}}with $errors.{{.CleanName}}{{"}}"}} is-danger{{"{{"}}end{{"}}"}}" type="email" {{with .Placeholder}}max="{{.}}"{{end}} name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" {{with .Max}}size="{{.}}"{{end}} {{with .Size}}size="{{.}}"{{end}} value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
                                   <span class="icon is-small is-left">
                                     <i class="fas fa-envelope"></i>
                                   </span>
@@ -44,7 +44,7 @@
 {{- if eq .Type "Phone"}}          <div class="field">
                                   <label class="label">{{.Name}} {{with .Required}}*{{end}}</label>
                                   <div class="control has-icons-left">
-                                    <input class="input{{"{{"}}with $errors.{{.CleanName}}{{"}}"}} is-danger{{"{{"}}end{{"}}"}}" type="tel" placeholder="+49" name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
+                                    <input class="input{{"{{"}}with $errors.{{.CleanName}}{{"}}"}} is-danger{{"{{"}}end{{"}}"}}" type="tel" {{with .Placeholder}}max="{{.}}"{{end}} name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
                                     <span class="icon is-small is-left">
                                       <i class="fas fa-phone"></i>
                                     </span>
@@ -64,14 +64,14 @@
 {{- if eq .Type "Integer"}}        <div class="field">
                                   <label class="label">{{.Name}} {{with .Required}}*{{end}}</label>
                                   <div class="control">
-                                    <input class="input" type="number" {{with .Step}}step="{{.}}"{{end}}  {{with .Min}}min="{{.}}"{{end}} {{with .Max}}max="{{.}}"{{end}} placeholder="Number input" name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" {{with .Max}}size="{{.}}"{{end}} {{with .Size}}size="{{.}}"{{end}} value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
+                                    <input class="input" type="number" {{with .Step}}step="{{.}}"{{end}}  {{with .Min}}min="{{.}}"{{end}} {{with .Max}}max="{{.}}"{{end}} {{with .Placeholder}}max="{{.}}"{{end}} name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" {{with .Max}}size="{{.}}"{{end}} {{with .Size}}size="{{.}}"{{end}} value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
                                   </div>
                                   {{- "{{"}}with $errors.{{.CleanName}}{{"}}"}} <p class="help is-danger">{{"{{"}}.{{"}}"}} </p>{{"{{"}}end{{"}}"}}
                                 </div>{{end}}
 {{- if eq .Type "Number"}}      <div class="field">
                                   <label class="label">{{.Name}} {{with .Required}}*{{end}}</label>
                                   <div class="control">
-                                    <input class="input" type="number" {{with .Step}}step="{{.}}"{{end}}  {{with .Min}}min="{{.}}"{{end}} {{with .Max}}max="{{.}}"{{end}} placeholder="Number input" name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" {{with .Max}}size="{{.}}"{{end}} {{with .Size}}size="{{.}}"{{end}} value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
+                                    <input class="input" type="number" {{with .GetDecimals}}step="{{.}}"{{end}}  {{with .Min}}min="{{.}}"{{end}} {{with .Max}}max="{{.}}"{{end}} {{with .Placeholder}}max="{{.}}"{{end}} name="{{.CleanName | lowercase}}" id="{{.CleanName | lowercase}}" {{with .Max}}size="{{.}}"{{end}} {{with .Size}}size="{{.}}"{{end}} value="{{"{{"}}.Entity.{{.CleanName}}{{"}}"}}" {{with .Required}}required{{end}}>
                                   </div>
                                   {{- "{{"}}with $errors.{{.CleanName}}{{"}}"}} <p class="help is-danger">{{"{{"}}.{{"}}"}} </p>{{"{{"}}end{{"}}"}}
                                 </div>{{end}}

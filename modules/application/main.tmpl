@@ -13,7 +13,7 @@ import (
 
 func main() {
 	env := database.GetMockEnv()
-//  env := database.GetSQLEnv()
+//  env := database.GetSQLEnv(":memory:")
 	server := view.NewServer(env)
 	// Start server
 	server.Logger.Fatal(server.Start(":8080"))

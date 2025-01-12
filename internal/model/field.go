@@ -2,6 +2,7 @@ package model
 
 import (
 	"crudgengui/pkg"
+	"strconv"
 )
 
 type Field struct {
@@ -21,7 +22,7 @@ type Field struct {
 	Max         string `yaml:"max,omitempty" json:"max" form:"field_max" `                         // Maximum number
 	Min         string `yaml:"min,omitempty" json:"min" form:"field_min" `                         // Minimum number
 	Step        string `yaml:"step,omitempty" json:"step" form:"field_step" `                      //Specifies the interval between allowed numbers in an input field
-	Decimals    string `yaml:"decimals,omitempty" json:"decimals" form:"field_decimal `            // amount of decimals for number type
+	Decimals    string `yaml:"decimals,omitempty" json:"decimals" form:"field_decimals"`           // amount of decimals for number type
 	Lookup      string `yaml:"lookup,omitempty" json:"lookup" form:"field_lookup" `                // Name of the Lookup list
 	Object      string `yaml:"object,omitempty" json:"object" `                                    // Holding the name of the related object (parent / child)
 }
@@ -29,6 +30,19 @@ type Field struct {
 // CleanName removes all non-numeric and non-alphanumeric characters from the input string.
 func (f Field) CleanName() string {
 	return pkg.CleanID(f.Name)
+}
+
+func (f Field) GetDecimals() string {
+	i, _ := strconv.Atoi(f.Decimals)
+	if i <= 0 {
+		return "1"
+	} else {
+		ret := "0."
+		for c := (1); c < i; c++ {
+			ret += "0"
+		}
+		return ret + "1"
+	}
 }
 
 func (f Field) GetDatabaseType() string {
