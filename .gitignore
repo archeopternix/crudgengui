@@ -2,3 +2,4 @@
 *.exe
 OLD_model.yaml
 data/generated.yaml
+cmd/crudgengui/crudgengui
