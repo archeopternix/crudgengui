@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> **ARCHIVED / SUPERSEDED** — This repository is no longer the active implementation. Its responsibilities are replaced by [archeopternix/business-platform](https://github.com/archeopternix/business-platform). Do not start new development here.
+
 # Crudgen GUI
 
 GUI for generating a YAML file that can be used by crudgen to generate a full
